@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Documents — EPA Clean Air Act Tracker{% endblock %}
+
+{% block content %}
+
+<h2 class="section-head" style="margin-top:1rem;">Browse all documents</h2>
+
+<div class="filter-bar">
+    <div>
+        <label for="f-search">Search title</label>
+        <input type="text" id="f-search" placeholder="keyword…">
+    </div>
+    <div>
+        <label for="f-cat">Program / category</label>
+        <select id="f-cat">
+            <option value="">All categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="f-state">State / territory</label>
+        <select id="f-state">
+            <option value="">All states</option>
+            {% for s in states %}
+            <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="f-region">EPA Region</label>
+        <select id="f-region">
+            <option value="">All regions</option>
+            {% for r in regions %}
+            <option value="{{ r }}">{{ r }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="f-type">Document type</label>
+        <select id="f-type">
+            <option value="">All types</option>
+            {% for t in doc_types %}
+            <option value="{{ t }}">{{ t }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="f-open">Comment period</label>
+        <select id="f-open">
+            <option value="">Any</option>
+            <option value="open">Open now</option>
+            <option value="ext">Extension filed</option>
+        </select>
+    </div>
+    <div style="align-self:center; padding-top:1.1rem;">
+        <label style="font-size:0.875rem; color:#444; cursor:pointer; text-transform:none; letter-spacing:0;">
+            <input type="checkbox" id="f-supporting" style="margin-right:4px;">
+            Include supporting docs
+        </label>
+    </div>
+</div>
+
+<p id="result-count"></p>
+
+<table class="doc-table" id="doc-table">
+    <thead>
+        <tr>
+            <th>Posted</th>
+            <th>Title</th>
+            <th class="hide-mobile">Type</th>
+            <th class="hide-mobile">Category</th>
+            <th class="hide-mobile">Location</th>
+            <th class="hide-mobile">Comments</th>
+        </tr>
+    </thead>
+    <tbody id="doc-tbody">
+    {% for doc in documents %}
+    <tr
+      data-title="{{ (doc.title or '') | lower }}"
+      data-cat="{{ doc.category or '' }}"
+      data-states="{{ (doc.states or []) | join('|') | lower }}"
+      data-region="{{ doc.epaRegion or '' }}"
+      data-type="{{ doc.documentType or '' }}"
+      data-open="{{ 'open' if doc.openForComment else '' }}"
+      data-ext="{{ 'ext' if doc.isExtension else '' }}"
+    >
+        <td style="white-space:nowrap; font-family:'PT Sans', sans-serif; font-size:0.8rem;">
+            {{ doc.postedDate[:10] if doc.postedDate else "—" }}
+        </td>
+        <td>
+            <a href="{{ url_for('document', document_id=doc.documentId) }}">{{ doc.title or doc.documentId }}</a>
+            {% if doc.isExtension %}
+            <span class="badge badge-ext" title="Deadline/comment extension">ext</span>
+            {% endif %}
+            {% if doc.openForComment %}
+            <span class="badge badge-open">open</span>
+            {% endif %}
+        </td>
+        <td class="hide-mobile">
+            {% set t = doc.documentType or "" %}
+            {% if t == "Rule" %}<span class="badge badge-type-Rule">Rule</span>
+            {% elif t == "Proposed Rule" %}<span class="badge badge-type-Proposed">Proposed</span>
+            {% elif t == "Notice" %}<span class="badge badge-type-Notice">Notice</span>
+            {% elif t == "Supporting & Related Material" %}<span class="badge badge-type-Supporting">Support</span>
+            {% else %}<span class="badge badge-type-Other">{{ t or "—" }}</span>
+            {% endif %}
+        </td>
+        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem;">{{ doc.category or "—" }}</td>
+        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem;">
+            {% if doc.location %}
+              {{ doc.location }}{% if doc.states and doc.states | length > 0 %}, {{ doc.states | join(" / ") }}{% endif %}
+            {% elif doc.states and doc.states | length > 0 %}
+              {{ doc.states | join(" / ") }}
+            {% elif doc.epaRegion %}
+              <span style="color:#999;">{{ doc.epaRegion }}</span>
+            {% else %}
+              —
+            {% endif %}
+        </td>
+        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem; text-align:right;">
+            {% if doc.commentCount %}{{ doc.commentCount }}{% else %}—{% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    const search      = document.getElementById('f-search');
+    const catSel      = document.getElementById('f-cat');
+    const stateSel    = document.getElementById('f-state');
+    const regionSel   = document.getElementById('f-region');
+    const typeSel     = document.getElementById('f-type');
+    const openSel     = document.getElementById('f-open');
+    const supportChk  = document.getElementById('f-supporting');
+    const count       = document.getElementById('result-count');
+    const rows        = Array.from(document.querySelectorAll('#doc-tbody tr'));
+
+    const SUPPORT_TYPE = 'supporting & related material';
+
+    // Pre-fill from URL query params
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('category'))  catSel.value   = params.get('category');
+    if (params.get('state'))     stateSel.value  = params.get('state');
+    if (params.get('region'))    regionSel.value = params.get('region');
+    // Show supporting if explicitly requested or if type filter is set to it
+    if (params.get('supporting') === '1' || params.get('type') === 'Supporting & Related Material') {
+        supportChk.checked = true;
+    }
+
+    function filter() {
+        const q          = search.value.toLowerCase().trim();
+        const cat        = catSel.value;
+        const state      = stateSel.value.toLowerCase();
+        const region     = regionSel.value;
+        const tp         = typeSel.value;
+        const op         = openSel.value;
+        const showSupport= supportChk.checked;
+        let visible      = 0;
+
+        rows.forEach(function (row) {
+            const isSupport = (row.dataset.type || '').toLowerCase() === SUPPORT_TYPE;
+            const pass =
+                (showSupport || !isSupport) &&
+                (!q      || (row.dataset.title || '').includes(q)) &&
+                (!cat    || row.dataset.cat === cat) &&
+                (!state  || (row.dataset.states || '').split('|').includes(state)) &&
+                (!region || row.dataset.region === region) &&
+                (!tp     || row.dataset.type === tp) &&
+                (!op     || (op === 'open' ? row.dataset.open === 'open' : row.dataset.ext === 'ext'));
+
+            row.style.display = pass ? '' : 'none';
+            if (pass) visible++;
+        });
+
+        count.textContent = visible + ' document' + (visible !== 1 ? 's' : '');
+    }
+
+    [search, catSel, stateSel, regionSel, typeSel, openSel, supportChk].forEach(function (el) {
+        el.addEventListener('input', filter);
+        el.addEventListener('change', filter);
+    });
+
+    filter();
+})();
+</script>
+{% endblock %}

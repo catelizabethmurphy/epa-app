@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}EPA Air Quality Tracker{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+<body>
+<header class="site-header">
+    <h1><a href="{{ url_for('index') }}">EPA Clean Air Act Tracker</a></h1>
+    <p>Regulatory actions on the books since January 20, 2025 — sourced from regulations.gov</p>
+</header>
+<nav class="site-nav">
+    <a href="{{ url_for('index') }}">Overview</a>
+    <a href="{{ url_for('browse') }}">Browse</a>
+    <a href="{{ url_for('calendar') }}">Calendar</a>
+    <a href="{{ url_for('search') }}">Full-text search</a>
+</nav>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+<footer>
+    Data from <a href="https://www.regulations.gov" target="_blank">regulations.gov</a> and the
+    <a href="https://www.federalregister.gov" target="_blank">Federal Register</a>.
+    Documents are EPA filings posted on or after January 20, 2025.
+    Filters: OAR (air office) and OGC (general counsel) dockets only.
+</footer>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

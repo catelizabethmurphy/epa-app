@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}{{ document.title or document.documentId }} — EPA Clean Air Act Tracker{% endblock %}
+
+{% block content %}
+
+<p style="font-family:'PT Sans', sans-serif; font-size:0.85rem; color:#666; margin-bottom:0.25rem;">
+    <a href="{{ url_for('index') }}">Overview</a>
+    {% if docket %}
+    &rsaquo; <a href="{{ url_for('docket', docket_id=document.docketId) }}">{{ document.docketId }}</a>
+    {% endif %}
+    &rsaquo; Document
+</p>
+
+<article data-pagefind-body>
+
+<h1 style="font-size:1.3rem; margin:0.25rem 0 0.5rem; line-height:1.4;"
+    data-pagefind-meta="title">
+    {{ document.title or document.documentId }}
+</h1>
+
+<div style="margin-bottom:1rem; display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center;">
+    {% set t = document.documentType or "" %}
+    {% if t == "Rule" %}<span class="badge badge-type-Rule">Rule</span>
+    {% elif t == "Proposed Rule" %}<span class="badge badge-type-Proposed">Proposed Rule</span>
+    {% elif t == "Notice" %}<span class="badge badge-type-Notice">Notice</span>
+    {% elif t == "Supporting & Related Material" %}<span class="badge badge-type-Supporting">Supporting Material</span>
+    {% else %}<span class="badge badge-type-Other">{{ t }}</span>
+    {% endif %}
+
+    {% if document.category %}
+    <span class="badge badge-cat" data-pagefind-filter="Category">{{ document.category }}</span>
+    {% endif %}
+
+    {% if document.state %}
+    <span class="badge" style="background:#e8f5e9; color:#2e7d32;"
+          data-pagefind-filter="State">{{ document.state }}</span>
+    {% endif %}
+
+    {% if document.epaRegion %}
+    <span data-pagefind-filter="Region" style="display:none">{{ document.epaRegion }}</span>
+    {% endif %}
+
+    {% if document.isExtension %}
+    <span class="badge badge-ext">Extension</span>
+    {% endif %}
+
+    {% if document.openForComment %}
+    <span class="badge badge-open">Open for comment</span>
+    {% endif %}
+
+    {% if document.withdrawn %}
+    <span class="badge" style="background:#fce4ec; color:#880e4f;">Withdrawn</span>
+    {% endif %}
+</div>
+
+<div class="links-box">
+    <a class="btn btn-primary"
+       href="https://www.regulations.gov/document/{{ document.documentId }}"
+       target="_blank">View on regulations.gov &uarr;</a>
+
+    {% if fr.html_url %}
+    <a class="btn btn-secondary" href="{{ fr.html_url }}" target="_blank">Federal Register (HTML) &uarr;</a>
+    {% endif %}
+
+    {% if fr.pdf_url %}
+    <a class="btn btn-secondary" href="{{ fr.pdf_url }}" target="_blank">Download PDF &uarr;</a>
+    {% endif %}
+</div>
+
+<div class="detail-meta">
+    <dl>
+        <dt>Document ID</dt>
+        <dd>{{ document.documentId }}</dd>
+
+        <dt>Docket</dt>
+        <dd>
+            {% if docket %}
+            <a href="{{ url_for('docket', docket_id=document.docketId) }}">{{ document.docketId }}</a>
+            — {{ docket.title or "" }}
+            {% else %}
+            {{ document.docketId or "—" }}
+            {% endif %}
+        </dd>
+
+        <dt>Posted</dt>
+        <dd>{{ document.postedDate[:10] if document.postedDate else "—" }}</dd>
+
+        {% if document.lastModifiedDate and document.lastModifiedDate != document.postedDate %}
+        <dt>Last modified</dt>
+        <dd>{{ document.lastModifiedDate[:10] }}</dd>
+        {% endif %}
+
+        {% if document.states and document.states | length > 0 %}
+        <dt>{% if document.states | length > 1 %}States / territories{% else %}State / territory{% endif %}</dt>
+        <dd>
+            {{ document.states | join(", ") }}
+            {% if document.location %} &mdash; <em>{{ document.location }}</em>{% endif %}
+        </dd>
+        {% elif document.state %}
+        <dt>State / territory</dt>
+        <dd>{{ document.state }}{% if document.location %} — <em>{{ document.location }}</em>{% endif %}</dd>
+        {% endif %}
+
+        <dt>EPA Region</dt>
+        <dd>{{ document.epaRegion or "—" }}</dd>
+
+        {% if document.frDocNum %}
+        <dt>FR Document #</dt>
+        <dd>{{ document.frDocNum }}</dd>
+        {% endif %}
+
+        {% if fr.action %}
+        <dt>Action type</dt>
+        <dd>{{ fr.action }}</dd>
+        {% endif %}
+
+        {% if fr.publication_date %}
+        <dt>FR Publication date</dt>
+        <dd>{{ fr.publication_date }}</dd>
+        {% endif %}
+
+        {% if document.commentStartDate or document.commentEndDate %}
+        <dt>Comment period</dt>
+        <dd>
+            {{ document.commentStartDate[:10] if document.commentStartDate else "—" }}
+            to
+            {{ document.commentEndDate[:10] if document.commentEndDate else "—" }}
+        </dd>
+        {% endif %}
+
+        {% if document.commentCount %}
+        <dt>Comments received</dt>
+        <dd>{{ document.commentCount }}</dd>
+        {% endif %}
+
+        {% if document.searchTerms %}
+        <dt>Matched search terms</dt>
+        <dd>{{ document.searchTerms | join(", ") }}</dd>
+        {% endif %}
+    </dl>
+</div>
+
+{% if fr.abstract %}
+<h2 class="section-head">Summary</h2>
+<div class="abstract-box">
+    {{ fr.abstract }}
+</div>
+{% endif %}
+
+{% if docket and docket.abstract %}
+<h2 class="section-head">Docket description</h2>
+<div class="docket-abstract">
+    {{ docket.abstract }}
+</div>
+{% endif %}
+
+{% if full_text %}
+<h2 class="section-head">Full text</h2>
+<details>
+    <summary style="cursor:pointer; font-family:'PT Sans', sans-serif; font-size:0.875rem; color:#1a5276; margin-bottom:0.5rem;">
+        Show full Federal Register text ({{ (full_text | length / 1000) | int }}k characters)
+    </summary>
+    <div style="font-size:0.85rem; line-height:1.7; white-space:pre-wrap; max-height:600px; overflow-y:auto; border:1px solid #ddd; padding:1rem; background:#fff; margin-top:0.5rem;">{{ full_text }}</div>
+</details>
+{% endif %}
+
+</article>
+
+{% endblock %}

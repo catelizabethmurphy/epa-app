@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}{{ docket.title or docket.docketId }} — EPA Clean Air Act Tracker{% endblock %}
+
+{% block content %}
+
+<p style="font-family:'PT Sans', sans-serif; font-size:0.85rem; color:#666; margin-bottom:0.25rem;">
+    <a href="{{ url_for('index') }}">Overview</a> &rsaquo; Docket
+</p>
+
+<h1 style="font-size:1.4rem; margin:0.25rem 0 0.5rem;">{{ docket.title or docket.docketId }}</h1>
+
+<div class="detail-meta">
+    <dl>
+        <dt>Docket ID</dt>
+        <dd>
+            {{ docket.docketId }}
+            &nbsp;
+            <a href="https://www.regulations.gov/docket/{{ docket.docketId }}" target="_blank" style="font-size:0.85rem;">
+                View on regulations.gov &uarr;
+            </a>
+        </dd>
+
+        {% if docket.rin %}
+        <dt>RIN</dt>
+        <dd>{{ docket.rin }}</dd>
+        {% endif %}
+
+        {% if docket.lastModifiedDate %}
+        <dt>Last modified</dt>
+        <dd>{{ docket.lastModifiedDate[:10] }}</dd>
+        {% endif %}
+    </dl>
+</div>
+
+{% if docket.abstract %}
+<div class="docket-abstract">
+    {{ docket.abstract }}
+</div>
+{% endif %}
+
+<h2 class="section-head">Documents in this docket ({{ documents | length }})</h2>
+
+{% if documents %}
+<table class="doc-table">
+    <thead>
+        <tr>
+            <th>Posted</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th class="hide-mobile">Category</th>
+            <th class="hide-mobile">State</th>
+            <th class="hide-mobile">Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for doc in documents %}
+    <tr>
+        <td style="white-space:nowrap; font-family:'PT Sans', sans-serif; font-size:0.8rem;">
+            {{ doc.postedDate[:10] if doc.postedDate else "—" }}
+        </td>
+        <td>
+            <a href="{{ url_for('document', document_id=doc.documentId) }}">{{ doc.title or doc.documentId }}</a>
+            {% if doc.isExtension %}<span class="badge badge-ext">ext</span>{% endif %}
+            {% if doc.openForComment %}<span class="badge badge-open">open</span>{% endif %}
+        </td>
+        <td>
+            {% set t = doc.documentType or "" %}
+            {% if t == "Rule" %}<span class="badge badge-type-Rule">Rule</span>
+            {% elif t == "Proposed Rule" %}<span class="badge badge-type-Proposed">Proposed</span>
+            {% elif t == "Notice" %}<span class="badge badge-type-Notice">Notice</span>
+            {% elif t == "Supporting & Related Material" %}<span class="badge badge-type-Supporting">Support</span>
+            {% else %}<span class="badge badge-type-Other">{{ t or "—" }}</span>
+            {% endif %}
+        </td>
+        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem;">{{ doc.category or "—" }}</td>
+        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem;">{{ doc.state or "—" }}</td>
+        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem; text-align:right;">
+            {% if doc.commentCount %}{{ doc.commentCount }}{% else %}—{% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p style="font-family:'PT Sans', sans-serif; color:#666;">No documents in this docket.</p>
+{% endif %}
+
+{% endblock %}

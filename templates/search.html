@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Full-Text Search — EPA Clean Air Act Tracker{% endblock %}
+
+{% block head %}
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+<style>
+.pagefind-ui__search-input { font-family: Georgia, serif; }
+.pagefind-ui__result-title a { color: #1a5276; }
+.pagefind-ui__result-excerpt mark { background: #ffeaa0; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<h2 class="section-head" style="margin-top:1rem;">Full-text search</h2>
+<p style="font-family:'PT Sans', sans-serif; font-size:0.9rem; color:#555; max-width:640px; margin-bottom:1.25rem;">
+    Search across document titles, Federal Register abstracts, and the full text of
+    rules and proposed rules. For metadata filtering (by state, category, or type),
+    use <a href="{{ url_for('browse') }}">Browse</a>.
+</p>
+
+<div id="search"></div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="/pagefind/pagefind-ui.js"></script>
+<script>
+new PagefindUI({
+    element: "#search",
+    showImages: false,
+    excerptLength: 30,
+    resetStyles: false,
+});
+</script>
+{% endblock %}

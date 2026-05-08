@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}EPA Clean Air Act Tracker — Overview{% endblock %}
+
+{% block content %}
+
+<h2 class="section-head" style="margin-top:1rem;">What this tracks</h2>
+<p style="font-size:0.95rem; max-width:700px;">
+  On March 12, 2025, EPA announced what it called the
+  &ldquo;<a href="https://www.epa.gov/newsreleases/epa-launches-biggest-deregulatory-action-us-history" target="_blank">biggest deregulatory action in U.S. history</a>.&rdquo;
+  This tracker pulls the actual regulations.gov docket record to show what was
+  filed — and what wasn't — since Inauguration Day. It covers State and Tribal
+  Implementation Plans, NAAQS standards, emission rules (MATS, NESHAPs, NSPS),
+  vehicle greenhouse gas standards, the Good Neighbor Plan, Regional Haze,
+  and consent decrees.
+</p>
+
+<div class="stats-grid">
+    <div class="stat-box">
+        <span class="num">{{ stats.substantive }}</span>
+        <span class="label">Rules, proposals &amp; notices</span>
+    </div>
+    <div class="stat-box">
+        <span class="num">{{ stats.open_comment }}</span>
+        <span class="label">Open for comment</span>
+    </div>
+    <div class="stat-box">
+        <span class="num">{{ stats.extensions }}</span>
+        <span class="label">Extensions filed</span>
+    </div>
+    <div class="stat-box">
+        <span class="num">{{ stats.supporting }}</span>
+        <span class="label">Supporting docs</span>
+    </div>
+</div>
+<p style="font-family:'PT Sans', sans-serif; font-size:0.8rem; color:#888; margin:-0.5rem 0 1rem;">
+    {{ stats.total }} total records. Supporting &amp; related materials are shown on individual docket pages.
+    <a href="{{ url_for('browse') }}">Browse all including supporting docs &rarr;</a>
+</p>
+
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:2rem; margin-top:1rem;">
+    <div>
+        <h2 class="section-head">Documents by program</h2>
+        <ul class="category-list">
+          {% for cat, n in stats.categories %}
+          <li>
+            <a href="{{ url_for('browse') }}?category={{ cat | urlencode }}">{{ cat }}</a>
+            <span class="count">{{ n }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+    </div>
+    <div>
+        <h2 class="section-head">Top states / tribal</h2>
+        <ul class="category-list">
+          {% for state, n in stats.states %}
+          <li>
+            <a href="{{ url_for('browse') }}?state={{ state | urlencode }}">{{ state }}</a>
+            <span class="count">{{ n }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<h2 class="section-head" style="margin-top:2rem;">Recent activity</h2>
+
+<table class="doc-table">
+    <thead>
+        <tr>
+            <th>Posted</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th class="hide-mobile">Category</th>
+            <th class="hide-mobile">State</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for doc in recent %}
+    <tr>
+        <td style="white-space:nowrap; font-family:'PT Sans', sans-serif; font-size:0.8rem;">
+            {{ doc.postedDate[:10] if doc.postedDate else "—" }}
+        </td>
+        <td>
+            <a href="{{ url_for('document', document_id=doc.documentId) }}">{{ doc.title or doc.documentId }}</a>
+            {% if doc.isExtension %}
+            <span class="badge badge-ext" title="Deadline/comment extension">ext</span>
+            {% endif %}
+        </td>
+        <td>
+            {% set t = doc.documentType or "" %}
+            {% if t == "Rule" %}
+              <span class="badge badge-type-Rule">Rule</span>
+            {% elif t == "Proposed Rule" %}
+              <span class="badge badge-type-Proposed">Proposed</span>
+            {% elif t == "Notice" %}
+              <span class="badge badge-type-Notice">Notice</span>
+            {% elif t == "Supporting & Related Material" %}
+              <span class="badge badge-type-Supporting">Support</span>
+            {% else %}
+              <span class="badge badge-type-Other">{{ t or "—" }}</span>
+            {% endif %}
+        </td>
+        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem;">{{ doc.category or "—" }}</td>
+        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem;">{{ doc.state or "—" }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<p style="margin-top:1rem; font-family:'PT Sans', sans-serif; font-size:0.875rem;">
+  <a href="{{ url_for('browse') }}">Browse all {{ stats.total }} documents &rarr;</a>
+</p>
+
+{% endblock %}
