@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}{{ press.title }} — PFAS &amp; TSCA Tracker{% endblock %}
+{% block og_title %}{{ press.title }}{% endblock %}
+{% block og_description %}{{ press.body[:200] if press.body else "EPA press release" }}{% endblock %}
+
+{% block content %}
+
+<p style="font-size:0.85rem; color:#666; margin-bottom:0.25rem;">
+    <a href="{{ url_for('index') }}">Overview</a>
+    &rsaquo; <a href="{{ url_for('signals') }}">Mixed Signals</a>
+    &rsaquo; Press Release
+</p>
+
+<article data-pagefind-body>
+
+<div style="margin-bottom:0.5rem; display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center;">
+    <span class="badge badge-signal badge-signal--{{ press.signalType or 'rhetoric' }}">
+        {{ press.signalType or "rhetoric" }}
+    </span>
+    <span class="badge" style="background:#e8f5e9; color:#1b5e20;">EPA Press Release</span>
+    {% for c in (press.compounds or [])[:4] %}
+    <span class="badge badge-compound">{{ c }}</span>
+    {% endfor %}
+    {% if press.mahaRelevant %}
+    <span class="badge badge-maha">MAHA relevant</span>
+    {% endif %}
+</div>
+
+<h1 style="font-size:1.3rem; margin:0.25rem 0 0.5rem; line-height:1.4;"
+    data-pagefind-meta="title">{{ press.title }}</h1>
+
+<div class="detail-meta" style="margin-bottom:1.5rem;">
+    <dl>
+        <dt>Date</dt>
+        <dd>{{ press.date or "—" }}</dd>
+        <dt>Source</dt>
+        <dd>
+            <a href="{{ press.url }}" target="_blank">{{ press.url }} &uarr;</a>
+        </dd>
+        {% if press.program %}
+        <dt>Regulatory program</dt>
+        <dd>{{ press.program }}</dd>
+        {% endif %}
+    </dl>
+</div>
+
+<div class="links-box">
+    <a class="btn btn-primary" href="{{ press.url }}" target="_blank">Read on EPA.gov &uarr;</a>
+</div>
+
+{% if press.signalType == "rhetoric" %}
+<div class="signal-contrast-note">
+    <strong>Editorial note:</strong> This is an official EPA press statement.
+    Compare with the <a href="{{ url_for('signals') }}?signal=rollback">regulatory rollback filings</a>
+    from the same period to see where official rhetoric diverges from regulatory action.
+</div>
+{% endif %}
+
+{% if press.body %}
+<h2 class="section-head">Excerpt</h2>
+<div class="abstract-box" data-pagefind-body>{{ press.body }}</div>
+<p style="font-size:0.85rem; color:#888; margin-top:0.5rem;">
+    First 2,500 characters. <a href="{{ press.url }}" target="_blank">Read full press release on EPA.gov &uarr;</a>
+</p>
+{% endif %}
+
+</article>
+
+{# ── Related items ─────────────────────────────────────────────────────────── #}
+{% if related %}
+<h2 class="section-head" style="margin-top:2rem;">Related regulatory filings</h2>
+<p style="font-size:0.85rem; color:#666; margin-bottom:0.75rem;">
+    Semantically similar documents — compare press release framing with what was actually filed.
+</p>
+<ul class="related-list">
+{% for r in related %}
+<li class="related-item">
+    <span class="related-type related-type--{{ r.type }}">{{ r.type | replace('_', ' ') }}</span>
+    <span class="related-title">
+        {% if r.type == "press_release" %}
+        <a href="{{ url_for('press', press_id=r.id.replace('PR-', '')) }}">{{ r.title }}</a>
+        {% elif r.type == "regulation" %}
+        <a href="{{ url_for('document', document_id=r.id) }}">{{ r.title }}</a>
+        {% else %}
+        {{ r.title }}
+        {% endif %}
+    </span>
+    <span class="related-score">{{ "%.0f"|format(r.score * 100) }}%</span>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

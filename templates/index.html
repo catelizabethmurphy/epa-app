@@ -1,115 +1,431 @@
 {% extends "base.html" %}
 
-{% block title %}EPA Clean Air Act Tracker — Overview{% endblock %}
+{% block title %}PFAS Forever Chemicals Tracker{% endblock %}
+
+{% block full_width %}
+
+{# ══════════════════════════════════════════════════════
+   HERO — full-width dark section
+═══════════════════════════════════════════════════════ #}
+<section class="hero-section" id="top">
+    <div class="hero-inner">
+        <div class="hero-eyebrow">PFAS &amp; Forever Chemicals — Federal Policy Tracker</div>
+        <h1 class="hero-headline">
+            The U.S. government promised to protect you<br>
+            from <em>forever chemicals</em>.<br>
+            This is what actually happened.
+        </h1>
+        <p class="hero-sub">
+            PFAS (per- and polyfluoroalkyl substances) are synthetic compounds that don't break down in the environment or in your body. They are linked to cancer, thyroid disruption, and harm to developing children. 176 million Americans drink tap water contaminated with them. The Biden EPA set the first binding drinking water limits in 2024. The Trump EPA began rolling them back in 2025.
+        </p>
+
+        {% if pfas_context and pfas_context.stats %}
+        <div class="hero-stats">
+            {% for stat in pfas_context.stats %}
+            <div class="hero-stat">
+                <span class="hero-stat-num">{{ stat.number }}</span>
+                <span class="hero-stat-label">{{ stat.label }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-num">176M</span>
+                <span class="hero-stat-label">Americans drink PFAS-contaminated tap water</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">97%</span>
+                <span class="hero-stat-label">of Americans have PFAS in their blood</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-num">4 ppt</span>
+                <span class="hero-stat-label">Biden-era drinking water limit — now being rolled back</span>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="hero-cta">
+            <a href="#status" class="btn-hero-primary">See what's changed since Jan. 20, 2025 ↓</a>
+            <a href="{{ url_for('browse') }}" class="btn-hero-secondary">Browse all regulatory filings →</a>
+        </div>
+    </div>
+    <div class="hero-scroll-hint">↓ scroll</div>
+</section>
+
+{# ══════════════════════════════════════════════════════
+   EXPLAINER STRIP
+═══════════════════════════════════════════════════════ #}
+<section class="explainer-section fade-in">
+    <div class="explainer-inner">
+        <div class="explainer-item">
+            <h3>What are PFAS?</h3>
+            <p>Per- and polyfluoroalkyl substances — a family of roughly 12,000 synthetic chemicals first developed in the 1940s for nonstick pans, firefighting foam, waterproof gear, and food packaging. The carbon-fluorine bond is among the strongest in chemistry. Nothing in nature breaks them down. They persist in soil, water, and body tissue indefinitely.</p>
+        </div>
+        <div class="explainer-item">
+            <h3>Why they're dangerous</h3>
+            <p>Studies link PFAS exposure to kidney and testicular cancer, thyroid hormone disruption, weakened immune response (including reduced vaccine effectiveness), and developmental harm in fetuses and infants. The compounds bioaccumulate — building up in tissue over a lifetime. Children, who drink more water relative to body weight, face the highest risk.</p>
+        </div>
+        <div class="explainer-item">
+            <h3>The MAHA contradiction</h3>
+            <p>The Make America Healthy Again agenda, led by HHS Secretary Robert F. Kennedy Jr., explicitly names PFAS as a chronic-disease driver and demands strict regulation. The Trump EPA's simultaneous rollback of binding PFAS drinking water limits creates a direct contradiction within the administration — one this tracker documents.</p>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
 
 {% block content %}
 
-<h2 class="section-head" style="margin-top:1rem;">What this tracks</h2>
-<p style="font-size:0.95rem; max-width:700px;">
-  On March 12, 2025, EPA announced what it called the
-  &ldquo;<a href="https://www.epa.gov/newsreleases/epa-launches-biggest-deregulatory-action-us-history" target="_blank">biggest deregulatory action in U.S. history</a>.&rdquo;
-  This tracker pulls the actual regulations.gov docket record to show what was
-  filed — and what wasn't — since Inauguration Day. It covers State and Tribal
-  Implementation Plans, NAAQS standards, emission rules (MATS, NESHAPs, NSPS),
-  vehicle greenhouse gas standards, the Good Neighbor Plan, Regional Haze,
-  and consent decrees.
-</p>
+{# ══════════════════════════════════════════════════════
+   STATUS: KEY RULES NOW
+═══════════════════════════════════════════════════════ #}
+<section id="status" style="scroll-margin-top: 3.5rem;">
+<h2 class="section-head">Where the key rules stand now</h2>
+<p class="section-note">Updated manually against the Federal Register. Run <code>make fetch-all</code> to refresh data.</p>
 
-<div class="stats-grid">
-    <div class="stat-box">
-        <span class="num">{{ stats.substantive }}</span>
-        <span class="label">Rules, proposals &amp; notices</span>
+{% if status %}
+<div class="status-grid">
+{% for rule in status %}
+<div class="status-card status-card--{{ rule.statusClass }} fade-in">
+    <div class="status-pill status-pill--{{ rule.statusClass }}">{{ rule.statusLabel }}</div>
+    <h3 class="status-title">{{ rule.title }}</h3>
+    <p class="status-subtitle">{{ rule.subtitle }}</p>
+    <p class="status-summary">{{ rule.summary }}</p>
+    {% if rule.get('protectedCompounds') or rule.get('rolledBackCompounds') %}
+    <div class="compound-split">
+        {% if rule.get('protectedCompounds') %}
+        <div class="compound-group compound-group--protected">
+            <span class="compound-label">Retained</span>
+            {% for c in rule.protectedCompounds %}
+            <span class="compound-tag compound-tag--protected">{{ c }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if rule.get('rolledBackCompounds') %}
+        <div class="compound-group compound-group--rollback">
+            <span class="compound-label">Rescinded / Weakened</span>
+            {% for c in rule.rolledBackCompounds %}
+            <span class="compound-tag compound-tag--rollback">{{ c }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
-    <div class="stat-box">
-        <span class="num">{{ stats.open_comment }}</span>
-        <span class="label">Open for comment</span>
-    </div>
-    <div class="stat-box">
-        <span class="num">{{ stats.extensions }}</span>
-        <span class="label">Extensions filed</span>
-    </div>
-    <div class="stat-box">
-        <span class="num">{{ stats.supporting }}</span>
-        <span class="label">Supporting docs</span>
+    {% endif %}
+    <div class="status-footer">
+        {% if rule.docketId %}
+        <a href="{{ url_for('docket', docket_id=rule.docketId) }}">View docket →</a>
+        {% endif %}
+        <span class="status-updated">Updated {{ rule.lastUpdated }}</span>
     </div>
 </div>
-<p style="font-family:'PT Sans', sans-serif; font-size:0.8rem; color:#888; margin:-0.5rem 0 1rem;">
-    {{ stats.total }} total records. Supporting &amp; related materials are shown on individual docket pages.
-    <a href="{{ url_for('browse') }}">Browse all including supporting docs &rarr;</a>
+{% endfor %}
+</div>
+{% else %}
+<p class="empty-state">Status data not loaded. Edit <code>static/data/status.json</code>.</p>
+{% endif %}
+
+{# ── MAHA tension ──────────────────────────────────────────────────────── #}
+<div class="maha-box fade-in">
+    <div class="maha-header">
+        <span class="maha-tag">MAHA Tension</span>
+        <h2>What the MAHA agenda says vs. what EPA is doing</h2>
+    </div>
+    <div class="maha-columns">
+        <div class="maha-col maha-col--wants">
+            <h3>MAHA position</h3>
+            <p>
+                The <em>Make America Healthy Again</em> coalition, led by HHS Secretary
+                Robert F. Kennedy Jr., frames PFAS as a driver of the chronic-disease
+                epidemic — linking these compounds to cancer, thyroid disruption, immune
+                suppression, and developmental problems in children.
+            </p>
+            <p>
+                The MAHA Commission's June 2025 report explicitly named PFAS contamination
+                alongside pesticides and food dyes as contributors to childhood chronic disease.
+                It was released <em>roughly two weeks after</em> EPA announced it would rescind
+                MCLs for four PFAS compounds.
+            </p>
+        </div>
+        <div class="maha-col maha-col--action">
+            <h3>EPA's regulatory record</h3>
+            <ul class="maha-action-list">
+                <li class="maha-action--rollback">
+                    <strong>Day 2:</strong> Withdrew effluent limits requiring PFAS discharge controls from industrial facilities
+                </li>
+                <li class="maha-action--rollback">
+                    <strong>Rolled back:</strong> MCLs for GenX, PFHxS, PFNA, PFBS rescinded (May 2025)
+                </li>
+                <li class="maha-action--rollback">
+                    <strong>Weakened:</strong> PFOA/PFOS compliance deadline extended 2029 → 2031
+                </li>
+                <li class="maha-action--rollback">
+                    <strong>Proposed:</strong> TSCA reporting exemptions would reduce required industry disclosure
+                </li>
+                <li class="maha-action--protection">
+                    <strong>Retained:</strong> 4 ppt MCLs for PFOA and PFOS (upheld under court pressure)
+                </li>
+                <li class="maha-action--protection">
+                    <strong>Retained:</strong> CERCLA hazardous substance designation for PFOA/PFOS
+                </li>
+            </ul>
+            <a href="{{ url_for('signals') }}" class="maha-more-link">Full mixed signals timeline →</a>
+        </div>
+    </div>
+</div>
+</section>
+
+{# ══════════════════════════════════════════════════════
+   TRUMP 1 vs TRUMP 2 — ARC OF REGULATION
+═══════════════════════════════════════════════════════ #}
+{% if trump1 %}
+<section id="history" style="scroll-margin-top: 3.5rem;">
+<h2 class="section-head" style="margin-top: 2.5rem;">The arc of federal PFAS regulation</h2>
+<p class="section-note">
+    Trump 1 started the regulatory process. Biden completed it. Trump 2 is unwinding the results.
+    <a href="{{ trump1.sourceUrl }}" target="_blank" style="font-size:0.8rem;">Source: EPA Jan. 19, 2021 →</a>
 </p>
 
-<div style="display:grid; grid-template-columns: 1fr 1fr; gap:2rem; margin-top:1rem;">
-    <div>
-        <h2 class="section-head">Documents by program</h2>
-        <ul class="category-list">
-          {% for cat, n in stats.categories %}
-          <li>
-            <a href="{{ url_for('browse') }}?category={{ cat | urlencode }}">{{ cat }}</a>
-            <span class="count">{{ n }}</span>
-          </li>
-          {% endfor %}
+<div class="arc-grid fade-in">
+    <div class="arc-era arc-era--trump1">
+        <div class="arc-era-label">Trump 1 (2017–2021)</div>
+        <div class="arc-era-tag arc-era-tag--building">Building the framework</div>
+        <ul class="arc-list">
+            <li>Released first-ever PFAS Action Plan (Feb. 2019)</li>
+            <li>Added 172 PFAS to Toxic Release Inventory</li>
+            <li>New TSCA rule: PFAS can't reach market without EPA review</li>
+            <li>Formally initiated MCL development for PFOA/PFOS</li>
+            <li>Began CERCLA hazardous substance evaluation</li>
+            <li>Proposed UCMR5: nationwide PFAS testing in water systems</li>
+            <li>Awarded $15M+ in PFAS research grants</li>
+            <li>16 PFAS enforcement actions</li>
+        </ul>
+        <p class="arc-note">Critical gap: EPA started the MCL process but did not complete it.</p>
+    </div>
+
+    <div class="arc-era arc-era--biden">
+        <div class="arc-era-label">Biden (2021–2025)</div>
+        <div class="arc-era-tag arc-era-tag--completing">Completing the rules</div>
+        <ul class="arc-list">
+            <li>April 2024: First binding MCLs for 6 PFAS (4 ppt PFOA/PFOS)</li>
+            <li>May 2024: PFOA/PFOS designated CERCLA hazardous substances</li>
+            <li>UCMR5 confirmed PFAS in water for ~70M Americans</li>
+            <li>TSCA Section 8(a)(7): mandatory PFAS reporting by industry</li>
         </ul>
     </div>
-    <div>
-        <h2 class="section-head">Top states / tribal</h2>
-        <ul class="category-list">
-          {% for state, n in stats.states %}
-          <li>
-            <a href="{{ url_for('browse') }}?state={{ state | urlencode }}">{{ state }}</a>
-            <span class="count">{{ n }}</span>
-          </li>
-          {% endfor %}
+
+    <div class="arc-era arc-era--trump2">
+        <div class="arc-era-label">Trump 2 (2025–)</div>
+        <div class="arc-era-tag arc-era-tag--unwinding">Unwinding the results</div>
+        <ul class="arc-list">
+            <li class="arc-list--rollback">Day 2: Withdrew industrial PFAS discharge limits (ELG rule)</li>
+            <li class="arc-list--rollback">May 2025: Rescinded MCLs for GenX, PFHxS, PFNA, PFBS</li>
+            <li class="arc-list--rollback">Extended PFOA/PFOS compliance: 2029 → 2031</li>
+            <li class="arc-list--rollback">Nov 2025: Proposed exemptions to TSCA reporting rule</li>
+            <li class="arc-list--protection">Retained PFOA/PFOS MCLs (4 ppt)</li>
+            <li class="arc-list--protection">Retained CERCLA designation (pledged to "hold polluters accountable")</li>
+            <li class="arc-list--rhetoric">Launched PFAS-OUT initiative (non-binding, guidance only)</li>
         </ul>
     </div>
 </div>
+</section>
+{% endif %}
 
-<h2 class="section-head" style="margin-top:2rem;">Recent activity</h2>
+{# ══════════════════════════════════════════════════════
+   CALENDAR TIMELINE
+═══════════════════════════════════════════════════════ #}
+{% if calendar %}
+<section id="calendar" style="scroll-margin-top: 3.5rem; margin-top: 2.5rem;">
+<h2 class="section-head">Timeline: key events by month</h2>
+<p class="section-note">Hand-curated from press releases, Federal Register, and court records. Edit <code>static/data/events.json</code> to update.</p>
 
+<div class="cal-timeline">
+{% for month in calendar %}
+<div class="cal-month fade-in">
+    <div class="cal-month-label">{{ month.label }}</div>
+    <div class="cal-events">
+    {% for ev in month.events %}
+    <div class="cal-event cal-event--{{ ev.signalType }}">
+        <div class="cal-event-header">
+            <span class="badge badge-signal badge-signal--{{ ev.signalType }}">{{ ev.signalType }}</span>
+            {% if ev.program %}<span class="badge badge-program">{{ ev.program }}</span>{% endif %}
+            {% if ev.mahaRelevant %}<span class="badge badge-maha" title="MAHA relevant">MAHA</span>{% endif %}
+            {% if ev.isPreTrump %}<span class="badge badge-pretrum">Pre-2025</span>{% endif %}
+            <span class="cal-event-date">{{ ev.date }}</span>
+        </div>
+        <div class="cal-event-title">
+            {% if ev.sourceUrl %}
+            <a href="{{ ev.sourceUrl }}" target="_blank">{{ ev.title }}</a>
+            {% elif ev.docketId %}
+            <a href="{{ url_for('docket', docket_id=ev.docketId) }}">{{ ev.title }}</a>
+            {% else %}
+            {{ ev.title }}
+            {% endif %}
+        </div>
+        <p class="cal-event-desc">{{ ev.description }}</p>
+        {% if ev.compounds %}
+        <div class="cal-event-compounds">
+            {% for c in ev.compounds %}<span class="compound-tag compound-tag--neutral">{{ c }}</span>{% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+    </div>
+</div>
+{% endfor %}
+</div>
+</section>
+{% endif %}
+
+{# ══════════════════════════════════════════════════════
+   OPEN FOR COMMENT
+═══════════════════════════════════════════════════════ #}
+{% if open_comment %}
+<section id="comment" style="scroll-margin-top: 3.5rem; margin-top: 2rem;">
+<h2 class="section-head">Open for public comment</h2>
+<table class="doc-table">
+    <thead>
+        <tr>
+            <th>Deadline</th>
+            <th>Title</th>
+            <th class="hide-mobile">Signal</th>
+            <th class="hide-mobile">Program</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for doc in open_comment %}
+    <tr>
+        <td style="white-space:nowrap; font-size:0.85rem;">
+            {{ doc.commentEndDate[:10] if doc.commentEndDate else "—" }}
+        </td>
+        <td>
+            <a href="{{ url_for('document', document_id=doc.documentId) }}">{{ doc.title or doc.documentId }}</a>
+        </td>
+        <td class="hide-mobile">
+            {% if doc.signalType %}
+            <span class="badge badge-signal badge-signal--{{ doc.signalType }}">{{ doc.signalType }}</span>
+            {% endif %}
+        </td>
+        <td class="hide-mobile" style="font-size:0.85rem;">{{ doc.program or doc.category or "—" }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</section>
+{% endif %}
+
+{# ══════════════════════════════════════════════════════
+   UPCOMING: UNIFIED AGENDA
+═══════════════════════════════════════════════════════ #}
+{% if agenda %}
+<section id="upcoming" style="scroll-margin-top: 3.5rem; margin-top: 2rem;">
+<h2 class="section-head">What's coming down the pike</h2>
+<p class="section-note">
+    From the <strong>Unified Regulatory Agenda</strong> — the government's forward calendar of planned EPA actions.
+    Published by OIRA twice yearly. Items listed here are planned, not final.
+    Run <code>make fetch-agenda</code> to update.
+</p>
+<div class="agenda-list fade-in">
+{% for item in agenda %}
+<div class="agenda-item agenda-item--{{ item.stage }}">
+    <div class="agenda-meta">
+        <span class="agenda-stage agenda-stage--{{ item.stage }}">{{ item.stage | replace('_', ' ') | title }}</span>
+        {% if item.rin %}<span class="agenda-rin">RIN {{ item.rin }}</span>{% endif %}
+        {% if item.nextAction %}
+        <span class="agenda-next">Next: {{ item.nextActionLabel or item.nextAction }}{% if item.nextDate %} ({{ item.nextDate }}){% endif %}</span>
+        {% endif %}
+        <span class="agenda-term">{{ item.agendaTerm }} {{ item.agendaYear }}</span>
+    </div>
+    <div class="agenda-title">
+        {% if item.reginfoUrl %}
+        <a href="{{ item.reginfoUrl }}" target="_blank">{{ item.title }}</a>
+        {% else %}
+        {{ item.title }}
+        {% endif %}
+    </div>
+    {% if item.abstract %}
+    <p class="agenda-abstract">{{ item.abstract[:280] }}{% if item.abstract|length > 280 %}…{% endif %}</p>
+    {% endif %}
+</div>
+{% endfor %}
+</div>
+</section>
+{% endif %}
+
+{# ══════════════════════════════════════════════════════
+   RECENT REGULATORY FILINGS
+═══════════════════════════════════════════════════════ #}
+<section id="filings" style="scroll-margin-top: 3.5rem; margin-top: 2rem;">
+<h2 class="section-head">Recent PFAS regulatory filings</h2>
 <table class="doc-table">
     <thead>
         <tr>
             <th>Posted</th>
             <th>Title</th>
-            <th>Type</th>
-            <th class="hide-mobile">Category</th>
-            <th class="hide-mobile">State</th>
+            <th>Signal</th>
+            <th class="hide-mobile">Type</th>
+            <th class="hide-mobile">Program</th>
         </tr>
     </thead>
     <tbody>
     {% for doc in recent %}
     <tr>
-        <td style="white-space:nowrap; font-family:'PT Sans', sans-serif; font-size:0.8rem;">
+        <td style="white-space:nowrap; font-size:0.85rem;">
             {{ doc.postedDate[:10] if doc.postedDate else "—" }}
         </td>
         <td>
             <a href="{{ url_for('document', document_id=doc.documentId) }}">{{ doc.title or doc.documentId }}</a>
-            {% if doc.isExtension %}
-            <span class="badge badge-ext" title="Deadline/comment extension">ext</span>
-            {% endif %}
+            {% if doc.openForComment %}<span class="badge badge-open">open</span>{% endif %}
         </td>
         <td>
-            {% set t = doc.documentType or "" %}
-            {% if t == "Rule" %}
-              <span class="badge badge-type-Rule">Rule</span>
-            {% elif t == "Proposed Rule" %}
-              <span class="badge badge-type-Proposed">Proposed</span>
-            {% elif t == "Notice" %}
-              <span class="badge badge-type-Notice">Notice</span>
-            {% elif t == "Supporting & Related Material" %}
-              <span class="badge badge-type-Supporting">Support</span>
-            {% else %}
-              <span class="badge badge-type-Other">{{ t or "—" }}</span>
+            {% if doc.signalType %}
+            <span class="badge badge-signal badge-signal--{{ doc.signalType }}">{{ doc.signalType }}</span>
             {% endif %}
         </td>
-        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem;">{{ doc.category or "—" }}</td>
-        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem;">{{ doc.state or "—" }}</td>
+        <td class="hide-mobile">
+            {% set t = doc.documentType or "" %}
+            {% if t == "Rule" %}<span class="badge badge-type-Rule">Rule</span>
+            {% elif t == "Proposed Rule" %}<span class="badge badge-type-Proposed">Proposed</span>
+            {% elif t == "Notice" %}<span class="badge badge-type-Notice">Notice</span>
+            {% else %}<span class="badge badge-type-Other">{{ t or "—" }}</span>
+            {% endif %}
+        </td>
+        <td class="hide-mobile" style="font-size:0.85rem;">{{ doc.program or doc.category or "—" }}</td>
     </tr>
     {% endfor %}
     </tbody>
 </table>
-
-<p style="margin-top:1rem; font-family:'PT Sans', sans-serif; font-size:0.875rem;">
-  <a href="{{ url_for('browse') }}">Browse all {{ stats.total }} documents &rarr;</a>
+<p style="margin-top:1rem; font-size:0.875rem;">
+    <a href="{{ url_for('browse') }}">Browse all PFAS regulatory documents →</a>
 </p>
+</section>
+
+{# ══════════════════════════════════════════════════════
+   KEY COVERAGE & SOURCES
+═══════════════════════════════════════════════════════ #}
+{% if sources %}
+<section id="coverage" style="scroll-margin-top: 3.5rem; margin-top: 2rem;">
+<h2 class="section-head">Key coverage &amp; sources</h2>
+<p class="section-note">Curated links. Edit <code>static/data/sources.json</code> to update.</p>
+<ul class="source-list">
+{% for src in sources %}
+<li class="source-item fade-in">
+    <div class="source-meta">
+        <span class="source-pub">{{ src.publication }}</span>
+        {% if src.date %}<span class="source-date">{{ src.date }}</span>{% endif %}
+        {% if src.sourcePerspective %}
+        <span class="badge badge-perspective badge-perspective--{{ src.sourcePerspective }}">{{ src.sourcePerspective }}</span>
+        {% endif %}
+        {% for tag in src.get('tags', []) %}
+        <span class="badge badge-tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+    <a href="{{ src.url }}" target="_blank" class="source-title">{{ src.title }}</a>
+    {% if src.summary %}<p class="source-summary">{{ src.summary }}</p>{% endif %}
+</li>
+{% endfor %}
+</ul>
+</section>
+{% endif %}
 
 {% endblock %}

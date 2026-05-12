@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Browse Documents — EPA Clean Air Act Tracker{% endblock %}
+{% block title %}Browse Documents — PFAS &amp; TSCA Tracker{% endblock %}
 
 {% block content %}
 
-<h2 class="section-head" style="margin-top:1rem;">Browse all documents</h2>
+<h2 class="section-head" style="margin-top:1rem;">Browse regulatory filings</h2>
 
 <div class="filter-bar">
     <div>
@@ -12,29 +12,31 @@
         <input type="text" id="f-search" placeholder="keyword…">
     </div>
     <div>
-        <label for="f-cat">Program / category</label>
+        <label for="f-signal">Signal type</label>
+        <select id="f-signal">
+            <option value="">All signals</option>
+            <option value="rollback">Rollback</option>
+            <option value="protection">Protection</option>
+            <option value="delay">Delay</option>
+            <option value="litigation">Litigation</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+    <div>
+        <label for="f-cat">Program</label>
         <select id="f-cat">
-            <option value="">All categories</option>
+            <option value="">All programs</option>
             {% for cat in categories %}
             <option value="{{ cat }}">{{ cat }}</option>
             {% endfor %}
         </select>
     </div>
     <div>
-        <label for="f-state">State / territory</label>
-        <select id="f-state">
-            <option value="">All states</option>
-            {% for s in states %}
-            <option value="{{ s }}">{{ s }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <div>
-        <label for="f-region">EPA Region</label>
-        <select id="f-region">
-            <option value="">All regions</option>
-            {% for r in regions %}
-            <option value="{{ r }}">{{ r }}</option>
+        <label for="f-compound">Compound</label>
+        <select id="f-compound">
+            <option value="">All compounds</option>
+            {% for c in compounds %}
+            <option value="{{ c }}">{{ c }}</option>
             {% endfor %}
         </select>
     </div>
@@ -48,55 +50,59 @@
         </select>
     </div>
     <div>
+        <label for="f-era">Administration</label>
+        <select id="f-era">
+            <option value="">All eras</option>
+            <option value="trump1">Trump 1 (2017–2021)</option>
+            <option value="biden">Biden (2021–2025)</option>
+            <option value="trump2">Trump 2 (2025–)</option>
+        </select>
+    </div>
+    <div>
         <label for="f-open">Comment period</label>
         <select id="f-open">
             <option value="">Any</option>
             <option value="open">Open now</option>
-            <option value="ext">Extension filed</option>
         </select>
-    </div>
-    <div style="align-self:center; padding-top:1.1rem;">
-        <label style="font-size:0.875rem; color:#444; cursor:pointer; text-transform:none; letter-spacing:0;">
-            <input type="checkbox" id="f-supporting" style="margin-right:4px;">
-            Include supporting docs
-        </label>
     </div>
 </div>
 
-<p id="result-count"></p>
+<p id="result-count" style="font-size:0.875rem; color:#666; margin-bottom:0.5rem;"></p>
 
 <table class="doc-table" id="doc-table">
     <thead>
         <tr>
             <th>Posted</th>
             <th>Title</th>
+            <th>Signal</th>
             <th class="hide-mobile">Type</th>
-            <th class="hide-mobile">Category</th>
-            <th class="hide-mobile">Location</th>
-            <th class="hide-mobile">Comments</th>
+            <th class="hide-mobile">Program</th>
+            <th class="hide-mobile">Compounds</th>
         </tr>
     </thead>
     <tbody id="doc-tbody">
     {% for doc in documents %}
     <tr
       data-title="{{ (doc.title or '') | lower }}"
+      data-signal="{{ doc.signalType or '' }}"
       data-cat="{{ doc.category or '' }}"
-      data-states="{{ (doc.states or []) | join('|') | lower }}"
-      data-region="{{ doc.epaRegion or '' }}"
+      data-compound="{{ (doc.compounds or []) | join('|') }}"
       data-type="{{ doc.documentType or '' }}"
       data-open="{{ 'open' if doc.openForComment else '' }}"
-      data-ext="{{ 'ext' if doc.isExtension else '' }}"
+      data-era="{{ doc.era or '' }}"
     >
-        <td style="white-space:nowrap; font-family:'PT Sans', sans-serif; font-size:0.8rem;">
+        <td style="white-space:nowrap; font-size:0.8rem;">
             {{ doc.postedDate[:10] if doc.postedDate else "—" }}
         </td>
         <td>
             <a href="{{ url_for('document', document_id=doc.documentId) }}">{{ doc.title or doc.documentId }}</a>
-            {% if doc.isExtension %}
-            <span class="badge badge-ext" title="Deadline/comment extension">ext</span>
-            {% endif %}
-            {% if doc.openForComment %}
-            <span class="badge badge-open">open</span>
+            {% if doc.era %}<span class="badge badge-era badge-era--{{ doc.era }}">{{ {'trump1':'T1','biden':'Biden','trump2':'T2'}.get(doc.era, doc.era) }}</span>{% endif %}
+            {% if doc.openForComment %}<span class="badge badge-open">open</span>{% endif %}
+            {% if doc.mahaRelevant %}<span class="badge badge-maha" title="MAHA-relevant">M</span>{% endif %}
+        </td>
+        <td>
+            {% if doc.signalType %}
+            <span class="badge badge-signal badge-signal--{{ doc.signalType }}">{{ doc.signalType }}</span>
             {% endif %}
         </td>
         <td class="hide-mobile">
@@ -108,20 +114,11 @@
             {% else %}<span class="badge badge-type-Other">{{ t or "—" }}</span>
             {% endif %}
         </td>
-        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem;">{{ doc.category or "—" }}</td>
-        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem;">
-            {% if doc.location %}
-              {{ doc.location }}{% if doc.states and doc.states | length > 0 %}, {{ doc.states | join(" / ") }}{% endif %}
-            {% elif doc.states and doc.states | length > 0 %}
-              {{ doc.states | join(" / ") }}
-            {% elif doc.epaRegion %}
-              <span style="color:#999;">{{ doc.epaRegion }}</span>
-            {% else %}
-              —
-            {% endif %}
-        </td>
-        <td class="hide-mobile" style="font-family:'PT Sans', sans-serif; font-size:0.8rem; text-align:right;">
-            {% if doc.commentCount %}{{ doc.commentCount }}{% else %}—{% endif %}
+        <td class="hide-mobile" style="font-size:0.8rem;">{{ doc.program or doc.category or "—" }}</td>
+        <td class="hide-mobile" style="font-size:0.8rem;">
+            {% for c in (doc.compounds or [])[:3] %}
+            <span class="badge badge-compound">{{ c }}</span>
+            {% endfor %}
         </td>
     </tr>
     {% endfor %}
@@ -133,57 +130,48 @@
 {% block scripts %}
 <script>
 (function () {
-    const search      = document.getElementById('f-search');
-    const catSel      = document.getElementById('f-cat');
-    const stateSel    = document.getElementById('f-state');
-    const regionSel   = document.getElementById('f-region');
-    const typeSel     = document.getElementById('f-type');
-    const openSel     = document.getElementById('f-open');
-    const supportChk  = document.getElementById('f-supporting');
-    const count       = document.getElementById('result-count');
-    const rows        = Array.from(document.querySelectorAll('#doc-tbody tr'));
+    const searchEl  = document.getElementById('f-search');
+    const sigSel    = document.getElementById('f-signal');
+    const catSel    = document.getElementById('f-cat');
+    const compSel   = document.getElementById('f-compound');
+    const typeSel   = document.getElementById('f-type');
+    const eraSel    = document.getElementById('f-era');
+    const openSel   = document.getElementById('f-open');
+    const countEl   = document.getElementById('result-count');
+    const rows      = Array.from(document.querySelectorAll('#doc-tbody tr'));
 
-    const SUPPORT_TYPE = 'supporting & related material';
-
-    // Pre-fill from URL query params
     const params = new URLSearchParams(window.location.search);
-    if (params.get('category'))  catSel.value   = params.get('category');
-    if (params.get('state'))     stateSel.value  = params.get('state');
-    if (params.get('region'))    regionSel.value = params.get('region');
-    // Show supporting if explicitly requested or if type filter is set to it
-    if (params.get('supporting') === '1' || params.get('type') === 'Supporting & Related Material') {
-        supportChk.checked = true;
-    }
+    if (params.get('signal'))   sigSel.value  = params.get('signal');
+    if (params.get('category')) catSel.value  = params.get('category');
+    if (params.get('compound')) compSel.value = params.get('compound');
+    if (params.get('era'))      eraSel.value  = params.get('era');
 
     function filter() {
-        const q          = search.value.toLowerCase().trim();
-        const cat        = catSel.value;
-        const state      = stateSel.value.toLowerCase();
-        const region     = regionSel.value;
-        const tp         = typeSel.value;
-        const op         = openSel.value;
-        const showSupport= supportChk.checked;
-        let visible      = 0;
+        const q    = searchEl.value.toLowerCase().trim();
+        const sig  = sigSel.value;
+        const cat  = catSel.value;
+        const comp = compSel.value;
+        const tp   = typeSel.value;
+        const era  = eraSel.value;
+        const op   = openSel.value;
+        let visible = 0;
 
         rows.forEach(function (row) {
-            const isSupport = (row.dataset.type || '').toLowerCase() === SUPPORT_TYPE;
             const pass =
-                (showSupport || !isSupport) &&
-                (!q      || (row.dataset.title || '').includes(q)) &&
-                (!cat    || row.dataset.cat === cat) &&
-                (!state  || (row.dataset.states || '').split('|').includes(state)) &&
-                (!region || row.dataset.region === region) &&
-                (!tp     || row.dataset.type === tp) &&
-                (!op     || (op === 'open' ? row.dataset.open === 'open' : row.dataset.ext === 'ext'));
-
+                (!q    || (row.dataset.title || '').includes(q)) &&
+                (!sig  || row.dataset.signal === sig) &&
+                (!cat  || row.dataset.cat === cat) &&
+                (!comp || (row.dataset.compound || '').split('|').includes(comp)) &&
+                (!tp   || row.dataset.type === tp) &&
+                (!era  || row.dataset.era === era) &&
+                (!op   || row.dataset.open === 'open');
             row.style.display = pass ? '' : 'none';
             if (pass) visible++;
         });
-
-        count.textContent = visible + ' document' + (visible !== 1 ? 's' : '');
+        countEl.textContent = visible + ' document' + (visible !== 1 ? 's' : '');
     }
 
-    [search, catSel, stateSel, regionSel, typeSel, openSel, supportChk].forEach(function (el) {
+    [searchEl, sigSel, catSel, compSel, typeSel, eraSel, openSel].forEach(function (el) {
         el.addEventListener('input', filter);
         el.addEventListener('change', filter);
     });

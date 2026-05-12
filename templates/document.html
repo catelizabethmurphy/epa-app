@@ -1,10 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}{{ document.title or document.documentId }} — EPA Clean Air Act Tracker{% endblock %}
+{% block title %}{{ document.title or document.documentId }} — PFAS &amp; TSCA Tracker{% endblock %}
+{% block og_title %}{{ document.title or document.documentId }}{% endblock %}
+{% block og_description %}{{ fr.abstract[:200] if fr and fr.abstract else (docket.abstract[:200] if docket and docket.abstract else "EPA regulatory document") }}{% endblock %}
 
 {% block content %}
 
-<p style="font-family:'PT Sans', sans-serif; font-size:0.85rem; color:#666; margin-bottom:0.25rem;">
+<p style="font-size:0.85rem; color:#666; margin-bottom:0.25rem;">
     <a href="{{ url_for('index') }}">Overview</a>
     {% if docket %}
     &rsaquo; <a href="{{ url_for('docket', docket_id=document.docketId) }}">{{ document.docketId }}</a>
@@ -28,21 +30,20 @@
     {% else %}<span class="badge badge-type-Other">{{ t }}</span>
     {% endif %}
 
+    {% if document.signalType %}
+    <span class="badge badge-signal badge-signal--{{ document.signalType }}" data-pagefind-filter="Signal">{{ document.signalType }}</span>
+    {% endif %}
+
     {% if document.category %}
-    <span class="badge badge-cat" data-pagefind-filter="Category">{{ document.category }}</span>
+    <span class="badge badge-cat" data-pagefind-filter="Program">{{ document.category }}</span>
     {% endif %}
 
-    {% if document.state %}
-    <span class="badge" style="background:#e8f5e9; color:#2e7d32;"
-          data-pagefind-filter="State">{{ document.state }}</span>
-    {% endif %}
+    {% for c in (document.compounds or [])[:4] %}
+    <span class="badge badge-compound" data-pagefind-filter="Compound">{{ c }}</span>
+    {% endfor %}
 
-    {% if document.epaRegion %}
-    <span data-pagefind-filter="Region" style="display:none">{{ document.epaRegion }}</span>
-    {% endif %}
-
-    {% if document.isExtension %}
-    <span class="badge badge-ext">Extension</span>
+    {% if document.mahaRelevant %}
+    <span class="badge badge-maha">MAHA relevant</span>
     {% endif %}
 
     {% if document.openForComment %}
@@ -59,12 +60,12 @@
        href="https://www.regulations.gov/document/{{ document.documentId }}"
        target="_blank">View on regulations.gov &uarr;</a>
 
-    {% if fr.html_url %}
-    <a class="btn btn-secondary" href="{{ fr.html_url }}" target="_blank">Federal Register (HTML) &uarr;</a>
+    {% if fr and fr.htmlUrl %}
+    <a class="btn btn-secondary" href="{{ fr.htmlUrl }}" target="_blank">Federal Register (HTML) &uarr;</a>
     {% endif %}
 
-    {% if fr.pdf_url %}
-    <a class="btn btn-secondary" href="{{ fr.pdf_url }}" target="_blank">Download PDF &uarr;</a>
+    {% if fr and fr.pdfUrl %}
+    <a class="btn btn-secondary" href="{{ fr.pdfUrl }}" target="_blank">Download PDF &uarr;</a>
     {% endif %}
 </div>
 
@@ -91,33 +92,29 @@
         <dd>{{ document.lastModifiedDate[:10] }}</dd>
         {% endif %}
 
-        {% if document.states and document.states | length > 0 %}
-        <dt>{% if document.states | length > 1 %}States / territories{% else %}State / territory{% endif %}</dt>
-        <dd>
-            {{ document.states | join(", ") }}
-            {% if document.location %} &mdash; <em>{{ document.location }}</em>{% endif %}
-        </dd>
-        {% elif document.state %}
-        <dt>State / territory</dt>
-        <dd>{{ document.state }}{% if document.location %} — <em>{{ document.location }}</em>{% endif %}</dd>
+        {% if document.program %}
+        <dt>Regulatory program</dt>
+        <dd>{{ document.program }}</dd>
         {% endif %}
 
-        <dt>EPA Region</dt>
-        <dd>{{ document.epaRegion or "—" }}</dd>
-
-        {% if document.frDocNum %}
-        <dt>FR Document #</dt>
-        <dd>{{ document.frDocNum }}</dd>
+        {% if document.tscaSection %}
+        <dt>TSCA section</dt>
+        <dd>Section {{ document.tscaSection }}</dd>
         {% endif %}
 
-        {% if fr.action %}
+        {% if fr and fr.action %}
         <dt>Action type</dt>
         <dd>{{ fr.action }}</dd>
         {% endif %}
 
-        {% if fr.publication_date %}
-        <dt>FR Publication date</dt>
-        <dd>{{ fr.publication_date }}</dd>
+        {% if fr and fr.publicationDate %}
+        <dt>FR publication date</dt>
+        <dd>{{ fr.publicationDate }}</dd>
+        {% endif %}
+
+        {% if fr and fr.effectiveDate %}
+        <dt>Effective date</dt>
+        <dd>{{ fr.effectiveDate }}</dd>
         {% endif %}
 
         {% if document.commentStartDate or document.commentEndDate %}
@@ -134,6 +131,11 @@
         <dd>{{ document.commentCount }}</dd>
         {% endif %}
 
+        {% if document.frDocNum %}
+        <dt>FR document #</dt>
+        <dd>{{ document.frDocNum }}</dd>
+        {% endif %}
+
         {% if document.searchTerms %}
         <dt>Matched search terms</dt>
         <dd>{{ document.searchTerms | join(", ") }}</dd>
@@ -141,24 +143,20 @@
     </dl>
 </div>
 
-{% if fr.abstract %}
+{% if fr and fr.abstract %}
 <h2 class="section-head">Summary</h2>
-<div class="abstract-box">
-    {{ fr.abstract }}
-</div>
+<div class="abstract-box">{{ fr.abstract }}</div>
 {% endif %}
 
 {% if docket and docket.abstract %}
 <h2 class="section-head">Docket description</h2>
-<div class="docket-abstract">
-    {{ docket.abstract }}
-</div>
+<div class="docket-abstract">{{ docket.abstract }}</div>
 {% endif %}
 
 {% if full_text %}
 <h2 class="section-head">Full text</h2>
 <details>
-    <summary style="cursor:pointer; font-family:'PT Sans', sans-serif; font-size:0.875rem; color:#1a5276; margin-bottom:0.5rem;">
+    <summary style="cursor:pointer; font-size:0.875rem; color:#1a5276; margin-bottom:0.5rem;">
         Show full Federal Register text ({{ (full_text | length / 1000) | int }}k characters)
     </summary>
     <div style="font-size:0.85rem; line-height:1.7; white-space:pre-wrap; max-height:600px; overflow-y:auto; border:1px solid #ddd; padding:1rem; background:#fff; margin-top:0.5rem;">{{ full_text }}</div>
@@ -166,5 +164,28 @@
 {% endif %}
 
 </article>
+
+{# ── Related items (semantic similarity) ──────────────────────────────────── #}
+{% if related %}
+<h2 class="section-head" style="margin-top:2rem;">Related items</h2>
+<p style="font-size:0.85rem; color:#666; margin-bottom:0.75rem;">Semantically similar documents and press releases.</p>
+<ul class="related-list">
+{% for r in related %}
+<li class="related-item">
+    <span class="related-type related-type--{{ r.type }}">{{ r.type | replace('_', ' ') }}</span>
+    <span class="related-title">
+        {% if r.type == "press_release" %}
+        <a href="{{ url_for('press', press_id=r.id.replace('PR-', '')) }}">{{ r.title }}</a>
+        {% elif r.type == "regulation" %}
+        <a href="{{ url_for('document', document_id=r.id) }}">{{ r.title }}</a>
+        {% else %}
+        {{ r.title }}
+        {% endif %}
+    </span>
+    <span class="related-score" title="Semantic similarity score">{{ "%.0f"|format(r.score * 100) }}%</span>
+</li>
+{% endfor %}
+</ul>
+{% endif %}
 
 {% endblock %}
