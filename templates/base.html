@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}PFAS Forever Chemicals Tracker{% endblock %}</title>
-    <meta name="description" content="{% block description %}Tracking Trump administration actions on PFAS — rollbacks, protections, and mixed signals since January 20, 2025.{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}PFAS Forever Chemicals Tracker{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Tracking Trump administration actions on PFAS — rollbacks, protections, and mixed signals since January 20, 2025.{% endblock %}">
+    <title>{% block title %}PFAS Forever Chemicals — Federal Policy Record{% endblock %}</title>
+    <meta name="description" content="{% block description %}A documentary record of U.S. federal policy on PFAS — per- and polyfluoroalkyl substances — from the first regulatory actions to today's partial rollback.{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}PFAS Forever Chemicals — Federal Policy Record{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Tracking what three administrations promised and did on PFAS drinking water, Superfund liability, and chemical reporting.{% endblock %}">
     <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block head %}{% endblock %}
 </head>
@@ -20,9 +20,10 @@
         <a href="{{ url_for('index') }}" class="nav-brand">PFAS Tracker</a>
         <div class="nav-links">
             <a href="{{ url_for('index') }}">Overview</a>
-            <a href="{{ url_for('signals') }}">Mixed Signals</a>
-            <a href="{{ url_for('browse') }}">Browse Docs</a>
-            <a href="{{ url_for('search') }}">Search</a>
+            <a href="{{ url_for('explore') }}">Explore</a>
+            <a href="{{ url_for('state_tracker') }}">States</a>
+            <a href="{{ url_for('what_are_pfas') }}">What are PFAS</a>
+            <a href="{{ url_for('glossary') }}">Glossary</a>
         </div>
     </div>
 </nav>
@@ -38,18 +39,17 @@
         <p>
             Regulatory data: <a href="https://www.regulations.gov" target="_blank">regulations.gov</a>
             &amp; <a href="https://www.federalregister.gov" target="_blank">Federal Register API</a>.
-            Press releases: <a href="https://www.epa.gov/newsreleases" target="_blank">EPA Newsroom</a>.
+            Press releases: <a href="https://www.epa.gov/pfas/press-releases-related-pfas" target="_blank">EPA PFAS newsroom</a>.
             PFAS statistics: EWG, CDC NHANES, EPA UCMR5.
-            Documents posted on or after January 20, 2025.
         </p>
-        <p style="margin-top:0.4rem;">
+        <p style="margin-top:0.4rem; color:#555;">
             Data last updated: <strong>{{ build_date if build_date is defined else "run make fetch-all to update" }}</strong>
         </p>
     </div>
 </footer>
 
 <script>
-// Fade-in sections as they enter the viewport
+// Fade-in on scroll
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
         if (e.isIntersecting) {
@@ -60,10 +60,21 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.08 });
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-// Sticky nav shrinks on scroll
+// Sticky nav shadow
 window.addEventListener('scroll', () => {
-    document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 60);
+    document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Scrollytelling: highlight step currently in view
+const scrollySteps = document.querySelectorAll('.scrolly-step');
+if (scrollySteps.length) {
+    const stepObs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            e.target.classList.toggle('is-active', e.isIntersecting);
+        });
+    }, { threshold: 0.45 });
+    scrollySteps.forEach(el => stepObs.observe(el));
+}
 </script>
 
 {% block scripts %}{% endblock %}

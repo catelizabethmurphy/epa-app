@@ -16,44 +16,30 @@
 
 <article data-pagefind-body>
 
-<h1 style="font-size:1.3rem; margin:0.25rem 0 0.5rem; line-height:1.4;"
+<div class="doc-byline">
+    <span>{{ document.documentType or "Document" }}</span>
+    <span class="doc-byline-sep">·</span>
+    <span>{{ document.postedDate[:10] if document.postedDate else "—" }}</span>
+    {% if document.program %}
+    <span class="doc-byline-sep">·</span>
+    <span>{{ document.program }}</span>
+    {% endif %}
+    {% if document.era %}
+    <span class="doc-byline-sep">·</span>
+    <span>{% if document.era == "trump1" %}Trump 1{% elif document.era == "biden" %}Biden{% elif document.era == "trump2" %}Trump 2{% else %}{{ document.era }}{% endif %}</span>
+    {% endif %}
+    {% if document.signalType and document.signalType != "other" %}
+    <span class="doc-byline-sep">·</span>
+    <span class="doc-byline-signal doc-byline-signal--{{ document.signalType }}" data-pagefind-filter="Signal:{{ document.signalType }}">{{ document.signalType }}</span>
+    {% endif %}
+    {% if document.category %}<span data-pagefind-filter="Program:{{ document.category }}" style="display:none;"></span>{% endif %}
+    {% for c in (document.compounds or []) %}<span data-pagefind-filter="Compound:{{ c }}" style="display:none;"></span>{% endfor %}
+</div>
+
+<h1 style="font-size:1.3rem; margin:0.25rem 0 0.75rem; line-height:1.4;"
     data-pagefind-meta="title">
     {{ document.title or document.documentId }}
 </h1>
-
-<div style="margin-bottom:1rem; display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center;">
-    {% set t = document.documentType or "" %}
-    {% if t == "Rule" %}<span class="badge badge-type-Rule">Rule</span>
-    {% elif t == "Proposed Rule" %}<span class="badge badge-type-Proposed">Proposed Rule</span>
-    {% elif t == "Notice" %}<span class="badge badge-type-Notice">Notice</span>
-    {% elif t == "Supporting & Related Material" %}<span class="badge badge-type-Supporting">Supporting Material</span>
-    {% else %}<span class="badge badge-type-Other">{{ t }}</span>
-    {% endif %}
-
-    {% if document.signalType %}
-    <span class="badge badge-signal badge-signal--{{ document.signalType }}" data-pagefind-filter="Signal">{{ document.signalType }}</span>
-    {% endif %}
-
-    {% if document.category %}
-    <span class="badge badge-cat" data-pagefind-filter="Program">{{ document.category }}</span>
-    {% endif %}
-
-    {% for c in (document.compounds or [])[:4] %}
-    <span class="badge badge-compound" data-pagefind-filter="Compound">{{ c }}</span>
-    {% endfor %}
-
-    {% if document.mahaRelevant %}
-    <span class="badge badge-maha">MAHA relevant</span>
-    {% endif %}
-
-    {% if document.openForComment %}
-    <span class="badge badge-open">Open for comment</span>
-    {% endif %}
-
-    {% if document.withdrawn %}
-    <span class="badge" style="background:#fce4ec; color:#880e4f;">Withdrawn</span>
-    {% endif %}
-</div>
 
 <div class="links-box">
     <a class="btn btn-primary"
@@ -155,37 +141,9 @@
 
 {% if full_text %}
 <h2 class="section-head">Full text</h2>
-<details>
-    <summary style="cursor:pointer; font-size:0.875rem; color:#1a5276; margin-bottom:0.5rem;">
-        Show full Federal Register text ({{ (full_text | length / 1000) | int }}k characters)
-    </summary>
-    <div style="font-size:0.85rem; line-height:1.7; white-space:pre-wrap; max-height:600px; overflow-y:auto; border:1px solid #ddd; padding:1rem; background:#fff; margin-top:0.5rem;">{{ full_text }}</div>
-</details>
+<div style="font-size:0.85rem; line-height:1.7; white-space:pre-wrap; max-height:700px; overflow-y:auto; border:1px solid #ddd; padding:1rem; background:#fff;">{{ full_text }}</div>
 {% endif %}
 
 </article>
-
-{# ── Related items (semantic similarity) ──────────────────────────────────── #}
-{% if related %}
-<h2 class="section-head" style="margin-top:2rem;">Related items</h2>
-<p style="font-size:0.85rem; color:#666; margin-bottom:0.75rem;">Semantically similar documents and press releases.</p>
-<ul class="related-list">
-{% for r in related %}
-<li class="related-item">
-    <span class="related-type related-type--{{ r.type }}">{{ r.type | replace('_', ' ') }}</span>
-    <span class="related-title">
-        {% if r.type == "press_release" %}
-        <a href="{{ url_for('press', press_id=r.id.replace('PR-', '')) }}">{{ r.title }}</a>
-        {% elif r.type == "regulation" %}
-        <a href="{{ url_for('document', document_id=r.id) }}">{{ r.title }}</a>
-        {% else %}
-        {{ r.title }}
-        {% endif %}
-    </span>
-    <span class="related-score" title="Semantic similarity score">{{ "%.0f"|format(r.score * 100) }}%</span>
-</li>
-{% endfor %}
-</ul>
-{% endif %}
 
 {% endblock %}

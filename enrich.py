@@ -320,6 +320,7 @@ def enrich_press_release(pr):
         pr["signalType"] = assign_press_signal(pr.get("title", ""), pr.get("body", ""))
     pr["mahaRelevant"] = assign_maha_relevant(text)
     pr["isExtension"] = False
+    pr["era"] = assign_era(pr.get("date", ""))
     return pr
 
 

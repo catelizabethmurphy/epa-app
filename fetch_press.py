@@ -30,7 +30,7 @@ from bs4 import BeautifulSoup
 BASE = "https://www.epa.gov"
 PFAS_LISTING_URL = "https://www.epa.gov/pfas/press-releases-related-pfas"
 DATA_DIR = Path("static/data")
-START_DATE = "2025-01-20"
+START_DATE = "2017-01-20"
 
 PFAS_KEYWORDS = [
     "pfas", "pfoa", "pfos", "pfna", "pfhxs", "pfbs",
@@ -159,7 +159,7 @@ def scrape_individual(path):
     body = ""
     if body_el:
         paras = body_el.find_all("p")
-        body = " ".join(p.get_text(" ", strip=True) for p in paras[:8])
+        body = " ".join(p.get_text(" ", strip=True) for p in paras)
 
     if not is_pfas_relevant(title, body):
         return None
@@ -169,7 +169,7 @@ def scrape_individual(path):
         "title": title,
         "date": date_iso,
         "url": url,
-        "body": body[:3000],
+        "body": body[:15000],
         "source": "epa.gov",
         "signalType": _infer_signal(title, body),
     }

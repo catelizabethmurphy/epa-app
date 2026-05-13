@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}{{ topic.title }} — PFAS Federal Policy Record{% endblock %}
+{% block og_title %}{{ topic.title }}{% endblock %}
+{% block og_description %}{{ topic.description }}{% endblock %}
+
+{% block content %}
+
+<p style="font-size:0.85rem; color:#666; margin-bottom:0.25rem;">
+    <a href="{{ url_for('index') }}">Overview</a> &rsaquo; {{ topic.title }}
+</p>
+
+{# ── Topic header ──────────────────────────────────────────────────────────── #}
+<div class="topic-header">
+    {% set eyebrow = topic.eyebrow or topic.subtitle %}
+    {% if eyebrow %}
+    <div class="topic-eyebrow">{{ eyebrow }}</div>
+    {% endif %}
+    <h1 class="topic-title">{{ topic.title }}</h1>
+    {% if topic.eyebrow and topic.subtitle and topic.subtitle != topic.eyebrow %}
+    <p class="topic-desc" style="margin:0.2rem 0 0.4rem; color:#555;">{{ topic.subtitle }}</p>
+    {% endif %}
+    <p class="topic-desc">{{ topic.description }}</p>
+    {% if topic.currentStatus %}
+    <div class="topic-status topic-status--{{ topic.statusClass }}">
+        <span class="topic-status-label">Current status</span>
+        {{ topic.currentStatus }}
+    </div>
+    {% endif %}
+</div>
+
+{# ── Docket index ──────────────────────────────────────────────────────────── #}
+{% if docket_ids %}
+<div class="topic-dockets">
+    <span class="topic-dockets-label">Source dockets</span>
+    {% for did in docket_ids %}
+    <a href="{{ url_for('docket', docket_id=did) }}" class="topic-docket-chip">{{ did }}</a>
+    {% endfor %}
+</div>
+{% endif %}
+
+{# ── Timeline ──────────────────────────────────────────────────────────────── #}
+<div class="topic-timeline" data-pagefind-body>
+{% if timeline %}
+{% set ns = namespace(last_year=None) %}
+{% for item in timeline %}
+
+{% set yr = item.date[:4] if item.date else "" %}
+{% if yr and yr != ns.last_year %}
+<div class="topic-year-marker" id="yr-{{ yr }}">{{ yr }}</div>
+{% set ns.last_year = yr %}
+{% endif %}
+
+<div class="topic-entry topic-entry--{{ item.signalType }} fade-in" id="{{ item.date }}-{{ loop.index }}">
+    <div class="topic-entry-left">
+        <div class="topic-entry-date">{{ item.date[5:] if item.date|length > 7 else item.date }}</div>
+        {% set tl = item.typeLabel %}
+        {% if tl and tl != "other" and tl != "unknown" %}
+        <div class="topic-entry-kind topic-entry-kind--{{ item.itemClass }}">
+            {% if item.itemClass == "press" %}Statement{% else %}{{ tl }}{% endif %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="topic-entry-body">
+        <div class="topic-entry-title">
+            {% if item.courtId %}
+            <a href="{{ url_for('court', court_id=item.courtId) }}">{{ item.title }}</a>
+            {% elif item.documentId %}
+            <a href="{{ url_for('document', document_id=item.documentId) }}">{{ item.title }}</a>
+            {% elif item.pressId %}
+            <a href="{{ url_for('press', press_id=item.pressId) }}">{{ item.title }}</a>
+            {% elif item.docketId %}
+            <a href="{{ url_for('docket', docket_id=item.docketId) }}">{{ item.title }}</a>
+            {% elif item.externalUrl %}
+            <a href="{{ item.externalUrl }}" target="_blank" rel="noopener">{{ item.title }}</a>
+            {% else %}
+            {{ item.title }}
+            {% endif %}
+        </div>
+        {% if item.description %}
+        <p class="topic-entry-desc">{{ item.description }}</p>
+        {% endif %}
+        <div class="topic-entry-meta">
+            {% if (item.documentId or item.pressId or item.docketId) and item.externalUrl %}
+            <a href="{{ item.externalUrl }}" class="topic-entry-ext" target="_blank" rel="noopener">Source ↗</a>
+            {% endif %}
+            {% if item.get('era') %}
+            <span class="badge badge-era badge-era--{{ item.era }}">{% if item.era == 'trump1' %}Trump 1{% elif item.era == 'biden' %}Biden{% elif item.era == 'trump2' %}Trump 2{% endif %}</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<p class="empty-state">No timeline items yet.</p>
+{% endif %}
+</div>
+
+{% endblock %}

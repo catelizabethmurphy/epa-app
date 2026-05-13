@@ -1,7 +1,11 @@
+import csv
+import html
 import json
+import re
 from collections import Counter, defaultdict
+from functools import lru_cache
 from pathlib import Path
-from flask import Flask, render_template, abort, send_from_directory
+from flask import Flask, render_template, abort, send_from_directory, redirect, url_for
 
 app = Flask(__name__)
 app.config['FREEZER_RELATIVE_URLS'] = True
@@ -9,6 +13,60 @@ app.config['FREEZER_RELATIVE_URLS'] = True
 DATA_DIR = Path("static/data")
 
 SUBSTANTIVE_TYPES = {"Rule", "Proposed Rule", "Notice"}
+
+STATE_ABBR = {
+    "Alabama": "AL",
+    "Alaska": "AK",
+    "Arizona": "AZ",
+    "Arkansas": "AR",
+    "California": "CA",
+    "Colorado": "CO",
+    "Connecticut": "CT",
+    "Delaware": "DE",
+    "District of Columbia": "DC",
+    "Florida": "FL",
+    "Georgia": "GA",
+    "Hawaii": "HI",
+    "Idaho": "ID",
+    "Illinois": "IL",
+    "Indiana": "IN",
+    "Iowa": "IA",
+    "Kansas": "KS",
+    "Kentucky": "KY",
+    "Louisiana": "LA",
+    "Maine": "ME",
+    "Maryland": "MD",
+    "Massachusetts": "MA",
+    "Michigan": "MI",
+    "Minnesota": "MN",
+    "Mississippi": "MS",
+    "Missouri": "MO",
+    "Montana": "MT",
+    "Nebraska": "NE",
+    "Nevada": "NV",
+    "New Hampshire": "NH",
+    "New Jersey": "NJ",
+    "New Mexico": "NM",
+    "New York": "NY",
+    "North Carolina": "NC",
+    "North Dakota": "ND",
+    "Ohio": "OH",
+    "Oklahoma": "OK",
+    "Oregon": "OR",
+    "Pennsylvania": "PA",
+    "Rhode Island": "RI",
+    "South Carolina": "SC",
+    "South Dakota": "SD",
+    "Tennessee": "TN",
+    "Texas": "TX",
+    "Utah": "UT",
+    "Vermont": "VT",
+    "Virginia": "VA",
+    "Washington": "WA",
+    "West Virginia": "WV",
+    "Wisconsin": "WI",
+    "Wyoming": "WY",
+}
 
 
 # ── Data loaders ──────────────────────────────────────────────────────────────
@@ -59,6 +117,65 @@ def get_agenda():
 
 def get_pfas_context():
     return _load("pfas_context.json", {})
+
+
+def get_timeline_page(slug):
+    return _load(f"timelines/{slug}.json", {})
+
+
+def get_court_actions():
+    return _load("court_actions.json", [])
+
+
+def _clean_text(value):
+    if value is None:
+        return ""
+    text = html.unescape(value)
+    text = " ".join(text.split())
+    return text.strip()
+
+
+def _slugify(value):
+    text = re.sub(r"[^a-zA-Z0-9\s-]", "", value or "")
+    text = re.sub(r"\s+", "-", text.strip().lower())
+    return text
+
+
+@lru_cache(maxsize=1)
+def get_state_bills():
+    path = DATA_DIR / "pfas-bill-tracker.csv"
+    if not path.exists():
+        return []
+    with open(path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        items = []
+        for row in reader:
+            items.append({
+                "state": _clean_text(row.get("State")),
+                "status": _clean_text(row.get("Status")),
+                "year": _clean_text(row.get("Year")),
+                "bill": _clean_text(row.get("Bill")),
+                "chemicals": _clean_text(row.get("Toxic Chemical")),
+                "issue": _clean_text(row.get("Issue/Sector")),
+                "solution": _clean_text(row.get("Safer Solution")),
+                "description": _clean_text(row.get("Description")),
+            })
+    return items
+
+
+_MEETING_TITLE_KEYWORDS = ("meetings:", "meeting;", "advisory council",
+                           "community engagement", "national drinking water advisory")
+
+
+def _is_primary_doc(doc):
+    """True for docs that belong in the main regulatory timeline (not supplementary)."""
+    t = doc.get("documentType", "")
+    if t in ("Rule", "Proposed Rule"):
+        return True
+    if t == "Notice":
+        title = (doc.get("title") or "").lower()
+        return not any(kw in title for kw in _MEETING_TITLE_KEYWORDS)
+    return False
 
 
 def get_trump1_context():
@@ -210,7 +327,7 @@ def all_items_timeline(documents, press_releases):
             "mahaRelevant": pr.get("mahaRelevant", False),
             "externalUrl": pr.get("url"),
             "body": (pr.get("body") or "")[:300],
-            "era": "trump2",  # press releases are Trump 2 era by definition (post 2025-01-20)
+            "era": pr.get("era", "trump2"),
             "_press_id": pr["pressId"],
         })
 
@@ -258,17 +375,7 @@ def index():
 
 @app.route("/signals/")
 def signals():
-    documents = get_all_documents()
-    press_releases = get_press_releases()
-    items = all_items_timeline(documents, press_releases)
-    categories = sorted({i.get("category") for i in items if i.get("category")})
-    compounds = sorted({c for i in items for c in i.get("compounds", [])})
-    eras = [e for e in ["trump1", "biden", "trump2"] if any(i.get("era") == e for i in items)]
-    return render_template("signals.html",
-                           items=items,
-                           categories=categories,
-                           compounds=compounds,
-                           eras=eras)
+    return redirect(url_for('explore') + "?view=timeline")
 
 
 @app.route("/browse/")
@@ -294,18 +401,21 @@ def browse():
 
 @app.route("/docket/<docket_id>/")
 def docket(docket_id):
-    documents = sorted(
+    all_docs = sorted(
         [d for d in get_all_documents() if d.get("docketId") == docket_id],
         key=lambda d: d.get("postedDate") or "",
         reverse=True,
     )
-    if not documents:
+    if not all_docs:
         abort(404)
     dockets = get_dockets()
     docket_data = dockets.get(docket_id) or {"docketId": docket_id, "title": docket_id}
+    primary = [d for d in all_docs if _is_primary_doc(d)]
+    supplementary = [d for d in all_docs if not _is_primary_doc(d)]
     return render_template("docket.html",
                            docket=docket_data,
-                           documents=documents)
+                           primary=primary,
+                           supplementary=supplementary)
 
 
 @app.route("/document/<path:document_id>/")
@@ -347,9 +457,210 @@ def press(press_id):
     abort(404)
 
 
+@app.route("/topic/<topic_id>/")
+def topic(topic_id):
+    alias_map = {
+        "drinking-water-mcl": "drinking-water-limits",
+        "cercla-designation": "hazardous-substance-designation",
+        "tsca-reporting": "pfas-reporting",
+    }
+    slug = alias_map.get(topic_id, topic_id)
+    return _render_timeline_page(slug)
+
+
+def _render_timeline_page(slug):
+    page = get_timeline_page(slug)
+    if not page:
+        abort(404)
+
+    topic_data = {
+        "title": page.get("title", ""),
+        "subtitle": page.get("subtitle", ""),
+        "eyebrow": page.get("eyebrow", ""),
+        "description": page.get("description", ""),
+        "currentStatus": page.get("currentStatus", ""),
+        "statusClass": page.get("statusClass", ""),
+    }
+
+    return render_template("topic.html",
+                           topic=topic_data,
+                           timeline=page.get("timeline", []),
+                           docket_ids=page.get("docketIds", []))
+
+
+@app.route("/timelines/<slug>/")
+def timeline_page(slug):
+    return _render_timeline_page(slug)
+
+
+@app.route("/drinking-water-limits/")
+def drinking_water_limits():
+    return timeline_page("drinking-water-limits")
+
+
+@app.route("/hazardous-substance-designation/")
+def hazardous_substance_designation():
+    return timeline_page("hazardous-substance-designation")
+
+
+@app.route("/pfas-reporting/")
+def pfas_reporting():
+    return timeline_page("pfas-reporting")
+
+
+@app.route("/court/<court_id>/")
+def court(court_id):
+    cases = get_court_actions()
+    case = next((c for c in cases if c["courtId"] == court_id), None)
+    if not case:
+        abort(404)
+    return render_template("court.html", case=case)
+
+
+def _topic_event_label(ev):
+    sig = ev.get("signalType", "other")
+    if sig == "litigation":
+        return "Court Action"
+    if sig == "rhetoric":
+        return "Statement"
+    if sig in ("rollback", "protection", "delay"):
+        return "Regulatory Action"
+    return "Milestone"
+
+
+@app.route("/glossary/")
+def glossary():
+    return render_template("glossary.html")
+
+
+@app.route("/states/")
+def state_tracker():
+    items = [i for i in get_state_bills() if i.get("state")]
+    by_state = defaultdict(list)
+    for item in items:
+        by_state[item["state"]].append(item)
+
+    states = []
+    for state, bills in sorted(by_state.items(), key=lambda x: x[0]):
+        adopted = sum(1 for b in bills if b.get("status") == "Adopted")
+        introduced = sum(1 for b in bills if b.get("status") == "Introduced")
+        abbr = STATE_ABBR.get(state, "")
+        states.append({
+            "name": state,
+            "slug": _slugify(state),
+            "abbr": abbr,
+            "bills": sorted(
+                bills,
+                key=lambda b: (b.get("year") or "", b.get("bill") or ""),
+                reverse=True,
+            ),
+            "counts": {
+                "total": len(bills),
+                "adopted": adopted,
+                "introduced": introduced,
+            },
+        })
+
+    state_lookup = {s["abbr"]: s for s in states if s.get("abbr")}
+    state_summaries = [
+        {
+            "name": s["name"],
+            "slug": s["slug"],
+            "count": s["counts"]["total"],
+        }
+        for s in states
+    ]
+
+    summary = {
+        "states": len(states),
+        "bills": len(items),
+        "adopted": sum(s["counts"]["adopted"] for s in states),
+        "introduced": sum(s["counts"]["introduced"] for s in states),
+    }
+
+    return render_template("state_tracker.html",
+                           states=states,
+                           summary=summary,
+                           state_lookup=state_lookup,
+                           state_summaries=state_summaries)
+
+
 @app.route("/search/")
 def search():
     return render_template("search.html")
+
+
+@app.route("/explore/")
+def explore():
+    documents = get_all_documents()
+    press_releases = get_press_releases()
+    court_cases = get_court_actions()
+
+    items = []
+
+    for doc in documents:
+        items.append({
+            "itemType": "regulation",
+            "typeLabel": doc.get("documentType") or "Document",
+            "id": doc["documentId"],
+            "title": doc.get("title") or doc["documentId"],
+            "date": (doc.get("postedDate") or "")[:10],
+            "signalType": doc.get("signalType") or "other",
+            "category": doc.get("category") or "",
+            "compounds": doc.get("compounds", []),
+            "program": doc.get("program") or "",
+            "era": doc.get("era") or "unknown",
+            "mahaRelevant": doc.get("mahaRelevant", False),
+            "isPrimary": doc.get("isPrimary", True),
+        })
+
+    for pr in press_releases:
+        items.append({
+            "itemType": "press",
+            "typeLabel": "Statement",
+            "id": pr["pressId"],
+            "title": pr.get("title") or pr["pressId"],
+            "date": pr.get("date", ""),
+            "signalType": pr.get("signalType") or "rhetoric",
+            "category": pr.get("category") or "",
+            "compounds": pr.get("compounds", []),
+            "program": pr.get("program") or "",
+            "era": pr.get("era") or "trump2",
+            "mahaRelevant": pr.get("mahaRelevant", False),
+            "isPrimary": True,
+        })
+
+    for case in court_cases:
+        items.append({
+            "itemType": "court",
+            "typeLabel": "Court Case",
+            "id": case["courtId"],
+            "title": case.get("caseTitle") or case["courtId"],
+            "date": case.get("filed", ""),
+            "signalType": "litigation",
+            "category": "Litigation",
+            "compounds": ["PFAS"],
+            "program": "",
+            "era": "biden" if (case.get("filed") or "") < "2025-01-20" else "trump2",
+            "mahaRelevant": False,
+            "isPrimary": True,
+        })
+
+    items.sort(key=lambda x: x.get("date") or "", reverse=True)
+    categories = sorted({i["category"] for i in items if i.get("category")})
+    compounds = sorted({c for i in items for c in i.get("compounds", [])})
+    eras = [e for e in ["trump1", "biden", "trump2"] if any(i.get("era") == e for i in items)]
+
+    return render_template("explore.html",
+                           items=items,
+                           categories=categories,
+                           compounds=compounds,
+                           eras=eras)
+
+
+@app.route("/what-are-pfas/")
+def what_are_pfas():
+    return render_template("what_are_pfas.html")
 
 
 @app.route("/pagefind/<path:filename>")

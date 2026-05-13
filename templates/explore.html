@@ -1,0 +1,380 @@
+{% extends "base.html" %}
+
+{% block title %}Explore — PFAS &amp; TSCA Tracker{% endblock %}
+
+{% block head %}
+<style>
+.pagefind-ui__search-input { font-family: Georgia, serif; }
+.pagefind-ui__result-title a { color: #1a5276; }
+.pagefind-ui__result-excerpt mark { background: #ffeaa0; }
+</style>
+<script>
+(function() {
+    var l = document.createElement('link');
+    l.rel = 'stylesheet'; l.href = '/pagefind/pagefind-ui.css';
+    document.head.appendChild(l);
+})();
+</script>
+{% endblock %}
+
+{% block content %}
+
+<h2 class="section-head" style="margin-top:1rem;">Full-text search</h2>
+<p style="font-size:0.9rem; color:#555; max-width:640px; margin-bottom:1.25rem;">
+    Search across document text, press releases, and case descriptions.
+</p>
+
+<div id="search"></div>
+
+<hr style="margin: 2.5rem 0;">
+
+<h2 class="section-head">Browse all items</h2>
+
+{# ── Filter bar ────────────────────────────────────────────────────────── #}
+<div class="filter-bar">
+    <div>
+        <label for="f-search">Search title</label>
+        <input type="text" id="f-search" placeholder="keyword…">
+    </div>
+    <div>
+        <label for="f-signal">Signal type</label>
+        <select id="f-signal">
+            <option value="">All</option>
+            <option value="rollback">Rollback</option>
+            <option value="protection">Protection</option>
+            <option value="delay">Delay</option>
+            <option value="rhetoric">Rhetoric</option>
+            <option value="litigation">Litigation</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+    <div>
+        <label for="f-itemtype">Source type</label>
+        <select id="f-itemtype">
+            <option value="">All</option>
+            <option value="regulation">Regulation</option>
+            <option value="press">Press Release</option>
+            <option value="court">Court Case</option>
+        </select>
+    </div>
+    <div>
+        <label for="f-cat">Program / Category</label>
+        <select id="f-cat">
+            <option value="">All</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="f-compound">Compound</label>
+        <select id="f-compound">
+            <option value="">All</option>
+            {% for c in compounds %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="f-era">Administration era</label>
+        <select id="f-era">
+            <option value="">All</option>
+            {% for era in eras %}
+            <option value="{{ era }}">{% if era == "trump1" %}Trump 1{% elif era == "biden" %}Biden{% elif era == "trump2" %}Trump 2{% else %}{{ era }}{% endif %}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div style="align-self:flex-end; display:flex; flex-direction:column; gap:0.4rem;">
+        <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; color:#444;">
+            <input type="checkbox" id="f-maha" style="margin:0;">
+            MAHA-relevant only
+        </label>
+        <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.85rem; color:#444;">
+            <input type="checkbox" id="f-supplementary" style="margin:0;">
+            Show supplementary materials
+        </label>
+    </div>
+</div>
+
+{# ── View tabs ─────────────────────────────────────────────────────────── #}
+<div class="view-tabs">
+    <button class="view-tab" id="tab-timeline" data-view="timeline">Timeline</button>
+    <button class="view-tab" id="tab-database" data-view="database">Database</button>
+</div>
+
+<p id="result-count" style="font-size:0.875rem; color:#666; margin-bottom:0.75rem;"></p>
+
+{# ── Timeline view ─────────────────────────────────────────────────────── #}
+<div id="view-timeline">
+
+<div id="timeline-list">
+{% set ns = namespace(cur_month="") %}
+{% for item in items %}
+{% set item_month = item.date[:7] if item.date else "" %}
+{% if item_month and item_month != ns.cur_month %}
+{% set ns.cur_month = item_month %}
+<div class="timeline-month-marker" data-month="{{ item_month }}">
+    {% set parts = item_month.split("-") %}
+    {% set month_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"] %}
+    {{ month_names[parts[1]|int - 1] }} {{ parts[0] }}
+</div>
+{% endif %}
+<div class="signal-item signal-item--{{ item.signalType or 'other' }}"
+     data-title="{{ (item.title or '') | lower }}"
+     data-itemtype="{{ item.itemType or '' }}"
+     data-signal="{{ item.signalType or '' }}"
+     data-era="{{ item.era or '' }}"
+     data-cat="{{ item.category or '' }}"
+     data-compound="{{ (item.compounds or []) | join('|') }}"
+     data-isprimary="{{ 'true' if item.isPrimary else 'false' }}"
+     data-maha="{{ 'true' if item.mahaRelevant else 'false' }}"
+     data-month="{{ item.date[:7] if item.date else '' }}">
+    <div class="signal-left">
+        <span class="signal-date">{{ item.date or "—" }}</span>
+        <div class="signal-type-col">
+            <span class="signal-type-badge signal-type-badge--{{ item.signalType or 'other' }}">{{ item.signalType or "other" }}</span>
+            {% if item.itemType == "press" %}
+            <span class="signal-source-badge signal-source-badge--press">Statement</span>
+            {% elif item.itemType == "court" %}
+            <span class="signal-source-badge" style="background:#ede7f6; color:#5c3480;">Court</span>
+            {% elif item.itemType == "regulation" %}
+            <span class="signal-source-badge signal-source-badge--reg">Reg</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="signal-body">
+        <div class="signal-badges">
+            {% if item.category %}<span class="badge badge-cat">{{ item.category }}</span>{% endif %}
+            {% for c in (item.compounds or []) %}<span class="badge badge-compound">{{ c }}</span>{% endfor %}
+            {% if item.mahaRelevant %}<span class="badge badge-maha">MAHA</span>{% endif %}
+            {% if item.era %}<span class="badge badge-era badge-era--{{ item.era }}">{% if item.era == "trump1" %}T1{% elif item.era == "biden" %}Biden{% elif item.era == "trump2" %}T2{% else %}{{ item.era }}{% endif %}</span>{% endif %}
+        </div>
+        <div class="signal-title">
+            {% if item.itemType == "regulation" %}
+                <a href="{{ url_for('document', document_id=item.id) }}">{{ item.title or item.id }}</a>
+            {% elif item.itemType == "press" %}
+                <a href="{{ url_for('press', press_id=item.id) }}">{{ item.title or item.id }}</a>
+            {% elif item.itemType == "court" %}
+                <a href="{{ url_for('court', court_id=item.id) }}">{{ item.title or item.id }}</a>
+            {% else %}
+                {{ item.title or item.id }}
+            {% endif %}
+        </div>
+        {% if item.typeLabel and item.typeLabel not in ("Statement", "Court Case") %}
+        <div class="signal-meta">
+            <span class="signal-meta-item">{{ item.typeLabel }}</span>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+</div>
+
+</div>{# /view-timeline #}
+
+{# ── Database view ─────────────────────────────────────────────────────── #}
+<div id="view-database" style="display:none;">
+
+<table class="doc-table" id="doc-table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Title</th>
+            <th>Signal</th>
+            <th class="hide-mobile">Era</th>
+        </tr>
+    </thead>
+    <tbody id="doc-tbody">
+    {% for item in items %}
+    <tr
+      data-title="{{ (item.title or '') | lower }}"
+      data-itemtype="{{ item.itemType or '' }}"
+      data-signal="{{ item.signalType or '' }}"
+      data-era="{{ item.era or '' }}"
+      data-cat="{{ item.category or '' }}"
+      data-compound="{{ (item.compounds or []) | join('|') }}"
+      data-isprimary="{{ 'true' if item.isPrimary else 'false' }}"
+      data-maha="{{ 'true' if item.mahaRelevant else 'false' }}"
+    >
+        <td style="white-space:nowrap; font-size:0.8rem;">{{ item.date or "—" }}</td>
+        <td>
+            {% if item.itemType == "regulation" %}
+                <a href="{{ url_for('document', document_id=item.id) }}">{{ item.title or item.id }}</a>
+            {% elif item.itemType == "press" %}
+                <a href="{{ url_for('press', press_id=item.id) }}">{{ item.title or item.id }}</a>
+            {% elif item.itemType == "court" %}
+                <a href="{{ url_for('court', court_id=item.id) }}">{{ item.title or item.id }}</a>
+            {% else %}
+                {{ item.title or item.id }}
+            {% endif %}
+
+            {% set tl = item.typeLabel or "" %}
+            {% if item.itemType == "press" %}
+                <span class="badge badge-type-Press" style="background:#fff3cd; color:#856404;">{{ tl }}</span>
+            {% elif item.itemType == "court" %}
+                <span class="badge badge-type-Court" style="background:#ede7f6; color:#5c3480;">{{ tl }}</span>
+            {% elif tl == "Rule" %}
+                <span class="badge badge-type-Rule">Rule</span>
+            {% elif tl == "Proposed Rule" %}
+                <span class="badge badge-type-Proposed">Proposed</span>
+            {% elif tl == "Notice" %}
+                <span class="badge badge-type-Notice">Notice</span>
+            {% elif tl == "Supporting & Related Material" %}
+                <span class="badge badge-type-Supporting">Support</span>
+            {% elif tl %}
+                <span class="badge badge-type-Other">{{ tl }}</span>
+            {% endif %}
+
+            {% if item.mahaRelevant %}<span class="badge badge-maha" title="MAHA-relevant">M</span>{% endif %}
+        </td>
+        <td>
+            {% if item.signalType %}
+            <span class="badge badge-signal badge-signal--{{ item.signalType }}">{{ item.signalType }}</span>
+            {% endif %}
+        </td>
+        <td class="hide-mobile">
+            {% if item.era %}
+            <span class="badge badge-era badge-era--{{ item.era }}">{{ {'trump1':'T1','biden':'Biden','trump2':'T2'}.get(item.era, item.era) }}</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</div>{# /view-database #}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function() {
+    var s = document.createElement('script');
+    s.src = '/pagefind/pagefind-ui.js';
+    s.onload = function() {
+        new PagefindUI({ element: "#search", showImages: false, excerptLength: 30, resetStyles: false });
+    };
+    s.onerror = function() {
+        document.getElementById('search').innerHTML = '<p style="font-size:0.875rem;color:#888;padding:0.5rem 0;">Full-text search unavailable — run <code>make freeze</code> to build the index.</p>';
+    };
+    document.head.appendChild(s);
+})();
+</script>
+<script>
+(function () {
+    // ── Filter inputs ──────────────────────────────────────────────────────
+    const searchEl    = document.getElementById('f-search');
+    const itemTypeSel = document.getElementById('f-itemtype');
+    const sigSel      = document.getElementById('f-signal');
+    const eraSel      = document.getElementById('f-era');
+    const catSel      = document.getElementById('f-cat');
+    const compSel     = document.getElementById('f-compound');
+    const suppCheck   = document.getElementById('f-supplementary');
+    const mahaCheck   = document.getElementById('f-maha');
+    const countEl     = document.getElementById('result-count');
+
+    const timelineEl  = document.getElementById('view-timeline');
+    const databaseEl  = document.getElementById('view-database');
+    const tabTimeline = document.getElementById('tab-timeline');
+    const tabDatabase = document.getElementById('tab-database');
+
+    const signalItems = Array.from(document.querySelectorAll('#timeline-list .signal-item'));
+    const monthMarkers = Array.from(document.querySelectorAll('#timeline-list .timeline-month-marker'));
+    const tableRows   = Array.from(document.querySelectorAll('#doc-tbody tr'));
+
+    // ── URL param initialisation ────────────────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('signal'))   sigSel.value       = params.get('signal');
+    if (params.get('category')) catSel.value        = params.get('category');
+    if (params.get('compound')) compSel.value       = params.get('compound');
+    if (params.get('era'))      eraSel.value        = params.get('era');
+    if (params.get('itemtype')) itemTypeSel.value   = params.get('itemtype');
+
+    // ── View switching ─────────────────────────────────────────────────────
+    let activeView = (params.get('view') === 'database') ? 'database' : 'timeline';
+
+    function showView(view) {
+        activeView = view;
+        if (view === 'timeline') {
+            timelineEl.style.display = '';
+            databaseEl.style.display = 'none';
+            tabTimeline.classList.add('active');
+            tabDatabase.classList.remove('active');
+        } else {
+            timelineEl.style.display = 'none';
+            databaseEl.style.display = '';
+            tabTimeline.classList.remove('active');
+            tabDatabase.classList.add('active');
+        }
+        applyFilters();
+    }
+
+    tabTimeline.addEventListener('click', function () { showView('timeline'); });
+    tabDatabase.addEventListener('click', function () { showView('database'); });
+
+    // ── Shared filter logic ────────────────────────────────────────────────
+    function matchesFilters(dataset) {
+        const q        = searchEl.value.toLowerCase().trim();
+        const itemType = itemTypeSel.value;
+        const sig      = sigSel.value;
+        const era      = eraSel.value;
+        const cat      = catSel.value;
+        const comp     = compSel.value;
+        const showSupp = suppCheck.checked;
+        const mahaOnly = mahaCheck.checked;
+        const isPrimary = dataset.isprimary === 'true';
+        const isMaha    = dataset.maha === 'true';
+
+        return (
+            (showSupp || isPrimary) &&
+            (!mahaOnly || isMaha) &&
+            (!q        || (dataset.title || '').includes(q)) &&
+            (!itemType || dataset.itemtype === itemType) &&
+            (!sig      || dataset.signal === sig) &&
+            (!era      || dataset.era === era) &&
+            (!cat      || dataset.cat === cat) &&
+            (!comp     || (dataset.compound || '').split('|').includes(comp))
+        );
+    }
+
+    function applyFilters() {
+        let visible = 0;
+
+        if (activeView === 'timeline') {
+            // Filter signal items
+            const visibleMonths = new Set();
+            signalItems.forEach(function (el) {
+                const pass = matchesFilters(el.dataset);
+                el.style.display = pass ? '' : 'none';
+                if (pass) {
+                    visible++;
+                    if (el.dataset.month) visibleMonths.add(el.dataset.month);
+                }
+            });
+            // Show/hide month markers based on whether they have visible items
+            monthMarkers.forEach(function (marker) {
+                marker.style.display = visibleMonths.has(marker.dataset.month) ? '' : 'none';
+            });
+        } else {
+            // Filter table rows
+            tableRows.forEach(function (row) {
+                const pass = matchesFilters(row.dataset);
+                row.style.display = pass ? '' : 'none';
+                if (pass) visible++;
+            });
+        }
+
+        const totalForView = activeView === 'timeline' ? signalItems.length : tableRows.length;
+        countEl.textContent = 'Showing ' + visible + ' of ' + totalForView + ' items';
+    }
+
+    [searchEl, itemTypeSel, sigSel, eraSel, catSel, compSel, suppCheck, mahaCheck].forEach(function (el) {
+        el.addEventListener('input', applyFilters);
+        el.addEventListener('change', applyFilters);
+    });
+
+    // Initialise view and run initial filter
+    showView(activeView);
+})();
+</script>
+{% endblock %}

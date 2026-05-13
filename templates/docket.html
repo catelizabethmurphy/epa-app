@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ docket.title or docket.docketId }} — PFAS &amp; TSCA Tracker{% endblock %}
+{% block title %}{{ docket.title or docket.docketId }} — PFAS Federal Policy Record{% endblock %}
 
 {% block content %}
 
@@ -8,38 +8,34 @@
     <a href="{{ url_for('index') }}">Overview</a> &rsaquo; Docket
 </p>
 
-<h1 style="font-size:1.4rem; margin:0.25rem 0 0.5rem;">{{ docket.title or docket.docketId }}</h1>
+<div class="doc-byline">
+    <span>Docket</span>
+    <span class="doc-byline-sep">·</span>
+    <span>{{ docket.docketId }}</span>
+    {% if docket.lastModifiedDate %}
+    <span class="doc-byline-sep">·</span>
+    <span>Updated {{ docket.lastModifiedDate[:10] }}</span>
+    {% endif %}
+</div>
 
-<div class="detail-meta">
-    <dl>
-        <dt>Docket ID</dt>
-        <dd>
-            {{ docket.docketId }}
-            &nbsp;
-            <a href="https://www.regulations.gov/docket/{{ docket.docketId }}" target="_blank" style="font-size:0.85rem;">
-                View on regulations.gov &uarr;
-            </a>
-        </dd>
+<h1 style="font-size:1.3rem; margin:0.25rem 0 0.5rem; line-height:1.4;">{{ docket.title or docket.docketId }}</h1>
 
-        {% if docket.rin %}
-        <dt>RIN</dt>
-        <dd>{{ docket.rin }}</dd>
-        {% endif %}
-
-        {% if docket.lastModifiedDate %}
-        <dt>Last modified</dt>
-        <dd>{{ docket.lastModifiedDate[:10] }}</dd>
-        {% endif %}
-    </dl>
+<div class="links-box">
+    <a class="btn btn-primary" href="https://www.regulations.gov/docket/{{ docket.docketId }}" target="_blank" rel="noopener">
+        View on regulations.gov ↗
+    </a>
+    {% if docket.rin %}
+    <span style="font-size:0.8rem; color:#555;">RIN {{ docket.rin }}</span>
+    {% endif %}
 </div>
 
 {% if docket.abstract %}
 <div class="docket-abstract">{{ docket.abstract }}</div>
 {% endif %}
 
-{% set rollbacks = documents | selectattr('signalType', 'equalto', 'rollback') | list %}
-{% set protections = documents | selectattr('signalType', 'equalto', 'protection') | list %}
-{% set delays = documents | selectattr('signalType', 'equalto', 'delay') | list %}
+{% set rollbacks = primary | selectattr('signalType', 'equalto', 'rollback') | list %}
+{% set protections = primary | selectattr('signalType', 'equalto', 'protection') | list %}
+{% set delays = primary | selectattr('signalType', 'equalto', 'delay') | list %}
 
 {% if rollbacks or protections or delays %}
 <div class="docket-signal-summary">
@@ -49,21 +45,21 @@
 </div>
 {% endif %}
 
-<h2 class="section-head">Documents in this docket ({{ documents | length }})</h2>
-
-{% if documents %}
+{# ── Primary documents ─────────────────────────────────────────────────────── #}
+{% if primary %}
+<h2 class="section-head">Rules, proposals &amp; notices ({{ primary | length }})</h2>
 <table class="doc-table">
     <thead>
         <tr>
             <th>Posted</th>
             <th>Title</th>
+            <th>Type</th>
             <th>Signal</th>
-            <th class="hide-mobile">Type</th>
             <th class="hide-mobile">Comments</th>
         </tr>
     </thead>
     <tbody>
-    {% for doc in documents %}
+    {% for doc in primary %}
     <tr>
         <td style="white-space:nowrap; font-size:0.8rem;">
             {{ doc.postedDate[:10] if doc.postedDate else "—" }}
@@ -71,20 +67,18 @@
         <td>
             <a href="{{ url_for('document', document_id=doc.documentId) }}">{{ doc.title or doc.documentId }}</a>
             {% if doc.openForComment %}<span class="badge badge-open">open</span>{% endif %}
-            {% if doc.mahaRelevant %}<span class="badge badge-maha" title="MAHA relevant">M</span>{% endif %}
         </td>
-        <td>
-            {% if doc.signalType %}
-            <span class="badge badge-signal badge-signal--{{ doc.signalType }}">{{ doc.signalType }}</span>
-            {% endif %}
-        </td>
-        <td class="hide-mobile">
+        <td style="white-space:nowrap;">
             {% set t = doc.documentType or "" %}
             {% if t == "Rule" %}<span class="badge badge-type-Rule">Rule</span>
             {% elif t == "Proposed Rule" %}<span class="badge badge-type-Proposed">Proposed</span>
             {% elif t == "Notice" %}<span class="badge badge-type-Notice">Notice</span>
-            {% elif t == "Supporting & Related Material" %}<span class="badge badge-type-Supporting">Support</span>
             {% else %}<span class="badge badge-type-Other">{{ t or "—" }}</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if doc.signalType and doc.signalType != "other" %}
+            <span class="badge badge-signal badge-signal--{{ doc.signalType }}">{{ doc.signalType }}</span>
             {% endif %}
         </td>
         <td class="hide-mobile" style="font-size:0.8rem; text-align:right;">
@@ -95,7 +89,45 @@
     </tbody>
 </table>
 {% else %}
-<p style="color:#666;">No documents loaded for this docket. Run <code>make fetch-regs</code>.</p>
+<p style="color:#666;">No rules or proposed rules in this docket.</p>
+{% endif %}
+
+{# ── Supplementary materials ───────────────────────────────────────────────── #}
+{% if supplementary %}
+<details style="margin-top:2rem;">
+    <summary style="cursor:pointer; font-size:0.875rem; font-weight:700; color:#555; list-style:none; display:flex; align-items:center; gap:0.4rem;">
+        <span class="details-arrow">▸</span>
+        Supplementary materials ({{ supplementary | length }})
+    </summary>
+    <table class="doc-table" style="margin-top:0.75rem;">
+        <thead>
+            <tr>
+                <th>Posted</th>
+                <th>Title</th>
+                <th>Type</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for doc in supplementary %}
+        <tr>
+            <td style="white-space:nowrap; font-size:0.8rem;">
+                {{ doc.postedDate[:10] if doc.postedDate else "—" }}
+            </td>
+            <td>
+                <a href="{{ url_for('document', document_id=doc.documentId) }}">{{ doc.title or doc.documentId }}</a>
+            </td>
+            <td style="white-space:nowrap;">
+                {% set t = doc.documentType or "" %}
+                {% if t == "Supporting & Related Material" %}<span class="badge badge-type-Supporting">Support</span>
+                {% elif t == "Notice" %}<span class="badge badge-type-Notice">Notice</span>
+                {% else %}<span class="badge badge-type-Other">{{ t or "—" }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</details>
 {% endif %}
 
 {% endblock %}

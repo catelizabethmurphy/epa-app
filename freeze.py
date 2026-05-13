@@ -2,7 +2,7 @@ import json
 import subprocess
 from pathlib import Path
 from flask_frozen import Freezer
-from app import app, get_all_documents, get_press_releases
+from app import app, get_all_documents, get_press_releases, get_court_actions
 
 freezer = Freezer(app)
 
@@ -30,12 +30,72 @@ def press():
 
 
 @freezer.register_generator
+def topic():
+    timelines_dir = Path("static/data/timelines")
+    alias_slugs = ["drinking-water-mcl", "cercla-designation", "tsca-reporting"]
+    if timelines_dir.exists():
+        for path in timelines_dir.glob("*.json"):
+            yield {"topic_id": path.stem}
+    for slug in alias_slugs:
+        yield {"topic_id": slug}
+
+
+@freezer.register_generator
+def court():
+    for c in get_court_actions():
+        yield {"court_id": c["courtId"]}
+
+
+@freezer.register_generator
 def signals():
     yield {}
 
 
 @freezer.register_generator
+def explore():
+    yield {}
+
+
+@freezer.register_generator
+def what_are_pfas():
+    yield {}
+
+
+@freezer.register_generator
 def search():
+    yield {}
+
+
+@freezer.register_generator
+def glossary():
+    yield {}
+
+
+@freezer.register_generator
+def state_tracker():
+    yield {}
+
+
+@freezer.register_generator
+def timeline_page():
+    timelines_dir = Path("static/data/timelines")
+    if timelines_dir.exists():
+        for path in timelines_dir.glob("*.json"):
+            yield {"slug": path.stem}
+
+
+@freezer.register_generator
+def drinking_water_limits():
+    yield {}
+
+
+@freezer.register_generator
+def hazardous_substance_designation():
+    yield {}
+
+
+@freezer.register_generator
+def pfas_reporting():
     yield {}
 
 

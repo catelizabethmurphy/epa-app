@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}State-by-State PFAS Policy Tracker{% endblock %}
+{% block og_title %}State-by-State PFAS Policy Tracker{% endblock %}
+{% block og_description %}State legislation on PFAS restrictions, reporting, and cleanup by state.{% endblock %}
+
+{% block head %}
+<style>
+.state-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    margin: 0.75rem 0 1.5rem;
+}
+.state-index a {
+    font-size: 0.85rem;
+    text-decoration: none;
+    border-bottom: 1px solid #111;
+}
+.state-jump {
+  margin: 0.75rem 0 1.5rem;
+}
+.state-jump label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #666;
+  font-family: "PT Sans", sans-serif;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.state-jump select {
+  font-size: 0.9rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-family: "PT Sans", sans-serif;
+  min-width: 220px;
+}
+.state-card {
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.25rem;
+}
+.state-card h2 {
+    font-size: 1.1rem;
+    margin: 0 0 0.35rem;
+    font-family: "Libre Baskerville", Georgia, serif;
+}
+.state-meta {
+    font-size: 0.8rem;
+    color: #777;
+    margin-bottom: 0.6rem;
+}
+.state-meta span { margin-right: 0.75rem; }
+.state-table-wrap { overflow-x: auto; }
+.state-table td { vertical-align: top; }
+.state-table td small { color: #666; }
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<h2 class="section-head" style="margin-top:1rem;">State-by-state tracker</h2>
+<p class="lede-block">
+  This tracker compiles state PFAS bills by year and status. Use the state index
+  to jump to a specific state.
+</p>
+
+<p class="section-note">
+  {{ summary.bills }} bills across {{ summary.states }} states.
+  {{ summary.adopted }} adopted · {{ summary.introduced }} introduced.
+</p>
+
+
+<div class="state-jump">
+  <label for="state-jump-select">Jump to a state</label>
+  <select id="state-jump-select" onchange="if (this.value) { window.location.hash = this.value; }">
+    <option value="">Select a state</option>
+    {% for s in states %}
+    <option value="state-{{ s.slug }}">{{ s.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+{% for s in states %}
+<section class="state-card" id="state-{{ s.slug }}" data-pagefind-body>
+  <h2>{{ s.name }}</h2>
+  <div class="state-meta">
+    <span>{{ s.counts.total }} bills</span>
+    <span>{{ s.counts.adopted }} adopted</span>
+    <span>{{ s.counts.introduced }} introduced</span>
+  </div>
+
+  <div class="state-table-wrap">
+    <table class="doc-table state-table">
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Status</th>
+          <th>Bill</th>
+          <th class="hide-mobile">Issue</th>
+          <th class="hide-mobile">Focus</th>
+          <th class="hide-mobile">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for b in s.bills %}
+        <tr>
+          <td style="white-space:nowrap;">{{ b.year or "—" }}</td>
+          <td>{{ b.status or "—" }}</td>
+          <td>
+            <strong>{{ b.bill or "—" }}</strong>
+            {% if b.chemicals %}
+            <br><small>{{ b.chemicals }}</small>
+            {% endif %}
+          </td>
+          <td class="hide-mobile">{{ b.issue or "—" }}</td>
+          <td class="hide-mobile">{{ b.solution or "—" }}</td>
+          <td class="hide-mobile">{{ b.description or "—" }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endfor %}
+
+{% endblock %}
