@@ -1,222 +1,199 @@
 {% extends "base.html" %}
 
-{% block title %}About PFAS — PFAS Forever Chemicals{% endblock %}
-{% block description %}What PFAS are, where they come from, their history, and definitions of compounds, regulatory programs, and key terms used in tracking federal policy.{% endblock %}
+{% block title %}FAQ — PFAS Forever Chemicals{% endblock %}
+{% block description %}Frequently asked questions about PFAS: what they are, why they matter, what the government did, and key regulatory terms.{% endblock %}
 
 {% block content %}
 
 <div style="margin-bottom: 0.5rem; font-size: 0.85rem; color: #666;">
-    <a href="{{ url_for('index') }}">Overview</a> &rsaquo; About PFAS
+    <a href="{{ url_for('index') }}">Overview</a> &rsaquo; FAQ
 </div>
 
-<article data-pagefind-body>
-
-{# ── What are PFAS ──────────────────────────────────────────────────────── #}
-<div style="border-top: 3px solid #111; padding-top: 1rem; margin-bottom: 2rem;">
-    <p style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: #888; font-family: 'PT Sans', sans-serif; margin: 0 0 0.5rem;">Background</p>
-    <h1 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; color: #111; margin: 0 0 1rem; line-height: 1.15; letter-spacing: -0.02em;">About PFAS</h1>
-    <p style="font-size: 1.05rem; color: #444; line-height: 1.7; max-width: 680px; margin: 0;">
-        PFAS — per- and polyfluoroalkyl substances — are a family of roughly 12,000 synthetic chemicals united by a single structural feature: a chain of carbon atoms bonded to fluorine. The carbon-fluorine bond is the strongest in organic chemistry. No enzyme, no bacterium, no amount of heat breaks it. Scientists engineered that permanence deliberately. It turned out to be their defining danger.
-    </p>
-    <p style="font-size: 1.05rem; color: #444; line-height: 1.7; max-width: 680px; margin: 1rem 0 0;">
-        PFAS repel water, oil, and heat. They make surfaces nonstick, fabrics waterproof, and foam capable of smothering fuel fires. Those properties made them commercially irresistible. From the 1950s onward they spread into cookware, food packaging, carpets, clothing, firefighting foam, cosmetics, and semiconductor manufacturing. They are now found in the blood of virtually every American, in Arctic ice, in deep ocean fish, and in human breast milk on every inhabited continent.
-    </p>
+<div class="faq-header">
+    <p class="faq-eyebrow">Reference</p>
+    <h1 class="faq-title">Frequently asked questions</h1>
+    <p class="faq-intro">What PFAS are, why they matter, what the government did about them, and key terms used in this tracker.</p>
 </div>
 
-<h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.2rem; font-weight: 700; color: #111; border-top: 2px solid #111; padding-top: 0.75rem; margin: 2.5rem 0 1rem;">A brief history</h2>
+<div class="faq-body">
 
-<dl class="pfas-history-list">
+{# ── THE BASICS ─────────────────────────────────────────────────────────── #}
+<div class="faq-section">
+    <h2 class="faq-section-label">The chemicals</h2>
 
-    <dt>1938</dt>
-    <dd>Roy Plunkett, a DuPont chemist working on refrigerants in Deepwater, N.J., accidentally discovers polytetrafluoroethylene (PTFE) when a canister of tetrafluoroethylene gas stops flowing and he finds a white, waxy solid inside. The material has a lubricity unlike anything known — virtually nothing sticks to it. DuPont patents the compound and markets it as Teflon beginning in 1945.</dd>
+    <details class="faq-item" open>
+        <summary class="faq-q">What are PFAS?</summary>
+        <div class="faq-a">
+            <p>Per- and polyfluoroalkyl substances are a family of roughly 12,000 synthetic chemicals united by a single structural feature: a chain of carbon atoms bonded to fluorine. The carbon-fluorine bond is the strongest in organic chemistry — no enzyme, bacterium, or amount of heat breaks it. That permanence was engineered deliberately. It turned out to be their defining danger.</p>
+            <p>PFAS repel water, oil, and heat. They make surfaces nonstick, fabrics waterproof, and foam capable of smothering fuel fires. Those properties made them commercially irresistible. From the 1950s onward they spread into cookware, food packaging, carpets, clothing, firefighting foam, cosmetics, and semiconductor manufacturing.</p>
+        </div>
+    </details>
 
-    <dt>1950s–1960s</dt>
-    <dd>PFAS proliferate across industry. 3M develops PFOS (perfluorooctane sulfonate) for Scotchgard, its stain- and water-resistant treatment for carpets and upholstery. DuPont expands Teflon manufacturing, using PFOA (perfluorooctanoic acid) as a processing aid. The U.S. Navy and Air Force adopt AFFF — aqueous film-forming foam — for fuel-fire suppression at naval and air installations worldwide. The foam saturates the soil around every base that trains with it.</dd>
+    <details class="faq-item">
+        <summary class="faq-q">Why are they called "forever chemicals"?</summary>
+        <div class="faq-a">
+            <p>Because they don't break down. Not in the environment. Not in your body. The carbon-fluorine bond resists every biological and chemical process that would degrade most compounds. PFAS accumulate in soil, drift through groundwater, and build up in human tissue over a lifetime of exposure — which is why blood-serum levels reflect total lifetime exposure, not just recent contact.</p>
+            <p>They are now found in Arctic ice, deep-ocean fish, and human breast milk on every inhabited continent.</p>
+        </div>
+    </details>
 
-    <dt>1998–2000</dt>
-    <dd>3M's internal toxicology research, conducted over two decades, finds PFOS in the blood of the general public — people with no occupational exposure. The compound had been building in human bodies globally without anyone outside the company knowing. Under EPA pressure, 3M voluntarily phases out PFOS production beginning in 2000. Internal documents later show the company had identified the contamination problem years earlier.</dd>
+    <details class="faq-item">
+        <summary class="faq-q">Where are PFAS found?</summary>
+        <div class="faq-a">
+            <p>Virtually everywhere consumer and industrial products have been used for the past 70 years:</p>
+            <ul>
+                <li><strong>Nonstick cookware</strong> — PTFE (Teflon) coatings. DuPont phased out PFOA as a processing aid by 2013, but shorter-chain PFAS remain in many "PFOA-free" alternatives.</li>
+                <li><strong>Food packaging</strong> — grease-resistant coatings on fast-food wrappers, pizza boxes, microwave popcorn bags, and paper takeout containers.</li>
+                <li><strong>Firefighting foam (AFFF)</strong> — aqueous film-forming foam used at military bases, airports, and refineries. One of the most significant contamination pathways in the U.S.; PFAS from foam training has leached into groundwater near hundreds of installations.</li>
+                <li><strong>Stain- and water-resistant textiles</strong> — Scotchgard treatments, outdoor gear, rain jackets, ski wear, and work uniforms.</li>
+                <li><strong>Cosmetics</strong> — mascara, foundation, and lipstick marketed as "long-lasting" or "waterproof" frequently contain PFAS as film-formers; the FDA does not require disclosure.</li>
+                <li><strong>Semiconductor manufacturing</strong> — process chemicals in chip fabrication, for which the industry has argued no substitutes exist at commercial scale.</li>
+            </ul>
+        </div>
+    </details>
 
-    <dt>2001</dt>
-    <dd>Attorney Robert Bilott, working on behalf of a West Virginia farmer, files what becomes a class-action lawsuit against DuPont on behalf of roughly 70,000 residents near the company's Washington Works plant in Parkersburg, W.Va. Discovery produces decades of internal DuPont research showing the company knew PFOA caused cancer in laboratory animals and had detected it in the blood of workers and their families. The case eventually compels the creation of the C8 Health Project, an independent epidemiological study.</dd>
+    <details class="faq-item">
+        <summary class="faq-q">What health effects are linked to PFAS?</summary>
+        <div class="faq-a">
+            <p>In 2006–2011, an independent epidemiological panel analyzing data from 70,000 residents near DuPont's West Virginia plant established "probable links" between PFOA exposure and six diseases: kidney cancer, testicular cancer, thyroid disease, ulcerative colitis, high cholesterol, and pregnancy-induced hypertension.</p>
+            <p>Subsequent research has added immune suppression, low infant birth weight, and developmental delays in children to the list of PFAS-associated health effects. In 2022, the National Academies of Sciences concluded the evidence of harm was sufficient to act on without waiting for definitive causal proof for every compound.</p>
+            <p>The CDC has detected PFAS in the blood of nearly every American it has tested. In June 2025, the White House's own MAHA Commission named PFAS a key driver of childhood chronic illness — two weeks after the Trump EPA rescinded drinking water protections for four PFAS compounds.</p>
+        </div>
+    </details>
 
-    <dt>2006–2011</dt>
-    <dd>The C8 Science Panel — three independent epidemiologists appointed as part of the DuPont settlement — analyzes health data from the 70,000 enrolled Parkersburg-area residents and establishes "probable links" between PFOA exposure and six diseases: kidney cancer, testicular cancer, thyroid disease, ulcerative colitis, hypercholesterolemia (high cholesterol), and pregnancy-induced hypertension. The findings provide the strongest epidemiological basis to date for PFAS health regulation.</dd>
+    <details class="faq-item">
+        <summary class="faq-q">How did PFAS get into public drinking water?</summary>
+        <div class="faq-a">
+            <p>Multiple pathways — but firefighting foam is among the largest known sources. AFFF used in training exercises at military installations and civilian airports for decades leached into the soil and groundwater beneath those sites. PFAS from industrial manufacturing plants (particularly DuPont's Washington Works facility on the Ohio River and Chemours's Cape Fear River facility in North Carolina) discharged directly into surface water used for drinking water intake. Food packaging and consumer products shed PFAS into landfill leachate, which can contaminate nearby groundwater.</p>
+            <p>A 2023–2025 EPA monitoring program (UCMR5) found PFAS above the new federal limits in water systems serving approximately 70 million Americans.</p>
+        </div>
+    </details>
 
-    <dt>2016</dt>
-    <dd>EPA issues a lifetime health advisory for PFOA and PFOS at 70 parts per trillion in drinking water. Health advisories are not enforceable limits — they carry no legal weight and impose no obligation on water systems. But the advisory is the first federal threshold for any PFAS compound and signals that EPA has concluded the chemicals pose a health risk at concentrations previously considered negligible.</dd>
+</div>
 
-    <dt>2017–2021 (Trump I)</dt>
-    <dd>The first Trump EPA releases the PFAS Action Plan in February 2019, committing to begin the rulemaking process for binding drinking water limits. It adds 172 PFAS to the Toxics Release Inventory in June 2020. It issues a significant new use rule requiring EPA review before long-chain PFAS can reach the market. On January 15, 2021 — five days before leaving office — it publishes an advance notice of proposed rulemaking on designating PFOA and PFOS as CERCLA hazardous substances. No binding limits are finalized before the administration ends.</dd>
+{# ── THE RULES ──────────────────────────────────────────────────────────── #}
+<div class="faq-section">
+    <h2 class="faq-section-label">The regulations</h2>
 
-    <dt>2021–2024 (Biden)</dt>
-    <dd>The Biden EPA completes the PFAS regulatory agenda initiated over the previous two decades. In 2023 it finalizes the TSCA Section 8(a)(7) reporting rule, requiring all manufacturers and importers to disclose PFAS use — the most comprehensive PFAS data collection in U.S. history. In May 2024 it designates PFOA and PFOS as CERCLA hazardous substances, the first synthetic chemicals designated since the law's enactment in 1980. In April 2024 it finalizes the first binding drinking water limits: 4 parts per trillion for PFOA and PFOS, plus limits for four additional compounds.</dd>
+    <details class="faq-item">
+        <summary class="faq-q">What is an MCL, and why does it matter?</summary>
+        <div class="faq-a">
+            <p>An MCL — Maximum Contaminant Level — is the legally enforceable limit on the concentration of a contaminant in public drinking water, set under the Safe Drinking Water Act. Water systems that exceed an MCL must notify customers and take corrective action.</p>
+            <p>In April 2024, the Biden EPA finalized the first-ever binding federal MCLs for PFAS: 4 parts per trillion for PFOA and PFOS, and limits for four other compounds. Water utilities were given five years to comply. The rule was estimated to protect 100 million Americans.</p>
+            <p>In May 2025, the Trump EPA rescinded the MCLs for four of those six compounds — PFNA, PFHxS, HFPO-DA (GenX), and mixtures — citing cost and feasibility. The PFOA and PFOS limits at 4 ppt were retained.</p>
+            <p class="faq-note">Note: 4 parts per trillion is roughly equivalent to four drops in an Olympic-size swimming pool. The MCLG — the non-enforceable health-based goal — for PFOA and PFOS is zero, meaning no level is considered safe.</p>
+        </div>
+    </details>
 
-    <dt>2025–present (Trump II)</dt>
-    <dd>The second Trump EPA rescinds drinking water protections for four of the six regulated PFAS — GenX, PFHxS, PFNA, and PFBS — in May 2025, citing cost concerns and arguing the scientific record was insufficient to support those specific limits. The 4 ppt limits for PFOA and PFOS survive, but only after federal courts deny EPA's requests to delay compliance deadlines. In a public contradiction, the MAHA Commission — the administration's own chronic-disease advisory body — names PFAS a driver of childhood illness in a June 2025 report published roughly two weeks after the drinking water rescissions.</dd>
+    <details class="faq-item">
+        <summary class="faq-q">What is CERCLA, and what does "hazardous substance designation" mean?</summary>
+        <div class="faq-a">
+            <p>CERCLA — the Comprehensive Environmental Response, Compensation, and Liability Act, known as Superfund — is the federal law enacted in 1980 that gives EPA authority to compel cleanup of contaminated sites and hold polluters financially liable for remediation costs.</p>
+            <p>Designating a chemical as a "hazardous substance" under CERCLA is the legal trigger that creates that liability. In April 2024, the Biden administration designated PFOA and PFOS as CERCLA hazardous substances — the first new designations in over two decades. Companies that released these chemicals can now be held responsible for cleanup costs at the roughly 700 federal facilities with known or suspected PFAS contamination.</p>
+            <p>The Trump II administration retained the designation but slowed enforcement — exempting municipalities, water utilities, farmers, and fire departments while continuing enforcement against manufacturers.</p>
+        </div>
+    </details>
 
-</dl>
+    <details class="faq-item">
+        <summary class="faq-q">Can EPA legally rescind a finalized MCL?</summary>
+        <div class="faq-a">
+            <p>That is actively disputed. The Safe Drinking Water Act contains an anti-backsliding provision (42 U.S.C. § 300g-1(b)(9)) that prohibits EPA from revising a national primary drinking water regulation in a way that results in a less stringent standard. Earthjustice and a coalition of state attorneys general have argued this provision makes the Trump II rescissions unlawful.</p>
+            <p>Courts have not yet ruled on the merits of the challenge as of this writing.</p>
+        </div>
+    </details>
 
+    <details class="faq-item">
+        <summary class="faq-q">What other federal tools govern PFAS?</summary>
+        <div class="faq-a">
+            <ul>
+                <li><strong>TSCA (Toxic Substances Control Act)</strong> — governs manufacture, use, and disposal of industrial chemicals. The Biden EPA issued a Section 8(a)(7) rule requiring all PFAS manufacturers and importers to disclose PFAS use — the most comprehensive federal PFAS data collection in U.S. history. Trump II proposed significant exemptions in November 2025, including a de minimis exemption for concentrations below 0.1%.</li>
+                <li><strong>Toxics Release Inventory (TRI)</strong> — the first Trump administration added 172 PFAS to this public database of toxic releases in 2019, one of its most tangible PFAS actions.</li>
+                <li><strong>UCMR5</strong> — a Biden-era rule requiring water systems to monitor for 29 PFAS compounds between 2023 and 2025, producing the data baseline used to justify the 2024 MCL rule.</li>
+            </ul>
+        </div>
+    </details>
 
-<h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.2rem; font-weight: 700; color: #111; border-top: 2px solid #111; padding-top: 0.75rem; margin: 2.5rem 0 1rem;">Where PFAS are used</h2>
+</div>
 
-<p style="font-size: 0.925rem; color: #555; margin: 0 0 1rem; line-height: 1.6; max-width: 680px;">The following categories account for the largest known uses of PFAS in the United States. Many consumer products no longer use the longest-chain compounds — PFOA and PFOS — but have substituted shorter-chain PFAS whose long-term health effects are less well studied.</p>
+{# ── THE RECORD ─────────────────────────────────────────────────────────── #}
+<div class="faq-section">
+    <h2 class="faq-section-label">The policy record</h2>
 
-<ul class="pfas-uses-list">
+    <details class="faq-item">
+        <summary class="faq-q">What did the first Trump administration do?</summary>
+        <div class="faq-a">
+            <p>The first Trump EPA was the first federal administration to formally acknowledge PFAS as a national public health problem. In February 2019 it released a PFAS Action Plan — a framework committing to set MCLs for PFOA and PFOS. In June 2020 it added 172 PFAS to the Toxics Release Inventory. On January 15, 2021 — five days before leaving office — it published an advance notice of proposed rulemaking on CERCLA designation.</p>
+            <p>None of the binding commitments were finalized before the administration ended. States, military communities, and manufacturers like 3M and DuPont were already in litigation. The federal government had acknowledged the problem; it had not yet acted on it.</p>
+        </div>
+    </details>
 
-    <li><strong>Nonstick cookware</strong> — PTFE (Teflon) coatings on pans, baking sheets, waffle irons, and small appliances. DuPont phased out PFOA as a processing aid in PTFE manufacturing by 2013 under an EPA voluntary agreement, but some shorter-chain PFAS remain in use in alternative nonstick coatings marketed as "PFOA-free."</li>
+    <details class="faq-item">
+        <summary class="faq-q">What did the Biden administration do?</summary>
+        <div class="faq-a">
+            <p>The Biden EPA completed the regulatory agenda the prior administration had begun. Key actions:</p>
+            <ul>
+                <li><strong>2021</strong> — Released a PFAS Strategic Roadmap committing to enforceable standards within two years</li>
+                <li><strong>2023</strong> — Proposed the first federal PFAS drinking water standards; finalized the TSCA Section 8(a)(7) reporting rule</li>
+                <li><strong>April 2024</strong> — Finalized MCLs for six PFAS compounds (4 ppt for PFOA and PFOS; limits for four additional compounds)</li>
+                <li><strong>April 2024</strong> — Designated PFOA and PFOS as CERCLA hazardous substances — the first new Superfund designation in over 20 years</li>
+            </ul>
+            <p>Water utilities were given five years to comply with the MCLs. The rule covered systems serving at least 25 people.</p>
+        </div>
+    </details>
 
-    <li><strong>Food packaging</strong> — Grease-resistant coatings on fast-food wrappers, pizza boxes, microwave popcorn bags, and paper takeout containers. The FDA banned certain PFAS from food-contact paper and paperboard in 2021, but enforcement and transition timelines are ongoing. Compostable packaging that still uses PFAS can transfer the compounds to food and, eventually, to composted soil.</li>
+    <details class="faq-item">
+        <summary class="faq-q">What has the second Trump administration done?</summary>
+        <div class="faq-a">
+            <p>In May 2025, the Trump EPA rescinded MCLs for four of the six regulated PFAS — PFNA, PFHxS, HFPO-DA (GenX), and mixtures — citing cost and feasibility concerns. The limits for PFOA and PFOS at 4 ppt were retained; the compliance deadline for those two was extended after federal courts denied EPA's request to pause them.</p>
+            <p>The Superfund designation for PFOA and PFOS was retained, but enforcement shifted — exempting municipalities, utilities, farmers, and fire departments while maintaining liability for manufacturers.</p>
+            <p>In June 2025 — two weeks after the rescissions — the White House's MAHA Commission published a report naming PFAS a key driver of childhood chronic illness. The administration did not address the contradiction.</p>
+        </div>
+    </details>
 
-    <li><strong>Firefighting foam (AFFF)</strong> — Aqueous film-forming foam, used at military installations, civilian airports, oil refineries, and industrial facilities to suppress fuel fires. AFFF is one of the most significant known contamination pathways in the United States: PFAS from foam training and emergency use has leached into groundwater near hundreds of military bases. The Department of Defense has been transitioning away from AFFF, but cleanup of existing contamination will take decades.</li>
+</div>
 
-    <li><strong>Stain- and water-resistant textiles</strong> — Scotchgard treatments for carpets, furniture upholstery, and clothing. PFAS-based durable water repellents (DWR) have been standard on outdoor gear, rain jackets, ski wear, and work uniforms. Gore-Tex and similar "waterproof breathable" membranes historically relied on PFAS chemistry. Several outdoor apparel brands have committed to PFAS-free alternatives, though performance trade-offs remain an industry debate.</li>
+{# ── KEY TERMS ──────────────────────────────────────────────────────────── #}
+<div class="faq-section">
+    <h2 class="faq-section-label">Key terms and compounds</h2>
 
-    <li><strong>Cosmetics</strong> — "Long-lasting," "waterproof," and "transfer-resistant" cosmetics — mascara, foundation, lipstick, blush, eyeliner — frequently contain PFAS as film-formers, conditioning agents, or texture modifiers. The FDA does not require PFAS disclosure on cosmetic labels; studies have detected PFAS in products whose ingredient lists contain no explicit PFAS names.</li>
+    <details class="faq-item">
+        <summary class="faq-q">What are PFOA and PFOS?</summary>
+        <div class="faq-a">
+            <p><strong>PFOA</strong> (perfluorooctanoic acid) is an 8-carbon PFAS used in manufacturing nonstick coatings including Teflon. Linked to kidney cancer, testicular cancer, thyroid disease, and immune disruption. DuPont's use of PFOA and its decades of documented internal knowledge of its harms became the basis for major litigation and the eventual regulatory action.</p>
+            <p><strong>PFOS</strong> (perfluorooctane sulfonate) is an 8-carbon PFAS used in Scotchgard fabric treatments and firefighting foam. 3M phased it out under EPA pressure in 2000 after its own internal research found it in the blood of the general public. Both compounds are now subject to the 4 ppt MCL retained by Trump II, and both are designated CERCLA hazardous substances.</p>
+        </div>
+    </details>
 
-    <li><strong>Medical devices</strong> — PTFE is biocompatible, chemically inert, and used in vascular grafts, surgical mesh, catheter coatings, suture materials, and implantable devices. Medical applications are among the uses most commonly cited as difficult to replace without performance loss.</li>
+    <details class="faq-item">
+        <summary class="faq-q">What is GenX?</summary>
+        <div class="faq-a">
+            <p>GenX is the commercial name for HFPO-DA (hexafluoropropylene oxide-dimer acid), a short-chain PFAS developed by Chemours (a DuPont spinoff) as a replacement for PFOA in fluoropolymer manufacturing. It came to national attention after it was detected in the drinking water of communities downstream from Chemours's Fayetteville Works facility on the Cape Fear River in North Carolina — including Wilmington, NC.</p>
+            <p>GenX was subject to a Biden-era MCL of 10 ppt, which the Trump EPA rescinded in May 2025.</p>
+        </div>
+    </details>
 
-    <li><strong>Semiconductor and electronics manufacturing</strong> — PFAS are used as process chemicals in chip fabrication (photolithography, etching, and cleaning steps), circuit board manufacturing, and flat-panel display production. The semiconductor industry has sought PFAS exemptions from European restriction proposals, arguing no suitable substitutes currently exist at commercial scale.</li>
+    <details class="faq-item">
+        <summary class="faq-q">What is AFFF?</summary>
+        <div class="faq-a">
+            <p>Aqueous film-forming foam — a PFAS-containing firefighting agent used at military bases, civilian airports, and oil refineries to suppress fuel fires. AFFF training exercises and accidental spills have contaminated groundwater near hundreds of military installations, making the Department of Defense one of the largest known sources of PFAS contamination in the United States. DoD has been transitioning away from AFFF, but cleanup of existing contamination will take decades.</p>
+        </div>
+    </details>
 
-    <li><strong>Industrial lubricants and coatings</strong> — Aerospace components, automotive parts, industrial bearings, and heavy equipment use PFAS-based coatings for low friction, chemical resistance, and high-temperature stability. Applications range from aircraft hydraulic systems to medical implant surfaces.</li>
+    <details class="faq-item">
+        <summary class="faq-q">What does "parts per trillion" mean?</summary>
+        <div class="faq-a">
+            <p>Parts per trillion (ppt) is the unit used to measure PFAS concentrations in water. One part per trillion is equivalent to one drop of water in 20 Olympic-size swimming pools. The Biden MCL for PFOA and PFOS — 4 ppt — reflects the compounds' potency: they accumulate in human tissue and pose health risks at concentrations that were previously considered negligible and were technically difficult to even detect.</p>
+        </div>
+    </details>
 
-</ul>
+    <details class="faq-item">
+        <summary class="faq-q">What is MAHA?</summary>
+        <div class="faq-a">
+            <p>Make America Healthy Again — a public health initiative associated with HHS Secretary Robert F. Kennedy Jr. The MAHA Commission released a report in June 2025 identifying PFAS, pesticides, and food additives as drivers of chronic disease in American children. The report was published approximately two weeks after the Trump EPA rescinded drinking water protections for four PFAS compounds, creating a visible contradiction within the administration.</p>
+        </div>
+    </details>
 
-
-{# ── Glossary ───────────────────────────────────────────────────────────── #}
-<h2 style="font-family: 'Libre Baskerville', Georgia, serif; font-size: 1.2rem; font-weight: 700; color: #111; border-top: 2px solid #111; padding-top: 0.75rem; margin: 2.5rem 0 1rem;">Glossary</h2>
-<p style="color: #666; font-size: 0.9rem; margin: 0 0 1.5rem; max-width: 680px;">Key compounds, regulatory programs, and terms used in tracking U.S. PFAS policy.</p>
-
-<h3 class="glossary-section-head">PFAS Compounds</h3>
-<ul class="glossary-list">
-
-    <li class="glossary-item">
-        <div class="glossary-term">Per- and polyfluoroalkyl substances <span class="glossary-abbr">PFAS</span></div>
-        <p class="glossary-def">A family of roughly 12,000 synthetic chemicals that share a carbon-fluorine bond — one of the strongest in chemistry. Because this bond resists breakdown by heat, water, oil, and biological processes, PFAS accumulate in the environment and in living organisms indefinitely. They are often called "forever chemicals."</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Perfluorooctanoic acid <span class="glossary-abbr">PFOA</span></div>
-        <p class="glossary-def">An 8-carbon PFAS used in the manufacture of nonstick coatings (including Teflon) and other fluoropolymers. One of the most studied PFAS compounds. Linked to kidney cancer, testicular cancer, thyroid disease, and immune system disruption. Subject to the Biden EPA's 2024 4 ppt maximum contaminant level, retained by Trump II.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Perfluorooctane sulfonate <span class="glossary-abbr">PFOS</span></div>
-        <p class="glossary-def">An 8-carbon PFAS historically used in stain-resistant fabric treatments (Scotchgard) and aqueous film-forming foam (AFFF) used by military and civilian firefighters. Phased out by major manufacturers in the early 2000s but persists widely in groundwater near military bases and industrial sites. Subject to the same 4 ppt MCL as PFOA.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">GenX <span class="glossary-abbr">HFPO-DA</span></div>
-        <p class="glossary-def">Hexafluoropropylene oxide-dimer acid — a short-chain PFAS developed as a replacement for PFOA in fluoropolymer manufacturing. Associated with the Chemours facility on the Cape Fear River in North Carolina, which discharged GenX into drinking water supplies for communities downstream including Wilmington, NC. Subject to a Biden-era MCL rescinded by Trump II in May 2025.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Perfluorohexane sulfonate <span class="glossary-abbr">PFHxS</span></div>
-        <p class="glossary-def">A 6-carbon PFAS found in firefighting foam and various consumer products. Linked to thyroid disease and developmental effects. Subject to a Biden-era MCL rescinded by Trump II in May 2025.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Perfluorononanoic acid <span class="glossary-abbr">PFNA</span></div>
-        <p class="glossary-def">A 9-carbon PFAS found in food packaging, stain-resistant coatings, and some industrial applications. Linked to immune suppression, thyroid effects, and obesity. EPA scientists reportedly flagged PFNA as more toxic than previously classified before its MCL was rescinded in May 2025.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Perfluorobutane sulfonate <span class="glossary-abbr">PFBS</span></div>
-        <p class="glossary-def">A short-chain (4-carbon) PFAS used as a replacement for PFOS in some applications. Previously considered less toxic because it clears the body faster, but newer research has raised concerns about thyroid and developmental effects. MCL rescinded by Trump II in May 2025.</p>
-    </li>
-
-</ul>
-
-<h3 class="glossary-section-head">Regulatory Standards &amp; Programs</h3>
-<ul class="glossary-list">
-
-    <li class="glossary-item">
-        <div class="glossary-term">Maximum Contaminant Level <span class="glossary-abbr">MCL</span></div>
-        <p class="glossary-def">The legally enforceable limit on the concentration of a contaminant in public drinking water systems, set under the Safe Drinking Water Act. Water systems that exceed an MCL must notify customers and take corrective action. Biden's April 2024 MCL final rule set the first-ever binding PFAS limits: 4 ppt for PFOA and PFOS, and limits for four other compounds. Trump II retained the PFOA/PFOS limits and rescinded the other four.</p>
-        <p class="glossary-note">Also see: MCLG (Maximum Contaminant Level Goal), a non-enforceable health-based target. For PFOA and PFOS, the MCLG is zero — meaning no level is considered safe.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Safe Drinking Water Act <span class="glossary-abbr">SDWA</span></div>
-        <p class="glossary-def">The federal law governing the safety of public drinking water systems in the United States. Enacted in 1974. Requires EPA to set MCLs for contaminants that pose a risk to public health. The SDWA's anti-backsliding provision may limit EPA's authority to rescind finalized MCLs — a legal question raised in litigation challenging the Trump II rollback.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Comprehensive Environmental Response, Compensation, and Liability Act <span class="glossary-abbr">CERCLA</span></div>
-        <p class="glossary-def">The federal Superfund law, enacted in 1980. Designating a substance as a CERCLA hazardous substance gives EPA authority to compel cleanup of contaminated sites and hold polluters liable for remediation costs. Biden designated PFOA and PFOS as CERCLA hazardous substances in May 2024 — the most powerful PFAS enforcement tool available. Trump II has retained the designation.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Toxic Substances Control Act <span class="glossary-abbr">TSCA</span></div>
-        <p class="glossary-def">The federal law governing the manufacture, use, and disposal of industrial chemicals in the United States. Key TSCA provisions used in PFAS regulation include: Section 8(a)(7) — reporting requirements; Section 5 — new chemical review (used to require EPA approval before new PFAS enter the market, later subject to a 5th Circuit ruling limiting EPA's authority); and Section 6 — risk management rules.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">TSCA Section 8(a)(7) Reporting Rule</div>
-        <p class="glossary-def">A Biden-era rule requiring companies to report to EPA all PFAS they manufacture, process, import, or use — including the quantities and uses. Described as the most comprehensive federal PFAS data collection ever conducted. Trump II proposed significant exemptions in November 2025, including a de minimis exemption (below 0.1% concentration) and an imported articles exemption.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Toxics Release Inventory <span class="glossary-abbr">TRI</span></div>
-        <p class="glossary-def">A publicly available database maintained by EPA listing toxic chemical releases, transfers, and disposal from industrial facilities. The first Trump administration added 172 PFAS to the TRI in 2019 as part of the PFAS Action Plan — one of its most tangible accomplishments.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Unregulated Contaminant Monitoring Rule 5 <span class="glossary-abbr">UCMR5</span></div>
-        <p class="glossary-def">A Biden-era rule requiring public water systems to monitor for 29 PFAS compounds and lithium between 2023 and 2025. Results confirmed PFAS above the new MCL levels in systems serving approximately 70 million Americans — providing the data baseline for the 2024 drinking water rule.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Significant New Use Rule <span class="glossary-abbr">SNUR</span></div>
-        <p class="glossary-def">A TSCA Section 5 regulatory tool requiring companies to notify EPA before using a chemical in a new way that could increase exposure or risk. EPA used SNURs against PFAS manufacturing processes; however, a March 2024 5th Circuit ruling (<em>Inhance Technologies v. EPA</em>) found that EPA had exceeded its authority in issuing certain PFAS SNURs — limiting this enforcement tool.</p>
-    </li>
-
-</ul>
-
-<h3 class="glossary-section-head">Key Laws, Concepts &amp; Abbreviations</h3>
-<ul class="glossary-list">
-
-    <li class="glossary-item">
-        <div class="glossary-term">Parts per trillion <span class="glossary-abbr">ppt</span></div>
-        <p class="glossary-def">The unit used to measure PFAS concentrations in water. One part per trillion is equivalent to one drop of water in 20 Olympic-size swimming pools. The Biden EPA's MCL for PFOA and PFOS is 4 ppt — an extremely low threshold reflecting the compounds' high bioaccumulation and their health risks even at trace concentrations.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Aqueous film-forming foam <span class="glossary-abbr">AFFF</span></div>
-        <p class="glossary-def">A PFAS-containing firefighting foam historically used at military bases, airports, and refineries to suppress fuel fires. AFFF training exercises and spills have contaminated groundwater near hundreds of military installations, making the Department of Defense one of the largest known sources of PFAS contamination in the U.S.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Make America Healthy Again <span class="glossary-abbr">MAHA</span></div>
-        <p class="glossary-def">A public health initiative associated with HHS Secretary Robert F. Kennedy Jr. The MAHA Commission released a report in June 2025 naming PFAS, pesticides, and food additives as contributors to chronic disease in American children. The report's PFAS concerns were published two weeks after EPA rescinded MCLs for four PFAS compounds, creating a visible contradiction within the administration.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Bioaccumulation</div>
-        <p class="glossary-def">The process by which a substance builds up in an organism's tissue faster than the organism can eliminate it. PFAS bioaccumulate because the body cannot break them down. Exposure is cumulative over a lifetime. Blood-serum PFAS levels reflect total lifetime exposure, not just recent contact.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Anti-backsliding provision</div>
-        <p class="glossary-def">A provision of the Safe Drinking Water Act (42 U.S.C. § 300g-1(b)(9)) that prohibits EPA from revising a national primary drinking water regulation in a way that results in a less stringent MCL. Earthjustice and state attorneys general have argued this provision makes Trump II's MCL rescissions unlawful. Courts have not yet ruled on the merits.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">PFAS Action Plan</div>
-        <p class="glossary-def">Released in February 2019 by the first Trump administration under EPA Administrator Andrew Wheeler, the PFAS Action Plan was the first comprehensive federal strategy for addressing PFAS contamination. It committed EPA to developing MCLs, expanding TRI reporting, and pursuing CERCLA designation — laying groundwork that Biden's EPA completed.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">Enforcement discretion</div>
-        <p class="glossary-def">A decision by a regulatory agency not to enforce a rule against a particular category of regulated parties, even when violations technically exist. Trump II's September 2025 CERCLA announcement retained the PFOA/PFOS designation but granted enforcement discretion to municipalities, water utilities, farmers, and fire departments — while continuing enforcement against manufacturers and industrial polluters.</p>
-    </li>
-
-    <li class="glossary-item">
-        <div class="glossary-term">De minimis exemption</div>
-        <p class="glossary-def">A regulatory exemption for quantities below a defined threshold, on the theory that the amount is too small to regulate effectively. The Trump II proposed TSCA reporting exemptions would create a de minimis exemption for PFAS below 0.1% concentration — a threshold that would cover a wide range of products, including many consumer goods that contain PFAS in small but potentially significant amounts.</p>
-    </li>
-
-</ul>
-
-</article>
+</div>
+</div>{# /faq-body #}
 
 {% endblock %}

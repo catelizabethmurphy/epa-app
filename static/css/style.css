@@ -2373,3 +2373,399 @@ details[open] .details-arrow { display: inline-block; transform: rotate(90deg); 
     color: #111;
     font-weight: 700;
 }
+
+/* ── FAQ / Glossary page ─────────────────────────────────────────────────── */
+
+.faq-header {
+    border-top: 3px solid #111;
+    padding-top: 1rem;
+    margin-bottom: 2.5rem;
+}
+.faq-eyebrow {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #888;
+    margin: 0 0 0.5rem;
+}
+.faq-title {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 0.75rem;
+    line-height: 1.15;
+}
+.faq-intro {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0;
+    font-family: "PT Sans", sans-serif;
+}
+
+.faq-body { max-width: 760px; }
+
+.faq-section { margin-bottom: 2.5rem; }
+.faq-section-label {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #888;
+    font-weight: 700;
+    margin: 0 0 0.75rem;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 1.25rem;
+}
+
+.faq-item {
+    border-bottom: 1px solid #e8e8e8;
+}
+.faq-item + .faq-item { margin-top: 0; }
+
+.faq-q {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111;
+    cursor: pointer;
+    padding: 1rem 2rem 1rem 0;
+    list-style: none;
+    position: relative;
+    line-height: 1.35;
+    user-select: none;
+}
+.faq-q::-webkit-details-marker { display: none; }
+.faq-q::after {
+    content: '+';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: "PT Sans", sans-serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: #aaa;
+    line-height: 1;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+details[open] > .faq-q::after {
+    content: '−';
+    color: #555;
+}
+.faq-q:hover { color: #c0202a; }
+
+.faq-a {
+    padding: 0 0 1.25rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.98rem;
+    line-height: 1.7;
+    color: #333;
+    max-width: 680px;
+}
+.faq-a p { margin: 0 0 0.85rem; }
+.faq-a p:last-child { margin-bottom: 0; }
+.faq-a ul {
+    padding-left: 1.2rem;
+    margin: 0.5rem 0 0.85rem;
+}
+.faq-a li { margin-bottom: 0.5rem; }
+.faq-a strong { color: #111; }
+.faq-note {
+    background: #f5f5f5;
+    border-left: 3px solid #ccc;
+    padding: 0.65rem 0.9rem;
+    font-size: 0.88rem;
+    color: #555;
+    margin-top: 0.75rem;
+    line-height: 1.55;
+}
+
+/* ── Story / scrollytelling home page ───────────────────────────────────── */
+
+.st-hero {
+    min-height: 100vh;
+    background: #111;
+    color: #f5f1ea;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1.5rem 6rem;
+    text-align: center;
+    position: relative;
+    margin-top: -1px; /* bleed into nav */
+}
+.st-hero-inner { max-width: 720px; }
+.st-hero-number {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(8rem, 22vw, 18rem);
+    line-height: 1;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em;
+}
+.st-hero-subhed {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    margin: 1.25rem 0 1rem;
+    color: #f5f1ea;
+    line-height: 1.35;
+}
+.st-hero-body {
+    font-family: "PT Sans", sans-serif;
+    font-size: 1.05rem;
+    color: #b8b0a4;
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto;
+}
+.st-scroll-cue {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #5a5248;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+}
+.st-scroll-arrow { animation: stBounce 1.8s ease-in-out infinite; font-size: 1rem; }
+@keyframes stBounce {
+    0%, 100% { transform: translateY(0); opacity: 0.5; }
+    50%       { transform: translateY(6px); opacity: 1; }
+}
+
+/* Chapter shell — dark */
+.st-chapter {
+    display: grid;
+    grid-template-columns: 32% 68%;
+    padding: 6rem clamp(1.5rem, 6vw, 5rem);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    align-items: start;
+    gap: 0;
+    background: #111;
+    color: #e8e4dc;
+}
+.st-chapter-single {
+    padding: 6rem clamp(1.5rem, 6vw, 5rem);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    background: #111;
+    color: #e8e4dc;
+}
+
+/* Left column */
+.st-chapter-left { padding-right: 3rem; }
+.st-big-stat {
+    position: sticky;
+    top: 5rem;
+    padding-top: 0.5rem;
+}
+.st-stat-number {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: #e8e4dc;
+}
+.st-stat-label {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.9rem;
+    color: #7a7268;
+    margin-top: 0.65rem;
+    line-height: 1.45;
+    max-width: 18rem;
+}
+
+/* Era labels (left column for admin sections) */
+.st-era-name {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(2.4rem, 4.5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+}
+.st-era-name--trump1 { color: #c8902a; }
+.st-era-name--biden  { color: #5a9fd4; }
+.st-era-name--trump2 { color: #e05060; }
+.st-era-years {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #5a5248;
+    margin-top: 0.6rem;
+}
+
+/* Right column */
+.st-chapter-right { padding-left: 1rem; }
+.st-eyebrow {
+    font-family: "PT Sans", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #7a7268;
+    margin: 0 0 0.9rem;
+}
+.st-hed {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(1.4rem, 2.4vw, 2rem);
+    line-height: 1.3;
+    margin: 0 0 1.4rem;
+    font-weight: 700;
+    color: #f0ece4;
+    max-width: 38ch;
+}
+.st-body {
+    font-family: "PT Sans", sans-serif;
+    font-size: 1.03rem;
+    line-height: 1.72;
+    color: #b8b0a4;
+    margin: 0 0 1.1rem;
+    max-width: 60ch;
+}
+.st-note {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-style: italic;
+    color: #7a7268;
+    border-left: 3px solid #333;
+    padding-left: 1rem;
+    margin-top: 1.4rem;
+    font-size: 1rem;
+    max-width: 55ch;
+    line-height: 1.55;
+}
+
+/* Pull quote */
+.st-pull {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+    font-style: italic;
+    color: #e8e4dc;
+    border-left: 3px solid #e05060;
+    padding: 0.75rem 1.25rem;
+    margin-top: 1.75rem;
+    max-width: 52ch;
+    line-height: 1.5;
+}
+.st-pull-source {
+    display: block;
+    font-size: 0.8rem;
+    font-style: normal;
+    font-family: "PT Sans", sans-serif;
+    color: #5a5248;
+    margin-top: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+/* Compound table — dark */
+.st-compound-table {
+    margin: 1.75rem 0 1rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 540px;
+    background: #1a1a1a;
+}
+.st-compound-row {
+    display: grid;
+    grid-template-columns: 1.6fr 0.9fr 1.2fr;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    align-items: center;
+    color: #b8b0a4;
+}
+.st-compound-row:last-child { border-bottom: none; }
+.st-compound-row.is-visible,
+.st-compound-row--header { opacity: 1; transform: none; }
+.st-compound-row--header {
+    background: #222;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #5a5248;
+    transition: none;
+}
+.st-compound-row > div:first-child { font-weight: 700; color: #e8e4dc; }
+.st-badge {
+    display: inline-block;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 0.22rem 0.6rem;
+    border-radius: 999px;
+}
+.st-badge--retained  { background: rgba(30,160,70,0.2); color: #5ec87a; }
+.st-badge--rescinded { background: rgba(200,40,50,0.2); color: #e07080; }
+
+/* CTA */
+.st-cta-section {
+    background: #0d0d0d;
+    color: #f5f1ea;
+    text-align: center;
+    padding: 6rem 1.5rem 5rem;
+    border-top: 1px solid rgba(255,255,255,0.07);
+}
+.st-cta-eyebrow {
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+    color: #f5f1ea;
+    max-width: 28ch;
+    margin: 0 auto 2rem;
+    line-height: 1.4;
+}
+.st-cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.st-cta-btn {
+    display: inline-block;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    padding: 0.85rem 1.5rem;
+    background: transparent;
+    color: #e8e4dc !important;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 2px;
+    letter-spacing: 0.03em;
+    transition: background 0.15s, border-color 0.15s;
+}
+.st-cta-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); }
+
+/* Mobile */
+@media (max-width: 768px) {
+    .st-chapter {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 3.5rem 1.25rem;
+    }
+    .st-chapter-left { padding-right: 0; }
+    .st-chapter-right { padding-left: 0; }
+    .st-big-stat { position: static; top: auto; }
+    .st-compound-row { font-size: 0.88rem; padding: 0.65rem 0.85rem; }
+    .st-hed { font-size: 1.35rem; }
+    .st-body { font-size: 1rem; }
+    .st-hero-number { font-size: clamp(6rem, 30vw, 8rem); }
+}
