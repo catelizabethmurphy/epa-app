@@ -1,131 +1,907 @@
 {% extends "base.html" %}
 
-{% block title %}State-by-State PFAS Policy Tracker{% endblock %}
-{% block og_title %}State-by-State PFAS Policy Tracker{% endblock %}
-{% block og_description %}State legislation on PFAS restrictions, reporting, and cleanup by state.{% endblock %}
+{% block title %}State PFAS Legislation Tracker{% endblock %}
+{% block og_title %}State PFAS Legislation Tracker{% endblock %}
+{% block og_description %}States are moving to restrict PFAS as the Trump EPA rolls back federal drinking water limits. Track legislation across 39 states.{% endblock %}
 
 {% block head %}
 <style>
-.state-index {
+/* ── State lede ──────────────────────────────────────────────────────────── */
+.state-lede {
+    border-top: 3px solid #111;
+    padding-top: 1rem;
+    margin: 1rem 0 1.25rem;
+    max-width: 720px;
+}
+.state-lede-eyebrow {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+    margin-bottom: 0.5rem;
+}
+.state-lede-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: clamp(1.3rem, 3vw, 1.75rem);
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 0.6rem;
+    line-height: 1.25;
+}
+.state-lede-text {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.7;
+    margin: 0 0 0.5rem;
+}
+.state-lede-credit {
+    font-size: 0.72rem;
+    color: #999;
+    font-family: "PT Sans", sans-serif;
+    margin: 0;
+}
+.state-lede-credit a { color: #999; }
+
+/* ── Stat strip ──────────────────────────────────────────────────────────── */
+.state-stat-strip {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 0.75rem;
-    margin: 0.75rem 0 1.5rem;
-}
-.state-index a {
-    font-size: 0.85rem;
-    text-decoration: none;
-    border-bottom: 1px solid #111;
-}
-.state-jump {
-  margin: 0.75rem 0 1.5rem;
-}
-.state-jump label {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #666;
-  font-family: "PT Sans", sans-serif;
-  display: block;
-  margin-bottom: 0.35rem;
-}
-.state-jump select {
-  font-size: 0.9rem;
-  padding: 0.4rem 0.5rem;
-  border: 1px solid #ddd;
-  background: #fff;
-  font-family: "PT Sans", sans-serif;
-  min-width: 220px;
-}
-.state-card {
+    gap: 1px;
+    background: #ddd;
     border: 1px solid #ddd;
+    margin: 1.25rem 0 1.75rem;
+}
+.state-stat {
     background: #fff;
     padding: 1rem 1.25rem;
-    margin: 0 0 1.25rem;
+    display: flex;
+    align-items: baseline;
+    flex: 1 1 auto;
+    white-space: nowrap;
 }
-.state-card h2 {
-    font-size: 1.1rem;
-    margin: 0 0 0.35rem;
-    font-family: "Libre Baskerville", Georgia, serif;
+.state-stat-phrase {
+    font-size: 0.95rem;
+    font-family: "PT Sans", sans-serif;
+    color: #555;
+    line-height: 1.3;
+    white-space: normal;
 }
-.state-meta {
-    font-size: 0.8rem;
-    color: #777;
-    margin-bottom: 0.6rem;
+.state-stat-phrase strong {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 1.55em;
+    font-weight: 700;
+    color: #111;
+    margin-right: 0.18em;
 }
-.state-meta span { margin-right: 0.75rem; }
-.state-table-wrap { overflow-x: auto; }
-.state-table td { vertical-align: top; }
-.state-table td small { color: #666; }
+.state-stat--adopted .state-stat-phrase strong { color: #1a6b35; }
 
+/* ── View mode bar ───────────────────────────────────────────────────────── */
+.view-mode-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 1.25rem 0 0;
+    border-top: 2px solid #111;
+    padding-top: 0.7rem;
+}
+.view-mode-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+    white-space: nowrap;
+    margin-right: 0.25rem;
+}
+.view-mode-btn {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.35rem 0.9rem;
+    border: 2px solid #ccc;
+    background: #fff;
+    color: #999;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+    line-height: 1;
+}
+.view-mode-btn.active {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+.view-mode-btn:hover:not(.active) { border-color: #888; color: #333; }
+
+/* ── Filter row ──────────────────────────────────────────────────────────── */
+.filter-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin: 0.6rem 0 1.5rem;
+}
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.filter-group label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+}
+.filter-group select {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.5rem;
+    border: 1px solid #ccc;
+    background: #fff;
+    font-family: "PT Sans", sans-serif;
+    min-width: 200px;
+}
+.filter-toggle {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+}
+.filter-btn {
+    background: #f2f3f4;
+    border: 1px solid #ccc;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: "PT Sans", sans-serif;
+    color: #333;
+    border-radius: 2px;
+    transition: background 0.1s, color 0.1s;
+    line-height: 1.4;
+}
+.filter-btn.active { background: #111; color: #fff; border-color: #111; }
+.filter-btn:hover:not(.active) { background: #e0e0e0; }
+
+/* ── State card ──────────────────────────────────────────────────────────── */
+.state-card,
+.year-section {
+    scroll-margin-top: 3.5rem;
+}
+.state-card {
+    border-top: 3px solid #111;
+    margin: 0 0 1.75rem;
+}
+.state-card--has-adopted { border-top-color: #1a6b35; }
+
+.state-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    padding: 0.6rem 0 0.5rem;
+}
+.state-card-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+.state-card-title h2 {
+    font-size: 1.4rem;
+    margin: 0;
+    font-family: "Libre Baskerville", Georgia, serif;
+    font-weight: 700;
+    line-height: 1;
+    color: #111;
+}
+.state-card-counts {
+    font-size: 0.72rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: "PT Sans", sans-serif;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.state-count-adopted {
+    font-weight: 700;
+    color: #1a6b35;
+}
+.state-count-sep { color: #ccc; }
+
+.state-table-wrap {
+    overflow-x: auto;
+    padding: 0 0 1rem;
+}
+.state-table { table-layout: fixed; width: 100%; }
+.state-table colgroup col:nth-child(1) { width: 60px; }
+.state-table colgroup col:nth-child(2) { width: 100px; }
+.state-table colgroup col:nth-child(3) { width: 18%; }
+.state-table colgroup col:nth-child(4) { width: 22%; }
+.state-table colgroup col:nth-child(5) { width: auto; }
+.year-table colgroup col:nth-child(1) { width: 130px; }
+.year-table colgroup col:nth-child(2) { width: 100px; }
+.state-table td { vertical-align: top; }
+.state-table td small { color: #666; font-size: 0.8rem; }
+
+/* ── Chemical scope label ────────────────────────────────────────────────── */
+.chem-label {
+    font-size: 0.72rem;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 400;
+}
+.chem-label--specific { color: #1a6b35; }
+.chem-label--broad    { color: #999; }
+
+/* ── Status badges ───────────────────────────────────────────────────────── */
+.sbadge {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+    font-family: "PT Sans", sans-serif;
+    white-space: nowrap;
+}
+.sbadge--adopted     { background: #eafaf1; color: #1a6b35; }
+.sbadge--introduced  { background: #f2f3f4; color: #555; }
+.sbadge--other       { background: #fef3e2; color: #7a5c30; }
+
+/* ── No-bills message ────────────────────────────────────────────────────── */
+.state-card-body { padding: 0.75rem 1.25rem 1rem; }
+
+/* ── Mobile table rows ───────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .tbl-hidden-row { display: none; }
+    .tbl-show-more-btn {
+        background: none; border: none; color: #1e5fa0; font-size: 0.8rem;
+        font-family: "PT Sans", sans-serif; cursor: pointer; padding: 0.4rem 0;
+        text-decoration: underline;
+    }
+}
+
+/* ── Year section (by-year view) ─────────────────────────────────────────── */
+.year-section {
+    margin: 0 0 1.75rem;
+}
+.year-section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    border-top: 3px solid #111;
+    padding-top: 0.6rem;
+    margin-bottom: 0.5rem;
+}
+.year-num {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1;
+}
+.year-count {
+    font-size: 0.72rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: "PT Sans", sans-serif;
+}
+
+/* ── Issue section (by-issue view) ───────────────────────────────────────── */
+.issue-section {
+    margin: 0 0 1.75rem;
+    scroll-margin-top: 3.5rem;
+}
+.issue-section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    border-top: 3px solid #111;
+    padding-top: 0.6rem;
+    margin-bottom: 0.5rem;
+}
+.issue-name {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1;
+}
+.issue-count {
+    font-size: 0.72rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: "PT Sans", sans-serif;
+}
+.issue-table colgroup col:nth-child(1) { width: 130px; }
+.issue-table colgroup col:nth-child(2) { width: 60px; }
+.issue-table colgroup col:nth-child(3) { width: 100px; }
+.issue-table colgroup col:nth-child(4) { width: 25%; }
+.issue-table colgroup col:nth-child(5) { width: auto; }
 </style>
 {% endblock %}
 
+{% macro chem_label(chemicals) %}{% if chemicals == 'PFAS' %}<br><small class="chem-label chem-label--specific">PFAS-specific</small>{% elif chemicals %}<br><small class="chem-label chem-label--broad">Covers PFAS</small>{% endif %}{% endmacro %}
+
 {% block content %}
 
-<h2 class="section-head" style="margin-top:1rem;">State-by-state tracker</h2>
-<p class="lede-block">
-  This tracker compiles state PFAS bills by year and status. Use the state index
-  to jump to a specific state.
-</p>
-
-<p class="section-note">
-  {{ summary.bills }} bills across {{ summary.states }} states.
-  {{ summary.adopted }} adopted · {{ summary.introduced }} introduced.
-</p>
-
-
-<div class="state-jump">
-  <label for="state-jump-select">Jump to a state</label>
-  <select id="state-jump-select" onchange="if (this.value) { window.location.hash = this.value; }">
-    <option value="">Select a state</option>
-    {% for s in states %}
-    <option value="state-{{ s.slug }}">{{ s.name }}</option>
-    {% endfor %}
-  </select>
+<div class="state-lede">
+    <div class="state-lede-eyebrow">State-by-State Tracker</div>
+    <h1 class="state-lede-hed">States step up as federal PFAS protections erode</h1>
+    <p class="state-lede-text">
+        As the Trump EPA rolls back drinking water limits for four of the six PFAS compounds
+        the Biden administration regulated, state legislatures have accelerated their own
+        restrictions — on drinking water, firefighting foam, food packaging, textiles, and cosmetics.
+    </p>
+    <p class="state-lede-credit">Data: <a href="https://www.saferstates.org/bill-tracker/?toxic_chemicals=PFAS" target="_blank" rel="noopener">Safer States PFAS Bill Tracker</a></p>
 </div>
 
-{% for s in states %}
-<section class="state-card" id="state-{{ s.slug }}" data-pagefind-body>
-  <h2>{{ s.name }}</h2>
-  <div class="state-meta">
-    <span>{{ s.counts.total }} bills</span>
-    <span>{{ s.counts.adopted }} adopted</span>
-    <span>{{ s.counts.introduced }} introduced</span>
-  </div>
+<div class="state-stat-strip" id="stat-strip">
+    <div class="state-stat state-stat--adopted" id="stat-adopted-wrap">
+        <span class="state-stat-phrase" id="stat-adopted-phrase"><strong>{{ summary.adopted }}</strong>PFAS {{ 'bill' if summary.adopted == 1 else 'bills' }} adopted into law</span>
+    </div>
+    <div class="state-stat" id="stat-introduced-wrap">
+        <span class="state-stat-phrase" id="stat-introduced-phrase"><strong>{{ summary.introduced }}</strong>PFAS {{ 'bill' if summary.introduced == 1 else 'bills' }} under consideration in 2025–26</span>
+    </div>
+    <div class="state-stat" id="stat-introduced-2026-wrap" style="display:none">
+        <span class="state-stat-phrase" id="stat-introduced-2026-phrase"><strong>0</strong>PFAS bills under consideration in 2026</span>
+    </div>
+    <div class="state-stat" id="stat-issues-wrap" style="display:none">
+        <span class="state-stat-phrase" id="stat-issues-phrase"><strong>0</strong>issue areas</span>
+    </div>
+    <div class="state-stat" id="stat-states-wrap" style="display:none">
+        <span class="state-stat-phrase" id="stat-states-phrase"><strong>0</strong>states</span>
+    </div>
+</div>
 
-  <div class="state-table-wrap">
-    <table class="doc-table state-table">
-      <thead>
-        <tr>
-          <th>Year</th>
-          <th>Status</th>
-          <th>Bill</th>
-          <th class="hide-mobile">Issue</th>
-          <th class="hide-mobile">Focus</th>
-          <th class="hide-mobile">Notes</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% for b in s.bills %}
-        <tr>
-          <td style="white-space:nowrap;">{{ b.year or "—" }}</td>
-          <td>{{ b.status or "—" }}</td>
-          <td>
-            <strong>{{ b.bill or "—" }}</strong>
-            {% if b.chemicals %}
-            <br><small>{{ b.chemicals }}</small>
+<div class="view-mode-bar">
+    <span class="view-mode-label">Viewing by</span>
+    <button class="sort-btn view-mode-btn active" data-sort="state">State</button>
+    <button class="sort-btn view-mode-btn" data-sort="year">Year</button>
+</div>
+
+<div class="filter-row">
+    <div class="filter-group" id="jump-group">
+        <label for="state-jump-select">Jump to state</label>
+        <select id="state-jump-select">
+            <option value="">All states</option>
+            {% for s in states %}
+            <option value="state-{{ s.slug }}" data-state-name="{{ s.name }}">{{ s.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-group" id="year-group" style="display:none;">
+        <label for="year-jump-select">Jump to year</label>
+        <select id="year-jump-select">
+            <option value="">All years</option>
+            {% for yr in bills_by_year %}
+            <option value="{{ yr.year }}">{{ yr.year }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="filter-group" id="issue-group">
+        <label for="issue-filter-select">Issue</label>
+        <select id="issue-filter-select">
+            <option value="">All issues</option>
+            {% for issue in all_issues %}
+            <option value="{{ issue }}">{{ issue }}</option>
+            {% endfor %}
+            <option value="Other">Other</option>
+        </select>
+    </div>
+    <div class="filter-group">
+        <label>Status</label>
+        <div class="filter-toggle">
+            <button class="status-btn filter-btn active" data-filter="all">All</button>
+            <button class="status-btn filter-btn" data-filter="Adopted">Adopted</button>
+            <button class="status-btn filter-btn" data-filter="Introduced">Introduced</button>
+        </div>
+    </div>
+</div>
+
+{# ── By-state view (default) ── #}
+<div id="view-by-state">
+{% for s in states %}
+<section class="state-card {% if s.counts.adopted > 0 %}state-card--has-adopted{% endif %}"
+         id="state-{{ s.slug }}"
+         data-pagefind-body>
+    <div class="state-card-header">
+        <div class="state-card-title">
+            <h2>{{ s.name }}</h2>
+        </div>
+        <div class="state-card-counts">
+            {% if s.counts.adopted > 0 %}
+            <span class="state-count-adopted">{{ s.counts.adopted }} adopted</span>
+            <span class="state-count-sep">·</span>
             {% endif %}
-          </td>
-          <td class="hide-mobile">{{ b.issue or "—" }}</td>
-          <td class="hide-mobile">{{ b.solution or "—" }}</td>
-          <td class="hide-mobile">{{ b.description or "—" }}</td>
-        </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
+            <span>{{ s.counts.introduced }} introduced</span>
+            <span class="state-count-sep">·</span>
+            <span>{{ s.counts.total }} total</span>
+        </div>
+    </div>
+    <div class="state-table-wrap">
+        <table class="doc-table state-table">
+            <colgroup><col><col><col><col><col></colgroup>
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Status</th>
+                    <th>Bill</th>
+                    <th>Issue</th>
+                    <th class="hide-mobile">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for b in s.bills %}
+            {% set status_clean = b.status | default("") | trim %}
+            <tr class="bill-row" data-status="{{ status_clean }}" data-issue="{{ b.issue or '' }}" data-year="{{ b.year or '' }}">
+                <td style="white-space:nowrap;">{{ b.year or "—" }}</td>
+                <td>
+                    {% if status_clean == "Adopted" %}
+                    <span class="sbadge sbadge--adopted">Adopted</span>
+                    {% elif status_clean == "Introduced" %}
+                    <span class="sbadge sbadge--introduced">Introduced</span>
+                    {% else %}
+                    <span class="sbadge sbadge--other">{{ status_clean or "—" }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <strong>{{ b.bill or "—" }}</strong>
+                </td>
+                <td>{{ b.issue or "Other" }}</td>
+                <td class="hide-mobile">{{ b.description or "—" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </section>
 {% endfor %}
+</div>
+
+{# ── By-year view (hidden by default) ── #}
+<div id="view-by-year" hidden>
+{% for yr in bills_by_year %}
+<section class="year-section" id="year-{{ yr.year }}">
+    <div class="year-section-header">
+        <span class="year-num">{{ yr.year }}</span>
+        <span class="year-count" data-total="{{ yr.bills | length }}">{{ yr.bills | length }} bills</span>
+    </div>
+    <div class="state-table-wrap">
+        <table class="doc-table state-table year-table">
+            <colgroup><col><col><col><col><col></colgroup>
+            <thead>
+                <tr>
+                    <th>State</th>
+                    <th>Status</th>
+                    <th>Bill</th>
+                    <th>Issue</th>
+                    <th class="hide-mobile">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for b in yr.bills %}
+            {% set status_clean = b.status | default("") | trim %}
+            <tr class="bill-row" data-status="{{ status_clean }}" data-issue="{{ b.issue or '' }}" data-year="{{ b.year or '' }}" data-state="{{ b.state or '' }}">
+                <td style="white-space:nowrap;">{{ b.state or "—" }}</td>
+                <td>
+                    {% if status_clean == "Adopted" %}
+                    <span class="sbadge sbadge--adopted">Adopted</span>
+                    {% elif status_clean == "Introduced" %}
+                    <span class="sbadge sbadge--introduced">Introduced</span>
+                    {% else %}
+                    <span class="sbadge sbadge--other">{{ status_clean or "—" }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <strong>{{ b.bill or "—" }}</strong>
+                </td>
+                <td>{{ b.issue or "Other" }}</td>
+                <td class="hide-mobile">{{ b.description or "—" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endfor %}
+</div>
+
+{# ── By-issue view (hidden by default) ── #}
+<div id="view-by-issue" hidden>
+{% for iss in bills_by_issue %}
+<section class="issue-section" id="issue-{{ iss.slug }}" data-issue="{{ iss.issue }}">
+    <div class="issue-section-header">
+        <span class="issue-name">{{ iss.issue }}</span>
+        <span class="issue-count">{{ iss.bills | length }} bills</span>
+    </div>
+    <div class="state-table-wrap">
+        <table class="doc-table state-table issue-table">
+            <colgroup><col><col><col><col><col></colgroup>
+            <thead>
+                <tr>
+                    <th>State</th>
+                    <th>Year</th>
+                    <th>Status</th>
+                    <th>Bill</th>
+                    <th class="hide-mobile">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for b in iss.bills %}
+            {% set status_clean = b.status | default("") | trim %}
+            <tr class="bill-row" data-status="{{ status_clean }}" data-issue="{{ b.issue or '' }}" data-year="{{ b.year or '' }}" data-state="{{ b.state or '' }}">
+                <td style="white-space:nowrap;">{{ b.state or "—" }}</td>
+                <td>{{ b.year or "—" }}</td>
+                <td>
+                    {% if status_clean == "Adopted" %}
+                    <span class="sbadge sbadge--adopted">Adopted</span>
+                    {% elif status_clean == "Introduced" %}
+                    <span class="sbadge sbadge--introduced">Introduced</span>
+                    {% else %}
+                    <span class="sbadge sbadge--other">{{ status_clean or "—" }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <strong>{{ b.bill or "—" }}</strong>
+                </td>
+                <td class="hide-mobile">{{ b.description or "—" }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endfor %}
+</div>
+
+<script>
+(function () {
+    var activeView      = 'state';
+    var activeStatus    = 'all';
+    var activeIssue     = '';
+    var activeYear      = '';
+    var activeState     = '';
+    var activeStateName = '';
+
+    var jumpGroup  = document.getElementById('jump-group');
+    var yearGroup  = document.getElementById('year-group');
+    var issueGroup = document.getElementById('issue-group');
+    var viewState  = document.getElementById('view-by-state');
+    var viewYear   = document.getElementById('view-by-year');
+    var viewIssue  = document.getElementById('view-by-issue');
+    var jumpSelect = document.getElementById('state-jump-select');
+    var yearSelect = document.getElementById('year-jump-select');
+    var issueSelectEl = document.getElementById('issue-filter-select');
+
+    // Store original options for rebuilding after filter changes
+    var origStateOptions = Array.from(jumpSelect.querySelectorAll('option[value]')).map(function(o) {
+        return { value: o.value, text: o.textContent, stateName: o.dataset.stateName || '' };
+    });
+    var origYearOptions = yearSelect ? Array.from(yearSelect.querySelectorAll('option[value]')).map(function(o) {
+        return { value: o.value, text: o.textContent };
+    }) : [];
+    var origIssueOptions = Array.from(issueSelectEl.querySelectorAll('option[value]')).map(function(o) {
+        return { value: o.value, text: o.textContent };
+    });
+
+    // State select
+    jumpSelect.addEventListener('change', function () {
+        activeState     = this.value;
+        var opt         = this.options[this.selectedIndex];
+        activeStateName = opt.dataset.stateName || '';
+        applyFilter();
+    });
+
+    // Year select
+    if (yearSelect) {
+        yearSelect.addEventListener('change', function () {
+            activeYear = this.value;
+            applyFilter();
+        });
+    }
+
+    // View toggle
+    document.querySelectorAll('.sort-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            activeView      = btn.dataset.sort;
+            activeState     = '';
+            activeStateName = '';
+            activeYear      = '';
+            jumpSelect.value = '';
+            if (yearSelect) yearSelect.value = '';
+            document.querySelectorAll('.sort-btn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            viewState.hidden = activeView !== 'state';
+            viewYear.hidden  = activeView !== 'year';
+            jumpGroup.style.display = activeView === 'state' ? '' : 'none';
+            yearGroup.style.display = activeView === 'year'  ? '' : 'none';
+            applyFilter();
+        });
+    });
+
+    // Status filter
+    document.querySelectorAll('.status-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            activeStatus = btn.dataset.filter;
+            document.querySelectorAll('.status-btn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            applyFilter();
+        });
+    });
+
+    // Issue filter
+    document.getElementById('issue-filter-select').addEventListener('change', function () {
+        activeIssue = this.value;
+        applyFilter();
+    });
+
+    function filterRows(container, cardSelector) {
+        container.querySelectorAll(cardSelector).forEach(function (card) {
+            if (activeView === 'state' && activeState && card.id !== activeState) {
+                card.style.display = 'none'; return;
+            }
+            if (activeView === 'year' && activeYear && card.id !== 'year-' + activeYear) {
+                card.style.display = 'none'; return;
+            }
+            if (activeView === 'issue' && activeIssue && card.dataset.issue !== activeIssue) {
+                card.style.display = 'none'; return;
+            }
+
+            var rows = card.querySelectorAll('.bill-row');
+            var visible = 0;
+            rows.forEach(function (row) {
+                var statusOk = activeStatus === 'all' || row.dataset.status === activeStatus;
+                var issueOk  = activeView === 'issue'
+                               ? true
+                               : (activeIssue === ''
+                                  || (activeIssue === 'Other' ? !row.dataset.issue.trim() : row.dataset.issue.indexOf(activeIssue) !== -1));
+                var yearOk   = activeYear === '' || row.dataset.year === activeYear;
+                var stateOk  = activeView === 'issue'
+                               ? (activeStateName === '' || row.dataset.state === activeStateName)
+                               : true;
+                row.style.display = (statusOk && issueOk && yearOk && stateOk) ? '' : 'none';
+                if (row.style.display !== 'none') visible++;
+            });
+            card.style.display = visible > 0 ? '' : 'none';
+
+            var badge = card.querySelector('.year-count, .issue-count');
+            if (badge) badge.textContent = visible + ' bill' + (visible !== 1 ? 's' : '');
+        });
+    }
+
+    function updateStats() {
+        var activeContainer = activeView === 'state' ? viewState : activeView === 'year' ? viewYear : viewIssue;
+        var cardSel = activeView === 'state' ? '.state-card' : activeView === 'year' ? '.year-section' : '.issue-section';
+        var rows = [];
+        activeContainer.querySelectorAll(cardSel).forEach(function (card) {
+            if (card.style.display === 'none') return;
+            card.querySelectorAll('.bill-row').forEach(function (row) {
+                if (row.style.display !== 'none') rows.push(row);
+            });
+        });
+
+        // In issue view bills appear in multiple sections — deduplicate by state+bill+year
+        var countRows = rows;
+        if (activeView === 'issue') {
+            var seen = new Set();
+            countRows = rows.filter(function (r) {
+                var key = (r.dataset.state || '') + '|' + (r.querySelector('strong') ? r.querySelector('strong').textContent : '') + '|' + (r.dataset.year || '');
+                if (seen.has(key)) return false;
+                seen.add(key); return true;
+            });
+        }
+        var adopted    = countRows.filter(function (r) { return r.dataset.status === 'Adopted'; }).length;
+        var introduced = countRows.filter(function (r) { return r.dataset.status === 'Introduced'; }).length;
+
+        // Distinct issues among visible rows (split comma-separated values like app.py does)
+        var issueSet = new Set();
+        rows.forEach(function (r) {
+            if (!r.dataset.issue) return;
+            r.dataset.issue.split(',').forEach(function (p) { var t = p.trim(); if (t) issueSet.add(t); });
+        });
+
+        // Distinct states among visible rows / cards
+        var statesCount;
+        if (activeView === 'state') {
+            statesCount = Array.from(viewState.querySelectorAll('.state-card'))
+                .filter(function (c) { return c.style.display !== 'none'; }).length;
+        } else {
+            var stateSet = new Set();
+            rows.forEach(function (r) { if (r.dataset.state) stateSet.add(r.dataset.state); });
+            statesCount = stateSet.size;
+        }
+
+        // State name for qualifier
+        var stateName = activeStateName || '';
+        if (!stateName && activeState) {
+            var stateCard = document.getElementById(activeState);
+            stateName = stateCard ? stateCard.querySelector('h2').textContent.trim() : '';
+        }
+        var qualifier = stateName ? ' in ' + stateName : '';
+
+        function num(n) { return '<strong>' + n + '</strong>'; }
+        function bills(n) { return n === 1 ? 'bill' : 'bills'; }
+
+        // Adopted stat — hide when filtering to Introduced only
+        var adoptedWrap = document.getElementById('stat-adopted-wrap');
+        if (activeStatus !== 'Introduced') {
+            document.getElementById('stat-adopted-phrase').innerHTML =
+                num(adopted) + 'PFAS ' + bills(adopted) + ' adopted into law' + qualifier;
+            adoptedWrap.style.display = '';
+        } else {
+            adoptedWrap.style.display = 'none';
+        }
+
+        // Under consideration stat — hide when filtering to Adopted only
+        var introducedWrap     = document.getElementById('stat-introduced-wrap');
+        var introduced2026Wrap = document.getElementById('stat-introduced-2026-wrap');
+        if (activeStatus !== 'Adopted') {
+            if (activeView === 'year') {
+                // Only 2025 and 2026 have active legislative sessions
+                var show2025 = activeYear === '' || activeYear === '2025';
+                var show2026 = activeYear === '' || activeYear === '2026';
+                if (show2025) {
+                    var n25 = countRows.filter(function(r) {
+                        return r.dataset.status === 'Introduced' && r.dataset.year === '2025';
+                    }).length;
+                    document.getElementById('stat-introduced-phrase').innerHTML =
+                        num(n25) + 'PFAS ' + bills(n25) + ' under consideration in 2025';
+                    introducedWrap.style.display = '';
+                } else {
+                    introducedWrap.style.display = 'none';
+                }
+                if (show2026) {
+                    var n26 = countRows.filter(function(r) {
+                        return r.dataset.status === 'Introduced' && r.dataset.year === '2026';
+                    }).length;
+                    document.getElementById('stat-introduced-2026-phrase').innerHTML =
+                        num(n26) + 'PFAS ' + bills(n26) + ' under consideration in 2026';
+                    introduced2026Wrap.style.display = '';
+                } else {
+                    introduced2026Wrap.style.display = 'none';
+                }
+            } else {
+                document.getElementById('stat-introduced-phrase').innerHTML =
+                    num(introduced) + 'PFAS ' + bills(introduced) + ' under consideration in 2025–26' + qualifier;
+                introducedWrap.style.display = '';
+                introduced2026Wrap.style.display = 'none';
+            }
+        } else {
+            introducedWrap.style.display = 'none';
+            introduced2026Wrap.style.display = 'none';
+        }
+
+        // Issues stat — show when not already filtered to one issue
+        var issuesWrap = document.getElementById('stat-issues-wrap');
+        if (!activeIssue) {
+            document.getElementById('stat-issues-phrase').innerHTML =
+                num(issueSet.size) + (issueSet.size === 1 ? 'issue area' : 'issue areas');
+            issuesWrap.style.display = '';
+        } else {
+            issuesWrap.style.display = 'none';
+        }
+
+        // States stat — show when not scoped to a single state
+        var statesWrap = document.getElementById('stat-states-wrap');
+        if (!activeState && !activeStateName) {
+            document.getElementById('stat-states-phrase').innerHTML =
+                num(statesCount) + (statesCount === 1 ? 'state' : 'states');
+            statesWrap.style.display = '';
+        } else {
+            statesWrap.style.display = 'none';
+        }
+    }
+
+    function updateDropdowns() {
+        var currentContainer = activeView === 'state' ? viewState : viewYear;
+        var allRows = Array.from(currentContainer.querySelectorAll('.bill-row'));
+
+        // For each dropdown, compute availability ignoring that dropdown's own filter
+        function matches(row, skipIssue, skipYear, skipState) {
+            var statusOk = activeStatus === 'all' || row.dataset.status === activeStatus;
+            var issueOk  = skipIssue  || activeIssue === ''
+                           || (activeIssue === 'Other' ? !row.dataset.issue.trim() : row.dataset.issue.indexOf(activeIssue) !== -1);
+            var yearOk   = skipYear   || activeYear  === '' || row.dataset.year  === activeYear;
+            var stateOk  = skipState  || activeView !== 'state' || !activeState
+                           || row.closest('.state-card').id === activeState;
+            return statusOk && issueOk && yearOk && stateOk;
+        }
+
+        // Issue: show issues available under current status + year + state
+        var availableIssues = new Set();
+        allRows.forEach(function(r) {
+            if (!matches(r, true, false, false)) return;
+            if (!r.dataset.issue.trim()) {
+                availableIssues.add('Other');
+            } else {
+                r.dataset.issue.split(',').forEach(function(p) { var t = p.trim(); if (t) availableIssues.add(t); });
+            }
+        });
+        var curIssue = issueSelectEl.value;
+        while (issueSelectEl.options.length > 1) issueSelectEl.remove(1);
+        origIssueOptions.forEach(function(o) {
+            if (availableIssues.has(o.value)) issueSelectEl.add(new Option(o.text, o.value));
+        });
+        issueSelectEl.value = curIssue;
+
+        // State: show states available under current status + issue + year (ignore own filter)
+        if (activeView === 'state') {
+            var availableStates = new Set();
+            allRows.forEach(function(r) {
+                if (matches(r, false, false, true)) {
+                    var card = r.closest('.state-card');
+                    if (card) availableStates.add(card.id);
+                }
+            });
+            var curState = jumpSelect.value;
+            while (jumpSelect.options.length > 1) jumpSelect.remove(1);
+            origStateOptions.forEach(function(o) {
+                if (availableStates.has(o.value)) {
+                    var opt = new Option(o.text, o.value);
+                    if (o.stateName) opt.dataset.stateName = o.stateName;
+                    jumpSelect.add(opt);
+                }
+            });
+            jumpSelect.value = curState;
+        }
+
+        // Year: show years available under current status + issue (ignore own filter)
+        if (activeView === 'year' && yearSelect) {
+            var availableYears = new Set();
+            allRows.forEach(function(r) {
+                if (matches(r, false, true, false) && r.dataset.year) availableYears.add(r.dataset.year);
+            });
+            var curYear = yearSelect.value;
+            while (yearSelect.options.length > 1) yearSelect.remove(1);
+            origYearOptions.forEach(function(o) {
+                if (availableYears.has(o.value)) yearSelect.add(new Option(o.text, o.value));
+            });
+            yearSelect.value = curYear;
+        }
+    }
+
+    function applyFilter() {
+        if (activeView === 'state') {
+            filterRows(viewState, '.state-card');
+        } else if (activeView === 'year') {
+            filterRows(viewYear, '.year-section');
+        } else {
+            filterRows(viewIssue, '.issue-section');
+        }
+        updateStats();
+        updateDropdowns();
+    }
+
+    updateStats();
+    updateDropdowns();
+})();
+
+// ── Mobile: show-more rows per state card ─────────────────────────────────────
+(function() {
+    if (!window.matchMedia || !window.matchMedia('(max-width: 600px)').matches) return;
+    var LIMIT = 3;
+    document.querySelectorAll('.state-table tbody').forEach(function(tbody) {
+        var rows = Array.from(tbody.querySelectorAll('tr'));
+        if (rows.length <= LIMIT) return;
+        rows.slice(LIMIT).forEach(function(r) { r.classList.add('tbl-hidden-row'); });
+        var btn = document.createElement('tr');
+        btn.className = 'tbl-show-more-row';
+        btn.innerHTML = '<td colspan="5"><button class="tbl-show-more-btn">Show ' + (rows.length - LIMIT) + ' more</button></td>';
+        tbody.appendChild(btn);
+        btn.querySelector('button').addEventListener('click', function() {
+            tbody.querySelectorAll('.tbl-hidden-row').forEach(function(r) { r.classList.remove('tbl-hidden-row'); });
+            btn.remove();
+        });
+    });
+})();
+</script>
 
 {% endblock %}

@@ -2,6 +2,7 @@ import csv
 import html
 import json
 import re
+from datetime import datetime
 from collections import Counter, defaultdict
 from functools import lru_cache
 from pathlib import Path
@@ -361,6 +362,15 @@ def index():
 
     calendar = events_by_month(all_events)
 
+    topics = _build_topics()
+    combined_url = url_for("pfas_programs")
+    # Stitch timeline description + url into each status card (same order)
+    for i, rule in enumerate(status):
+        if i < len(topics):
+            rule["timelineDescription"] = topics[i].get("description", "")
+            # Drinking water (0) and Superfund (1) go to combined page; reporting (2) stays solo
+            rule["timelineUrl"] = combined_url if i < 2 else topics[i].get("url", "")
+
     return render_template("index.html",
                            stats=stats,
                            status=status,
@@ -508,6 +518,26 @@ def pfas_reporting():
     return timeline_page("pfas-reporting")
 
 
+@app.route("/timelines/pfas-programs/")
+def pfas_programs():
+    page = get_timeline_page("pfas-programs")
+    if not page:
+        abort(404)
+    topic_data = {
+        "title":         page.get("title", ""),
+        "eyebrow":       page.get("eyebrow", ""),
+        "description":   page.get("description", ""),
+        "currentStatus": None,
+        "statusClass":   "",
+    }
+    programs = page.get("programs", [])
+    return render_template("topic.html",
+                           topic=topic_data,
+                           timeline=page.get("timeline", []),
+                           docket_ids=[],
+                           programs=programs)
+
+
 @app.route("/court/<court_id>/")
 def court(court_id):
     cases = get_court_actions()
@@ -571,18 +601,59 @@ def state_tracker():
         for s in states
     ]
 
+    surge_years = {"2025", "2026"}
     summary = {
         "states": len(states),
         "bills": len(items),
         "adopted": sum(s["counts"]["adopted"] for s in states),
         "introduced": sum(s["counts"]["introduced"] for s in states),
+        "surge_bills": sum(1 for i in items if i.get("year") in surge_years),
     }
+
+    all_issues = sorted({
+        part.strip()
+        for i in items
+        for part in (i.get("issue") or "").split(",")
+        if part.strip()
+    })
+
+    bills_by_year_map = defaultdict(list)
+    for state_obj in states:
+        for bill in state_obj["bills"]:
+            yr = bill.get("year") or ""
+            if yr:
+                bills_by_year_map[yr].append(dict(bill, state_slug=state_obj["slug"]))
+    bills_by_year = [
+        {"year": yr, "bills": sorted(bills_by_year_map[yr], key=lambda b: b.get("state") or "")}
+        for yr in sorted(bills_by_year_map.keys(), reverse=True)
+    ]
+
+    bills_by_issue_map = defaultdict(list)
+    for state_obj in states:
+        for bill in state_obj["bills"]:
+            issue_parts = [p.strip() for p in (bill.get("issue") or "").split(",") if p.strip()]
+            if not issue_parts:
+                issue_parts = ["Other"]
+            for issue in issue_parts:
+                bills_by_issue_map[issue].append(dict(bill, state_slug=state_obj["slug"]))
+    bills_by_issue = [
+        {
+            "issue": issue,
+            "slug": _slugify(issue),
+            "bills": sorted(bills_by_issue_map[issue],
+                            key=lambda b: (b.get("state") or "", -(int(b.get("year") or 0)))),
+        }
+        for issue in sorted(bills_by_issue_map.keys())
+    ]
 
     return render_template("state_tracker.html",
                            states=states,
                            summary=summary,
                            state_lookup=state_lookup,
-                           state_summaries=state_summaries)
+                           state_summaries=state_summaries,
+                           all_issues=all_issues,
+                           bills_by_year=bills_by_year,
+                           bills_by_issue=bills_by_issue)
 
 
 @app.route("/search/")
@@ -590,77 +661,38 @@ def search():
     return render_template("search.html")
 
 
+def _build_topics():
+    """Return list of topic metadata dicts for the three main PFAS programs."""
+    TOPIC_SLUGS = [
+        ("drinking-water-limits",          url_for("drinking_water_limits"),           "Drinking Water"),
+        ("hazardous-substance-designation", url_for("hazardous_substance_designation"), "Superfund"),
+        ("pfas-reporting",                 url_for("pfas_reporting"),                  "PFAS Reporting"),
+    ]
+    topics = []
+    for slug, route_url, program in TOPIC_SLUGS:
+        page = get_timeline_page(slug)
+        if not page:
+            continue
+        topics.append({
+            "title":         page.get("title", ""),
+            "eyebrow":       page.get("eyebrow", ""),
+            "description":   page.get("description", ""),
+            "currentStatus": page.get("currentStatus", ""),
+            "statusClass":   page.get("statusClass", ""),
+            "url":           route_url,
+        })
+    return topics
+
+
 @app.route("/explore/")
 def explore():
-    documents = get_all_documents()
-    press_releases = get_press_releases()
-    court_cases = get_court_actions()
-
-    items = []
-
-    for doc in documents:
-        items.append({
-            "itemType": "regulation",
-            "typeLabel": doc.get("documentType") or "Document",
-            "id": doc["documentId"],
-            "title": doc.get("title") or doc["documentId"],
-            "date": (doc.get("postedDate") or "")[:10],
-            "signalType": doc.get("signalType") or "other",
-            "category": doc.get("category") or "",
-            "compounds": doc.get("compounds", []),
-            "program": doc.get("program") or "",
-            "era": doc.get("era") or "unknown",
-            "mahaRelevant": doc.get("mahaRelevant", False),
-            "isPrimary": doc.get("isPrimary", True),
-        })
-
-    for pr in press_releases:
-        items.append({
-            "itemType": "press",
-            "typeLabel": "Statement",
-            "id": pr["pressId"],
-            "title": pr.get("title") or pr["pressId"],
-            "date": pr.get("date", ""),
-            "signalType": pr.get("signalType") or "rhetoric",
-            "category": pr.get("category") or "",
-            "compounds": pr.get("compounds", []),
-            "program": pr.get("program") or "",
-            "era": pr.get("era") or "trump2",
-            "mahaRelevant": pr.get("mahaRelevant", False),
-            "isPrimary": True,
-        })
-
-    for case in court_cases:
-        items.append({
-            "itemType": "court",
-            "typeLabel": "Court Case",
-            "id": case["courtId"],
-            "title": case.get("caseTitle") or case["courtId"],
-            "date": case.get("filed", ""),
-            "signalType": "litigation",
-            "category": "Litigation",
-            "compounds": ["PFAS"],
-            "program": "",
-            "era": "biden" if (case.get("filed") or "") < "2025-01-20" else "trump2",
-            "mahaRelevant": False,
-            "isPrimary": True,
-        })
-
-    items.sort(key=lambda x: x.get("date") or "", reverse=True)
-    categories = sorted({i["category"] for i in items if i.get("category")})
-    compounds = sorted({c for i in items for c in i.get("compounds", [])})
-    eras = [e for e in ["trump1", "biden", "trump2"] if any(i.get("era") == e for i in items)]
-
-    return render_template("explore.html",
-                           items=items,
-                           categories=categories,
-                           compounds=compounds,
-                           eras=eras)
+    from flask import redirect
+    return redirect(url_for("index"))
 
 
 @app.route("/what-are-pfas/")
 def what_are_pfas():
-    return render_template("what_are_pfas.html")
+    return render_template("glossary.html")
 
 
 @app.route("/pagefind/<path:filename>")

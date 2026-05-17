@@ -20,10 +20,8 @@
         <a href="{{ url_for('index') }}" class="nav-brand">PFAS Tracker</a>
         <div class="nav-links">
             <a href="{{ url_for('index') }}">Overview</a>
-            <a href="{{ url_for('explore') }}">Explore</a>
             <a href="{{ url_for('state_tracker') }}">States</a>
-            <a href="{{ url_for('what_are_pfas') }}">What are PFAS</a>
-            <a href="{{ url_for('glossary') }}">Glossary</a>
+            <a href="{{ url_for('glossary') }}">About PFAS</a>
         </div>
     </div>
 </nav>
@@ -34,6 +32,8 @@
     {% block content %}{% endblock %}
 </div>
 
+{% block full_width_after %}{% endblock %}
+
 <footer>
     <div class="footer-inner">
         <p>
@@ -41,6 +41,7 @@
             &amp; <a href="https://www.federalregister.gov" target="_blank">Federal Register API</a>.
             Press releases: <a href="https://www.epa.gov/pfas/press-releases-related-pfas" target="_blank">EPA PFAS newsroom</a>.
             PFAS statistics: EWG, CDC NHANES, EPA UCMR5.
+            State legislation: <a href="https://www.saferstates.org/bill-tracker/?toxic_chemicals=PFAS" target="_blank" rel="noopener">Safer States</a>.
         </p>
         <p style="margin-top:0.4rem; color:#555;">
             Data last updated: <strong>{{ build_date if build_date is defined else "run make fetch-all to update" }}</strong>
@@ -64,17 +65,6 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
-
-// Scrollytelling: highlight step currently in view
-const scrollySteps = document.querySelectorAll('.scrolly-step');
-if (scrollySteps.length) {
-    const stepObs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-            e.target.classList.toggle('is-active', e.isIntersecting);
-        });
-    }, { threshold: 0.45 });
-    scrollySteps.forEach(el => stepObs.observe(el));
-}
 </script>
 
 {% block scripts %}{% endblock %}

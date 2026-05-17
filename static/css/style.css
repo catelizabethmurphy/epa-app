@@ -66,6 +66,13 @@ nav.site-nav.nav-scrolled { box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
 }
 .nav-links a:hover { color: #fff; }
 
+@media (max-width: 600px) {
+    nav.site-nav { padding: 0 0.75rem; }
+    .nav-inner { gap: 0; justify-content: space-between; }
+    .nav-brand { font-size: 0.72rem; }
+    .nav-links a { padding: 0 0.45rem; font-size: 0.7rem; letter-spacing: 0; }
+}
+
 /* ── Container / footer ──────────────────────────────────────────────────── */
 
 .container {
@@ -83,7 +90,11 @@ footer {
 }
 .footer-inner { max-width: 1100px; margin: 0 auto; }
 footer a { color: #bbb; }
-footer p { margin: 0; }
+footer p { margin: 0; line-height: 1.6; }
+
+@media (max-width: 500px) {
+    footer { padding: 1rem; font-size: 0.72rem; }
+}
 
 /* ── Typography helpers ──────────────────────────────────────────────────── */
 
@@ -109,22 +120,21 @@ h2.section-head {
 
 .empty-state { color: #888; font-size: 0.9rem; padding: 1rem 0; }
 
-/* ── Masthead ────────────────────────────────────────────────────────────── */
+/* ── Page header (replaces full-width masthead) ──────────────────────────── */
 
-.masthead {
-    background: #fff;
-    border-bottom: 3px solid #111;
-    padding: 2.5rem 1.5rem 1.5rem;
+.page-header {
+    border-top: 4px solid #111;
+    padding-top: 1.5rem;
+    margin-bottom: 1.5rem;
 }
-.masthead-inner { max-width: 1100px; margin: 0 auto; }
 
-.masthead-top {
+.page-header-meta {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    border-bottom: 1px solid #111;
+    border-bottom: 1px solid #ddd;
     padding-bottom: 0.4rem;
-    margin-bottom: 0.9rem;
+    margin-bottom: 1rem;
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.12em;
@@ -132,128 +142,66 @@ h2.section-head {
     font-family: "PT Sans", sans-serif;
 }
 
-.masthead-title {
+.page-header-title {
     font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
-    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-size: clamp(2rem, 4vw, 3.2rem);
     font-weight: 700;
     color: #111;
-    margin: 0 0 0.6rem;
-    line-height: 1.08;
+    margin: 0 0 0.75rem;
+    line-height: 1.1;
     letter-spacing: -0.02em;
 }
 
-.masthead-deck {
+.page-header-deck {
     font-size: 1rem;
     color: #555;
     line-height: 1.6;
     margin: 0;
-    max-width: 680px;
-    border-top: 1px solid #ddd;
+    max-width: 720px;
+    border-top: 1px solid #eee;
     padding-top: 0.75rem;
-    margin-top: 0.5rem;
 }
 
-/* ── Scrollytelling intro ────────────────────────────────────────────────── */
+/* ── News-style intro block ──────────────────────────────────────────────── */
 
-.scrolly-section { background: #111; }
-
-.scrolly-step {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5rem 1.5rem;
-    border-bottom: 1px solid #1e1e1e;
-    opacity: 0.35;
-    transition: opacity 0.5s;
-}
-.scrolly-step.is-active { opacity: 1; }
-.scrolly-step:first-child { opacity: 1; }
-
-.scrolly-step-inner {
-    max-width: 660px;
-    width: 100%;
+.intro-block {
+    border-left: 4px solid #111;
+    padding: 0 0 0 1.25rem;
+    margin: 0 0 2rem;
+    max-width: 720px;
 }
 
-.scrolly-step-num {
-    font-size: 0.65rem;
+.intro-lede {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 1.1rem;
+    line-height: 1.65;
+    color: #111;
+    margin: 0 0 0.75rem;
+    font-weight: 400;
+}
+
+.intro-block p {
+    font-size: 0.925rem;
+    line-height: 1.7;
     color: #444;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    font-family: "PT Sans", sans-serif;
-    margin-bottom: 0.6rem;
+    margin: 0 0 0.75rem;
 }
 
-.scrolly-eyebrow {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: #c0202a;
-    margin-bottom: 1.25rem;
-    font-family: "PT Sans", sans-serif;
-    font-weight: 700;
-}
-
-.scrolly-hed {
-    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
-    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
-    font-weight: 400;
-    color: #f0ede8;
-    line-height: 1.35;
-    margin: 0 0 1.5rem;
-}
-.scrolly-hed em { font-style: italic; color: #f0ede8; }
-
-.scrolly-body {
-    font-size: 1.05rem;
-    color: #8a9ea8;
-    line-height: 1.8;
-    margin: 0 0 1rem;
-    font-family: "PT Sans", sans-serif;
-}
-
-.scrolly-anchor {
-    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
-    font-size: clamp(4rem, 12vw, 8rem);
-    font-weight: 700;
-    color: #f0ede8;
-    line-height: 1;
-    margin: 0 0 1.5rem;
-    letter-spacing: -0.03em;
-}
-
-.scrolly-anchor-unit {
-    font-size: 0.35em;
-    font-weight: 400;
-    color: #8a9ea8;
-    letter-spacing: 0;
-    vertical-align: baseline;
-}
-
-.scrolly-anchor--red { color: #c0202a; }
-
-.scrolly-anchor--list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1em;
-    font-size: clamp(2.8rem, 8vw, 5.5rem);
-}
-
-.scrolly-cta {
-    display: inline-block;
-    margin-top: 2rem;
+.intro-nav {
     font-size: 0.8rem;
-    color: #c0202a;
-    text-decoration: none;
-    border: 1.5px solid #c0202a;
-    padding: 0.6rem 1.5rem;
-    font-family: "PT Sans", sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    transition: background 0.15s, color 0.15s;
+    color: #888;
+    padding-top: 0.5rem;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
 }
-.scrolly-cta:hover { background: #c0202a; color: #fff; text-decoration: none; }
+
+.intro-nav a { color: #c0202a; text-decoration: none; font-weight: 700; font-size: 0.78rem; }
+.intro-nav a:hover { text-decoration: underline; }
+.intro-nav-sep { color: #ccc; }
+
 
 /* ── Initiative × Era grid ───────────────────────────────────────────────── */
 
@@ -285,9 +233,9 @@ h2.section-head {
 }
 .igrid-era:last-child { border-right: none; }
 
-.igrid-era--trump1 { border-top: 4px solid #7a5c30; }
-.igrid-era--biden  { border-top: 4px solid #1a3a6b; }
-.igrid-era--trump2 { border-top: 4px solid #c0202a; }
+.igrid-era--trump1 { border-top: 4px solid #a06820; }
+.igrid-era--biden  { border-top: 4px solid #1e5fa0; }
+.igrid-era--trump2 { border-top: 4px solid #2a9080; }
 
 .igrid-era-name {
     font-family: 'Libre Baskerville', Georgia, serif;
@@ -344,7 +292,7 @@ h2.section-head {
 .igrid-cell:last-child { border-right: none; }
 .igrid-cell p { margin: 0.5rem 0 0; }
 
-.igrid-cell--trump2 { background: #fffafa; }
+.igrid-cell--trump2 { background: #fdf5f9; }
 
 .igrid-tag {
     display: inline-block;
@@ -356,7 +304,7 @@ h2.section-head {
     border-radius: 2px;
     font-family: "PT Sans", sans-serif;
 }
-.igrid-tag--building  { background: #fef3e2; color: #7a5c30; }
+.igrid-tag--building  { background: #fff4d9; color: #a06820; }
 .igrid-tag--protected { background: #eafaf1; color: #1a6b35; }
 .igrid-tag--rollback  { background: #fdecea; color: #c0202a; }
 .igrid-tag--retained  { background: #eafaf1; color: #1a6b35; }
@@ -460,17 +408,15 @@ h2.section-head {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    padding: 0.2rem 0.55rem;
-    border-radius: 2px;
     align-self: flex-start;
     font-family: "PT Sans", sans-serif;
 }
 .status-pill--rollback, .status-pill--partial_rollback,
-.status-pill--rollback_proposed    { background: #fdecea; color: #c0202a; }
+.status-pill--rollback_proposed    { color: #c0202a; }
 .status-pill--under_reconsideration,
-.status-pill--delay                { background: #fef3e2; color: #935116; }
+.status-pill--delay                { color: #935116; }
 .status-pill--protection,
-.status-pill--retained             { background: #eafaf1; color: #1a6b35; }
+.status-pill--retained             { color: #1a6b35; }
 
 .status-title {
     font-family: 'Libre Baskerville', Georgia, serif;
@@ -489,12 +435,12 @@ h2.section-head {
     color: #666; margin-right: 0.25rem; min-width: 80px;
 }
 .compound-tag {
-    display: inline-block; font-size: 0.7rem; padding: 0.1rem 0.4rem;
-    border-radius: 2px; background: #e8eaf6; color: #283593; font-weight: 700;
+    display: inline-block; font-size: 0.7rem;
+    font-weight: 700; color: #333;
 }
-.compound-tag--protected { background: #d4efdf; color: #1a6b35; }
-.compound-tag--rollback  { background: #fdecea; color: #c0202a; }
-.compound-tag--neutral   { background: #e8e4de; color: #5a5048; }
+.compound-tag--protected { color: #1a6b35; }
+.compound-tag--rollback  { color: #c0202a; }
+.compound-tag--neutral   { color: #5a5048; }
 
 .status-footer {
     display: flex; justify-content: space-between; align-items: center;
@@ -593,12 +539,12 @@ h2.section-head {
 /* ── Signal type color system ────────────────────────────────────────────── */
 
 .badge-signal { font-weight: 700; }
-.badge-signal--rollback    { background: #fdecea; color: #c0202a; }
-.badge-signal--protection  { background: #eafaf1; color: #1a6b35; }
-.badge-signal--delay       { background: #fef3e2; color: #935116; }
-.badge-signal--rhetoric    { background: #f0f3f8; color: #2c4f7c; }
-.badge-signal--litigation  { background: #f5eef8; color: #5c3480; }
-.badge-signal--other       { background: #f2f3f4; color: #555; }
+.badge-signal--rollback    { color: #c0202a; }
+.badge-signal--protection  { color: #1a6b35; }
+.badge-signal--delay       { color: #935116; }
+.badge-signal--rhetoric    { color: #2c4f7c; }
+.badge-signal--litigation  { color: #5c3480; }
+.badge-signal--other       { color: #666; }
 
 .signal-label { font-size: 0.875rem; }
 .signal-label--rollback   { color: #c0202a; }
@@ -703,9 +649,9 @@ h2.section-head {
 .badge-maha    { background: #f5eef8; color: #5c3480; }
 .badge-tag     { background: #f2f3f4; color: #555; }
 .badge-era             { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.02em; }
-.badge-era--trump1     { background: #fef3e2; color: #7a5c30; }
-.badge-era--biden      { background: #eaf4fb; color: #1a3a6b; }
-.badge-era--trump2     { background: #fdecea; color: #c0202a; }
+.badge-era--trump1     { background: #fff4d9; color: #a06820; }
+.badge-era--biden      { background: #e8f2fc; color: #1e5fa0; }
+.badge-era--trump2     { background: #e6f5f3; color: #2a9080; }
 .badge-pretrum         { background: #f2f3f4; color: #666; }
 
 /* ── Tables ──────────────────────────────────────────────────────────────── */
@@ -880,6 +826,501 @@ table.doc-table tr:hover td { background: #fafaf8; }
 .cal-event-desc { font-size: 0.82rem; color: #444; margin: 0 0 0.3rem; line-height: 1.55; }
 .cal-event-compounds { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.25rem; }
 
+/* ── Barcode / dot plot ──────────────────────────────────────────────────── */
+
+.bcode-section {
+    background: #fff;
+    border-top: 3px solid #111;
+    padding: 1rem 2rem 0.75rem;
+    position: sticky;
+    top: 2.75rem;
+    z-index: 20;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.bcode-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.4rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.bcode-eyebrow {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #aaa;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+}
+
+.bcode-legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.bcode-leg {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #555;
+    font-family: "PT Sans", sans-serif;
+}
+.bcode-leg-dot {
+    width: 6px;
+    height: 14px;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* Hover tooltip row above the chart */
+.bcode-tooltip {
+    min-height: 1.4rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.6;
+    font-family: "PT Sans", sans-serif;
+    margin-bottom: 0.3rem;
+    display: block;
+    white-space: normal;
+    overflow: visible;
+}
+.bcode-tooltip-title {
+    color: var(--tooltip-color, #111);
+}
+.bcode-tooltip[hidden] {
+    display: flex;
+    visibility: hidden;
+}
+
+.bcode-wrap {
+    position: relative;
+    height: 80px;
+}
+
+.bcode-inner {
+    position: absolute;
+    inset: 0;
+}
+
+/* Administration bands */
+.bcode-bands {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 20px;
+}
+.bcode-band {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    opacity: 0.06;
+}
+.bcode-band--trump1 { background: #a06820; }
+.bcode-band--biden  { background: #1e5fa0; }
+.bcode-band--trump2 { background: #2a9080; }
+
+.bcode-era-name { display: none; }
+
+/* Era label bar just above the chart */
+.bcode-era-bar {
+    position: relative;
+    height: 22px;
+    margin-bottom: 2px;
+}
+.bcode-era-bar-item {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3em;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-family: "PT Sans", sans-serif;
+    border-top: 2px solid currentColor;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.bcode-era-bar-years {
+    font-weight: 400;
+    font-size: 0.58rem;
+    opacity: 0.7;
+}
+.bcode-era-bar--trump1 { color: #a06820; }
+.bcode-era-bar--biden  { color: #1e5fa0; }
+.bcode-era-bar--trump2 { color: #2a9080; }
+
+/* Event dots */
+.bcode-ticks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 20px;
+    pointer-events: none;
+}
+.bcode-tick {
+    position: absolute;
+    width: 6px;
+    top: 8%;
+    bottom: 8%;
+    height: auto;
+    border-radius: 2px;
+    transform: translateX(-50%);
+    opacity: 0.85;
+    pointer-events: all;
+    cursor: pointer;
+    transition: opacity 0.1s, width 0.1s;
+    z-index: 2;
+}
+/* Extend the clickable area without changing visual size */
+.bcode-tick::after {
+    content: '';
+    position: absolute;
+    inset: 0 -4px;
+}
+.bcode-tick:hover {
+    opacity: 1;
+    width: 8px;
+    z-index: 3;
+}
+.bcode-tick--active {
+    opacity: 1;
+    width: 8px;
+    z-index: 4;
+}
+/* Scroll position indicator */
+.bcode-scroll-pos {
+    position: absolute;
+    top: -6px;
+    bottom: 14px;
+    width: 2px;
+    background: #888;
+    pointer-events: none;
+    transform: translateX(-50%);
+    z-index: 1;
+    transition: left 0.15s ease-out, background 0.25s ease;
+}
+
+@media (max-width: 600px) {
+    .bcode-section { padding: 0.5rem 0.75rem 0.5rem; }
+    .bcode-legend { display: none; }
+    .bcode-header { margin-bottom: 0.2rem; }
+    .hide-mobile { display: none !important; }
+}
+
+/* Year labels */
+.bcode-years {
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    right: 0;
+    height: 20px;
+}
+.bcode-year {
+    position: absolute;
+    bottom: 0;
+    font-size: 0.68rem;
+    color: #bbb;
+    font-family: "PT Sans", sans-serif;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    user-select: none;
+    pointer-events: none;
+}
+
+/* ── Timeline filter bar (topic pages) ───────────────────────────────────── */
+
+.tl-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 2rem;
+    align-items: flex-end;
+    padding: 1rem 0 0.85rem;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 0.5rem;
+}
+.tl-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.tl-filter-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #aaa;
+    font-family: "PT Sans", sans-serif;
+}
+.tl-filter-btns {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+}
+.tl-fbtn {
+    background: #f2f3f4;
+    border: 1px solid #ddd;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-family: "PT Sans", sans-serif;
+    color: #555;
+    border-radius: 2px;
+    white-space: nowrap;
+    transition: background 0.1s, color 0.1s;
+}
+.tl-fbtn.active  { background: #111; color: #fff; border-color: #111; }
+.tl-fbtn:hover:not(.active) { background: #e0e0e0; }
+.tl-filter-group input[type="text"] {
+    font-size: 0.875rem;
+    padding: 0.28rem 0.6rem;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-family: "PT Sans", sans-serif;
+    width: 200px;
+    border-radius: 2px;
+}
+.tl-count {
+    font-size: 0.78rem;
+    color: #888;
+    margin: 0 0 0.35rem;
+    font-style: italic;
+}
+
+.tl-entry { scroll-margin-top: 16rem; }
+
+/* ── Vertical scrollytelling timeline ────────────────────────────────────── */
+
+.stl-outer {
+    display: grid;
+    grid-template-columns: 44% 56%;
+    align-items: start;
+    border-top: 3px solid #111;
+}
+
+/* Left: sticky panel */
+.stl-left {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.stl-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #f5f4f0;
+    transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.stl-panel.stl-updating {
+    opacity: 0;
+    transform: translateY(8px);
+}
+
+.stl-panel-bar {
+    height: 4px;
+    background: #888;
+    flex-shrink: 0;
+    transition: background 0.25s ease;
+}
+
+.stl-panel-body {
+    flex: 1;
+    padding: 2.5rem 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.stl-panel-eyebrow {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #aaa;
+    font-family: "PT Sans", sans-serif;
+    min-height: 1em;
+}
+
+.stl-panel-date {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    line-height: 1;
+}
+
+.stl-year {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    font-weight: 700;
+    color: #111;
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+
+.stl-monthday {
+    font-size: 1rem;
+    color: #bbb;
+    font-family: "PT Sans", sans-serif;
+}
+
+.stl-panel-badges {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    min-height: 1.6em;
+}
+
+.stl-badge {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+    font-family: "PT Sans", sans-serif;
+}
+.stl-badge--rollback   { background: #fdecea; color: #c0202a; }
+.stl-badge--protection { background: #eafaf1; color: #1a6b35; }
+.stl-badge--delay      { background: #fef3e2; color: #935116; }
+.stl-badge--rhetoric   { background: #f0f3f8; color: #2c4f7c; }
+.stl-badge--litigation { background: #f5eef8; color: #5c3480; }
+.stl-badge--other      { background: #eee;    color: #666; }
+
+.stl-panel-title {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: clamp(1rem, 1.8vw, 1.25rem);
+    font-weight: 700;
+    color: #111;
+    line-height: 1.45;
+}
+
+.stl-panel-desc {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.7;
+    margin: 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+}
+
+.stl-panel-link { font-size: 0.85rem; min-height: 1.5em; }
+.stl-panel-link a { color: #c0202a; font-weight: 700; text-decoration: none; }
+.stl-panel-link a:hover { text-decoration: underline; }
+
+.stl-panel-footer {
+    flex-shrink: 0;
+    padding: 0.75rem 2.5rem;
+    font-size: 0.65rem;
+    color: #bbb;
+    letter-spacing: 0.1em;
+    font-family: "PT Sans", sans-serif;
+    border-top: 1px solid #e8e4de;
+}
+
+/* Right: scrolling steps */
+.stl-right {
+    position: relative;
+    padding: 0 2.5rem 0 3.5rem;
+}
+
+.stl-line {
+    position: absolute;
+    left: 1.25rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e0e0e0;
+}
+
+.stl-step {
+    position: relative;
+    min-height: 75vh;
+    padding: 2rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    opacity: 0.35;
+    transition: opacity 0.3s ease;
+}
+.stl-step--active { opacity: 1; }
+
+.stl-step-dot {
+    position: absolute;
+    left: -2.9rem;
+    top: 2.2rem;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #ccc;
+    border: 2px solid #f5f4f0;
+    box-shadow: 0 0 0 2px #ddd;
+    flex-shrink: 0;
+    transition: background 0.25s, box-shadow 0.25s;
+}
+
+.stl-step--rollback.stl-step--active   .stl-step-dot { background: #c0202a; box-shadow: 0 0 0 2px #c0202a; }
+.stl-step--partial_rollback.stl-step--active .stl-step-dot { background: #c0202a; box-shadow: 0 0 0 2px #c0202a; }
+.stl-step--protection.stl-step--active .stl-step-dot { background: #1a6b35; box-shadow: 0 0 0 2px #1a6b35; }
+.stl-step--policy.stl-step--active     .stl-step-dot { background: #1a6b35; box-shadow: 0 0 0 2px #1a6b35; }
+.stl-step--delay.stl-step--active      .stl-step-dot { background: #b85c00; box-shadow: 0 0 0 2px #b85c00; }
+.stl-step--rhetoric.stl-step--active   .stl-step-dot { background: #2c4f7c; box-shadow: 0 0 0 2px #2c4f7c; }
+.stl-step--litigation.stl-step--active .stl-step-dot { background: #5c3480; box-shadow: 0 0 0 2px #5c3480; }
+.stl-step--regulatory.stl-step--active .stl-step-dot { background: #444;    box-shadow: 0 0 0 2px #444; }
+.stl-step--active:not([class*="stl-step--rollback"]):not([class*="stl-step--protection"]):not([class*="stl-step--policy"]):not([class*="stl-step--delay"]):not([class*="stl-step--rhetoric"]):not([class*="stl-step--litigation"]):not([class*="stl-step--regulatory"]) .stl-step-dot { background: #111; box-shadow: 0 0 0 2px #111; }
+
+.stl-step-text { padding-top: 0.1rem; }
+
+.stl-step-date {
+    font-size: 0.72rem;
+    color: #bbb;
+    font-family: "PT Sans", sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.3rem;
+}
+.stl-step--active .stl-step-date { color: #888; }
+
+.stl-step-title {
+    font-size: 0.925rem;
+    font-weight: 700;
+    color: #999;
+    line-height: 1.4;
+    max-width: 420px;
+    font-family: "PT Sans", sans-serif;
+}
+.stl-step--active .stl-step-title { color: #111; }
+
+.stl-end-pad { height: 35vh; }
+
+/* Mobile: hide sticky panel, show plain vertical list */
+@media (max-width: 720px) {
+    .stl-outer { display: block; }
+    .stl-left  { display: none; }
+    .stl-right { padding: 0 1rem 0 2.5rem; }
+    .stl-line  { left: 0.75rem; }
+    .stl-step  { min-height: auto; opacity: 1; padding: 1.25rem 0; }
+    .stl-step-dot { left: -2rem; top: 1.5rem; }
+    .stl-step-title { color: #111; max-width: none; }
+    .stl-step-date  { color: #888; }
+    .stl-end-pad { height: 2rem; }
+}
+
 /* ── Topic timeline page ─────────────────────────────────────────────────── */
 
 .topic-header {
@@ -911,30 +1352,32 @@ table.doc-table tr:hover td { background: #fafaf8; }
     margin: 0 0 0.75rem;
 }
 .topic-status {
-    font-size: 0.85rem;
-    padding: 0.6rem 1rem;
-    border-left: 4px solid #aaa;
-    background: #f8f7f5;
-    color: #333;
-    line-height: 1.5;
-    max-width: 680px;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
 }
 .topic-status-label {
     display: block;
-    font-size: 0.62rem;
+    font-size: 0.6rem;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #999;
+    letter-spacing: 0.1em;
+    color: #aaa;
     margin-bottom: 0.2rem;
     font-family: "PT Sans", sans-serif;
 }
-.topic-status--rollback,
-.topic-status--partial_rollback,
-.topic-status--rollback_proposed  { border-left-color: #c0202a; }
-.topic-status--protection,
-.topic-status--retained            { border-left-color: #1a6b35; }
-.topic-status--delay,
-.topic-status--under_reconsideration { border-left-color: #b85c00; }
+.topic-status-value {
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: "PT Sans", sans-serif;
+    color: #333;
+}
+.topic-status--rollback .topic-status-value,
+.topic-status--partial_rollback .topic-status-value,
+.topic-status--rollback_proposed .topic-status-value { color: #c0202a; }
+.topic-status--protection .topic-status-value,
+.topic-status--retained .topic-status-value           { color: #1a6b35; }
+.topic-status--delay .topic-status-value,
+.topic-status--under_reconsideration .topic-status-value { color: #b85c00; }
 
 .topic-dockets {
     display: flex;
@@ -1133,9 +1576,9 @@ table.doc-table tr:hover td { background: #fafaf8; }
         grid-template-columns: 1fr;
     }
     .igrid-era { border-left: 4px solid; border-top: none; }
-    .igrid-era--trump1 { border-left-color: #7a5c30; }
-    .igrid-era--biden  { border-left-color: #1a3a6b; }
-    .igrid-era--trump2 { border-left-color: #c0202a; }
+    .igrid-era--trump1 { border-left-color: #a06820; }
+    .igrid-era--biden  { border-left-color: #1e5fa0; }
+    .igrid-era--trump2 { border-left-color: #2a9080; }
     .igrid-label       { border-right: none; border-bottom: 1px solid #d8d8d8; background: #f2f2f0; }
     .igrid-cell        { border-right: none; border-bottom: 1px solid #d8d8d8; }
     .igrid-cell:last-child { border-bottom: none; }
@@ -1152,8 +1595,7 @@ table.doc-table tr:hover td { background: #fafaf8; }
     .status-grid  { grid-template-columns: 1fr; }
     .signal-item  { flex-direction: column; gap: 0.5rem; }
     .signal-left  { flex-direction: row; min-width: unset; }
-    .masthead-title { font-size: clamp(2rem, 8vw, 2.8rem); }
-    .scrolly-hed { font-size: clamp(1.4rem, 5vw, 1.8rem); }
+    .page-header-title { font-size: clamp(1.6rem, 7vw, 2.4rem); }
     .cal-month { flex-direction: column; gap: 0.25rem; }
     .cal-month-label {
         width: auto; text-align: left; border-right: none;
@@ -1249,9 +1691,13 @@ details[open] .details-arrow { display: inline-block; transform: rotate(90deg); 
     border-top: 2px solid #111; border-bottom: 1px solid #e0e0e0;
 }
 .tl-era-band:first-child { margin-top: 0; }
-.tl-era-band--trump1 { border-top-color: #7a5c30; }
-.tl-era-band--biden  { border-top-color: #1a3a6b; }
-.tl-era-band--trump2 { border-top-color: #c0202a; }
+.tl-era-band--trump1 { border-top-color: #a06820; }
+.tl-era-band--biden  { border-top-color: #1e5fa0; }
+.tl-era-band--trump2 { border-top-color: #2a9080; }
+.tl-era-band--trump2.tl-era-band--rollback,
+.tl-era-band--trump2.tl-era-band--partial_rollback,
+.tl-era-band--trump2.tl-era-band--rollback_proposed { border-top-color: #c0202a; }
+.tl-era-band--trump2.tl-era-band--retained          { border-top-color: #1a6b35; }
 .tl-era-name {
     font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em;
     font-weight: 700; color: #111; font-family: "PT Sans", sans-serif;
@@ -1277,7 +1723,7 @@ details[open] .details-arrow { display: inline-block; transform: rotate(90deg); 
 
 /* Left column: date + type */
 .tl-entry-left {
-    min-width: 150px; flex-shrink: 0;
+    width: 180px; flex-shrink: 0;
     display: flex; flex-direction: column; gap: 0.25rem;
     padding-right: 1.25rem; padding-top: 0.1rem;
 }
@@ -1289,6 +1735,18 @@ details[open] .details-arrow { display: inline-block; transform: rotate(90deg); 
     font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em;
     color: #aaa; font-family: "PT Sans", sans-serif; line-height: 1.4;
 }
+.tl-program {
+    font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; font-family: "PT Sans", sans-serif;
+    margin-top: 0.2rem; line-height: 1.3;
+}
+.tl-program--drinking-water { color: #1e5fa0; }
+.tl-program--superfund      { color: #1a6b35; }
+.tl-program--both           { color: #999; }
+
+/* Per-program filter button accents */
+.tl-fbtn--prog-drinking-water.active { background: #1e5fa0; border-color: #1e5fa0; color: #fff; }
+.tl-fbtn--prog-superfund.active      { background: #1a6b35; border-color: #1a6b35; color: #fff; }
 .tl-major-flag {
     font-size: 0.6rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: 0.07em; color: #c0202a;
@@ -1298,16 +1756,8 @@ details[open] .details-arrow { display: inline-block; transform: rotate(90deg); 
 /* Right column: content */
 .tl-entry-right {
     flex: 1; min-width: 0;
-    border-left: 3px solid #e0e0e0; padding-left: 1rem;
+    padding-left: 1rem;
 }
-
-/* Signal color bars on left edge */
-.tl-entry--protection .tl-entry-right { border-left-color: #1a6b35; }
-.tl-entry--rollback   .tl-entry-right { border-left-color: #c0202a; }
-.tl-entry--delay      .tl-entry-right { border-left-color: #b85c00; }
-.tl-entry--litigation .tl-entry-right { border-left-color: #5c3480; }
-.tl-entry--rhetoric   .tl-entry-right { border-left-color: #2c4f7c; }
-.tl-entry--other      .tl-entry-right { border-left-color: #ddd; }
 
 /* Titles */
 .tl-title {
@@ -1347,15 +1797,15 @@ details[open] .details-arrow { display: inline-block; transform: rotate(90deg); 
 /* Signal badge in footer */
 .tl-signal-badge {
     font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.04em; padding: 0.12rem 0.4rem; border-radius: 2px;
-    font-family: "PT Sans", sans-serif;
+    letter-spacing: 0.06em; font-family: "PT Sans", sans-serif;
 }
-.tl-signal-badge--protection { background: #eafaf1; color: #1a6b35; }
-.tl-signal-badge--rollback   { background: #fdecea; color: #c0202a; }
-.tl-signal-badge--delay      { background: #fef3e2; color: #935116; }
-.tl-signal-badge--litigation { background: #f5eef8; color: #5c3480; }
-.tl-signal-badge--rhetoric   { background: #f0f3f8; color: #2c4f7c; }
-.tl-signal-badge--policy     { background: #eafaf1; color: #1a6b35; }
+.tl-signal-badge--protection { color: #1a6b35; }
+.tl-signal-badge--rollback   { color: #c0202a; }
+.tl-signal-badge--delay      { color: #935116; }
+.tl-signal-badge--litigation { color: #5c3480; }
+.tl-signal-badge--rhetoric   { color: #2c4f7c; }
+.tl-signal-badge--policy     { color: #1a6b35; }
+.tl-signal-badge--other      { color: #666; }
 
 /* ── Major entry overrides ─────────────────────────────────────────────── */
 
@@ -1363,11 +1813,10 @@ details[open] .details-arrow { display: inline-block; transform: rotate(90deg); 
     padding: 1.1rem 0;
 }
 .tl-entry--major .tl-entry-right {
-    border-left-width: 4px;
     padding-left: 1.1rem;
 }
 .tl-title--major {
-    font-family: 'Libre Baskerville', Georgia, serif;
+    font-family: "PT Sans", sans-serif;
     font-size: 1.05rem; font-weight: 700;
 }
 .tl-entry--major .tl-desc {
@@ -1389,18 +1838,472 @@ details[open] .details-arrow { display: inline-block; transform: rotate(90deg); 
     .tl-entry-right { padding-left: 0.75rem; }
 }
 
-/* ── Scrolly pull-quote ──────────────────────────────────────────────────── */
 
-.scrolly-pull {
-    font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+/* ── Explore hub cards grid ──────────────────────────────────────────────── */
+
+.explore-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0 2.5rem;
+}
+
+/* ── All-events combined timeline (explore page) ─────────────────────────── */
+
+.atl-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    background: #f8f7f5;
+    border: 1px solid #e0e0e0;
+}
+.atl-filters > div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.atl-filters label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+}
+.atl-filters select,
+.atl-filters input[type="text"] {
+    font-size: 0.875rem;
+    padding: 0.35rem 0.5rem;
+    border: 1px solid #ccc;
+    background: #fff;
+    font-family: "PT Sans", sans-serif;
+    min-width: 140px;
+}
+.atl-filters input[type="text"] { min-width: 180px; }
+
+.atl-count {
+    font-size: 0.78rem;
+    color: #888;
+    margin: 0 0 0.5rem;
     font-style: italic;
-    font-size: clamp(1.3rem, 3vw, 1.8rem);
-    font-weight: 400;
-    color: #f0ede8;
-    line-height: 1.45;
-    margin: 0 0 1.5rem;
-    padding-left: 1rem;
-    border-left: 3px solid #c0202a;
+}
+
+.atl-list { display: flex; flex-direction: column; gap: 0; }
+
+.atl-year-head {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ddd;
+    padding: 0.85rem 0 0.3rem;
+    border-top: 1px solid #eee;
+    margin-top: 0.25rem;
+    line-height: 1;
+}
+.atl-year-head:first-child { border-top: none; padding-top: 0; }
+
+.atl-row {
+    display: grid;
+    grid-template-columns: 56px auto auto 1fr;
+    gap: 0.4rem 0.65rem;
+    align-items: baseline;
+    padding: 0.5rem 0.5rem 0.5rem 0.85rem;
+    border-bottom: 1px solid #eee;
+    border-left: 3px solid #ddd;
+    font-size: 0.875rem;
+}
+.atl-row--rollback   { border-left-color: #c0202a; }
+.atl-row--protection { border-left-color: #1a6b35; }
+.atl-row--delay      { border-left-color: #b85c00; }
+.atl-row--rhetoric   { border-left-color: #2c4f7c; }
+.atl-row--litigation { border-left-color: #5c3480; }
+.atl-row--other      { border-left-color: #bbb; }
+
+.atl-date {
+    font-size: 0.7rem;
+    color: #aaa;
+    font-family: "PT Sans", sans-serif;
+    white-space: nowrap;
+}
+
+.atl-signal {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.13rem 0.38rem;
+    border-radius: 2px;
+    font-family: "PT Sans", sans-serif;
+    white-space: nowrap;
+}
+.atl-signal--rollback   { background: #fdecea; color: #c0202a; }
+.atl-signal--protection { background: #eafaf1; color: #1a6b35; }
+.atl-signal--delay      { background: #fef3e2; color: #935116; }
+.atl-signal--rhetoric   { background: #f0f3f8; color: #2c4f7c; }
+.atl-signal--litigation { background: #f5eef8; color: #5c3480; }
+.atl-signal--other      { background: #f2f3f4; color: #555; }
+
+.atl-program-tag {
+    font-size: 0.65rem;
+    color: #999;
+    white-space: nowrap;
+    font-family: "PT Sans", sans-serif;
+}
+
+.atl-title { font-size: 0.875rem; line-height: 1.4; }
+.atl-title a { color: #111; }
+.atl-title a:hover { color: #c0202a; }
+
+@media (max-width: 600px) {
+    .atl-row { grid-template-columns: auto auto 1fr; }
+    .atl-date { display: none; }
+}
+
+/* ── Status tags (used in prog-panels and prog-matrix) ───────────────────── */
+
+.pmt {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-family: "PT Sans", sans-serif;
+    white-space: nowrap;
+}
+.pmt--building  { color: #a06820; }
+.pmt--finalized { color: #1e5fa0; }
+.pmt--rollback  { color: #c0202a; }
+.pmt--retained  { color: #1a6b35; }
+
+/* ── Explore / timelines landing page ────────────────────────────────────── */
+
+.exp-header {
+    border-top: 3px solid #111;
+    padding-top: 1.25rem;
+    margin-bottom: 2.5rem;
+    max-width: 640px;
+}
+.exp-eyebrow {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #aaa;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    margin: 0 0 0.4rem;
+}
+.exp-title {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 0.5rem;
+    line-height: 1.15;
+}
+.exp-deck {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ── Three-up card grid ── */
+.exp-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 2.5rem;
+    margin-bottom: 3.5rem;
+}
+
+.exp-card {
+    display: flex;
+    flex-direction: column;
+    border-top: 3px solid #111;
+    padding-top: 1.25rem;
+}
+
+/* Status pill — top of card */
+.exp-card-status {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 2px;
+    margin-bottom: 1.1rem;
+    align-self: flex-start;
+}
+.exp-card--rollback .exp-card-status,
+.exp-card--partial_rollback .exp-card-status,
+.exp-card--rollback_proposed .exp-card-status { background: #fdecea; }
+.exp-card--retained .exp-card-status { background: #eafaf1; }
+.exp-card--delay .exp-card-status,
+.exp-card--under_reconsideration .exp-card-status { background: #fef3e2; }
+
+.exp-card-status-label {
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    color: #aaa;
+    white-space: nowrap;
+}
+.exp-card-status-val {
+    font-size: 0.82rem;
+    font-weight: 700;
+    font-family: "PT Sans", sans-serif;
+}
+.exp-card--rollback .exp-card-status-val,
+.exp-card--partial_rollback .exp-card-status-val,
+.exp-card--rollback_proposed .exp-card-status-val { color: #c0202a; }
+.exp-card--retained .exp-card-status-val { color: #1a6b35; }
+.exp-card--delay .exp-card-status-val,
+.exp-card--under_reconsideration .exp-card-status-val { color: #935116; }
+
+.exp-card-law {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    color: #bbb;
+    margin: 0 0 0.3rem;
+}
+.exp-card-title {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 0.75rem;
+    line-height: 1.2;
+}
+.exp-card-desc {
+    font-size: 0.9rem;
+    color: #444;
+    line-height: 1.65;
+    margin: 0 0 1.25rem;
+    flex: 1;
+}
+
+/* Era arc strip */
+.exp-era-arc {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+.exp-era-stop {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+}
+.exp-era-admin {
+    font-size: 0.58rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: "PT Sans", sans-serif;
+    color: #bbb;
+    line-height: 1;
+}
+.exp-era-arrow {
+    color: #ccc;
+    font-size: 1rem;
+    line-height: 1;
+    padding-bottom: 0.6rem;
+}
+.exp-era-pmt {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-family: "PT Sans", sans-serif;
+}
+.exp-era-pmt--building  { color: #a06820; }
+.exp-era-pmt--finalized { color: #1e5fa0; }
+.exp-era-pmt--rollback  { color: #c0202a; }
+.exp-era-pmt--retained  { color: #1a6b35; }
+.exp-era-pmt--delay     { color: #935116; }
+
+.exp-card-cta {
+    font-size: 0.8rem;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    color: #1e5fa0;
+    text-decoration: none;
+    border-top: 1px solid #eee;
+    padding-top: 0.75rem;
+    margin-top: auto;
+    display: block;
+}
+.exp-card-cta:hover { color: #111; }
+
+@media (max-width: 860px) {
+    .exp-cards { grid-template-columns: 1fr; gap: 2rem 0; }
+    .exp-card { border-bottom: 1px solid #eee; padding-bottom: 1.5rem; }
+    .exp-card:last-child { border-bottom: none; }
+}
+
+/* ── Recent activity feed ── */
+.exp-feed-wrap { margin-top: 0.5rem; }
+
+.exp-section-head {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #111;
+    border-top: 3px solid #111;
+    padding-top: 0.75rem;
+    margin: 0 0 0.25rem;
+}
+
+.exp-feed { display: flex; flex-direction: column; }
+
+.exp-feed-row {
+    display: grid;
+    grid-template-columns: 100px 110px 110px 1fr;
+    gap: 0.4rem 0.75rem;
+    align-items: baseline;
+    padding: 0.55rem 0.75rem;
+    border-bottom: 1px solid #f0f0f0;
+    border-left: 3px solid #e0e0e0;
+    font-size: 0.875rem;
+}
+.exp-feed-row--rollback { border-left-color: #c0202a; }
+.exp-feed-row--protection,
+.exp-feed-row--retained  { border-left-color: #1a9040; }
+.exp-feed-row--delay,
+.exp-feed-row--underreconsideration { border-left-color: #e07000; }
+.exp-feed-row--litigation { border-left-color: #8040c0; }
+
+.exp-feed-date {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.72rem;
+    color: #aaa;
+    white-space: nowrap;
+}
+.exp-feed-prog {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #999;
+}
+.exp-feed-sig {
+    display: inline-block;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.12rem 0.35rem;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+.exp-feed-sig--rollback  { background: #fdecea; color: #c0202a; }
+.exp-feed-sig--protection,
+.exp-feed-sig--retained  { background: #eafaf1; color: #1a6b35; }
+.exp-feed-sig--delay,
+.exp-feed-sig--under-reconsideration { background: #fef3e2; color: #935116; }
+.exp-feed-sig--litigation { background: #ede7f6; color: #5c3480; }
+.exp-feed-sig--other     { background: #f2f3f4; color: #666; }
+
+.exp-feed-title { font-size: 0.875rem; color: #222; line-height: 1.4; }
+.exp-feed-title a { color: #222; text-decoration: none; }
+.exp-feed-title a:hover { color: #1e5fa0; text-decoration: underline; }
+
+@media (max-width: 700px) {
+    .exp-feed-row {
+        grid-template-columns: 80px 1fr;
+        grid-template-rows: auto auto;
+        gap: 0.2rem 0.6rem;
+    }
+    .exp-feed-prog { display: none; }
+    .exp-feed-sig { grid-column: 2; align-self: start; }
+    .exp-feed-title { grid-column: 1 / -1; padding-top: 0.1rem; }
+}
+
+
+/* ── Topic hub cards (explore page) ─────────────────────────────────────── */
+
+.topic-card {
+    display: block;
+    border: 1px solid #ddd;
+    border-top: 3px solid #111;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.12s;
+}
+.topic-card:hover { background: #f8f7f5; text-decoration: none; }
+
+.topic-card-eyebrow {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+    margin-bottom: 0.35rem;
+}
+
+.topic-card-title {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.topic-card-desc {
+    font-size: 0.9rem;
+    color: #444;
+    line-height: 1.6;
+    margin: 0 0 0.75rem;
+    max-width: 680px;
+}
+
+.topic-card-status {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+    border-left: 3px solid #aaa;
+    background: #f8f7f5;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+    display: inline-block;
+}
+.topic-card-status-label {
+    display: block;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #999;
+    margin-bottom: 0.15rem;
+    font-family: "PT Sans", sans-serif;
+}
+.topic-card-status--rollback,
+.topic-card-status--partial_rollback,
+.topic-card-status--rollback_proposed  { border-left-color: #c0202a; }
+.topic-card-status--protection,
+.topic-card-status--retained           { border-left-color: #1a6b35; }
+.topic-card-status--delay,
+.topic-card-status--under_reconsideration { border-left-color: #b85c00; }
+
+.topic-card-cta {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #c0202a;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: block;
 }
 
 /* ── View tabs (explore page) ────────────────────────────────────────────── */

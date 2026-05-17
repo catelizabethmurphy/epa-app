@@ -5,31 +5,23 @@
 {% block og_description %}{{ topic.description }}{% endblock %}
 
 {% block content %}
-
 <p style="font-size:0.85rem; color:#666; margin-bottom:0.25rem;">
-    <a href="{{ url_for('index') }}">Overview</a> &rsaquo; {{ topic.title }}
+    <a href="{{ url_for('explore') }}">Timelines</a> &rsaquo; {{ topic.title }}
 </p>
 
-{# ── Topic header ──────────────────────────────────────────────────────────── #}
 <div class="topic-header">
     {% set eyebrow = topic.eyebrow or topic.subtitle %}
-    {% if eyebrow %}
-    <div class="topic-eyebrow">{{ eyebrow }}</div>
-    {% endif %}
+    {% if eyebrow %}<div class="topic-eyebrow">{{ eyebrow }}</div>{% endif %}
     <h1 class="topic-title">{{ topic.title }}</h1>
-    {% if topic.eyebrow and topic.subtitle and topic.subtitle != topic.eyebrow %}
-    <p class="topic-desc" style="margin:0.2rem 0 0.4rem; color:#555;">{{ topic.subtitle }}</p>
-    {% endif %}
-    <p class="topic-desc">{{ topic.description }}</p>
+    {% if topic.description %}<p class="topic-desc">{{ topic.description }}</p>{% endif %}
     {% if topic.currentStatus %}
     <div class="topic-status topic-status--{{ topic.statusClass }}">
         <span class="topic-status-label">Current status</span>
-        {{ topic.currentStatus }}
+        <span class="topic-status-value">{{ topic.currentStatus }}</span>
     </div>
     {% endif %}
 </div>
 
-{# ── Docket index ──────────────────────────────────────────────────────────── #}
 {% if docket_ids %}
 <div class="topic-dockets">
     <span class="topic-dockets-label">Source dockets</span>
@@ -38,62 +30,555 @@
     {% endfor %}
 </div>
 {% endif %}
+{% endblock %}
 
-{# ── Timeline ──────────────────────────────────────────────────────────────── #}
-<div class="topic-timeline" data-pagefind-body>
+
+{% block full_width_after %}
 {% if timeline %}
-{% set ns = namespace(last_year=None) %}
+
+{# ── Barcode overview ──────────────────────────────────────────────────────── #}
+<div class="bcode-section">
+    <div class="bcode-header">
+        <div class="bcode-legend">
+            <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#e0202a"></span>Rollback</span>
+            <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#1a9040"></span>Protection</span>
+            <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#e07000"></span>Delay</span>
+            <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#8040c0"></span>Litigation</span>
+            <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#999"></span>Other</span>
+        </div>
+    </div>
+    <div class="bcode-tooltip" id="bcode-tooltip" hidden></div>
+    <div class="bcode-era-bar" id="bcode-era-bar"></div>
+    <div class="bcode-wrap">
+        <div class="bcode-inner" id="bcode-inner"></div>
+    </div>
+</div>
+
+{# ── Filters + list ────────────────────────────────────────────────────────── #}
+<div class="container tl-container" id="tl-container">
+
+<div class="tl-filter-bar">
+    <div class="tl-filter-group">
+        <span class="tl-filter-label">Era</span>
+        <div class="tl-filter-btns" id="era-btns">
+            <button class="tl-fbtn active" data-era="">All</button>
+            <button class="tl-fbtn" data-era="trump1">Trump I</button>
+            <button class="tl-fbtn" data-era="biden">Biden</button>
+            <button class="tl-fbtn" data-era="trump2">Trump II</button>
+        </div>
+    </div>
+    <div class="tl-filter-group">
+        <span class="tl-filter-label">Type</span>
+        <div class="tl-filter-btns" id="sig-btns">
+            <button class="tl-fbtn active" data-sig="">All</button>
+            <button class="tl-fbtn" data-sig="rollback">Rollback</button>
+            <button class="tl-fbtn" data-sig="protection">Protection</button>
+            <button class="tl-fbtn" data-sig="delay">Delay</button>
+            <button class="tl-fbtn" data-sig="litigation">Litigation</button>
+            <button class="tl-fbtn" data-sig="other">Other</button>
+        </div>
+    </div>
+    {% if programs %}
+    <div class="tl-filter-group">
+        <span class="tl-filter-label">Program</span>
+        <div class="tl-filter-btns" id="prog-btns">
+            <button class="tl-fbtn active" data-prog="">All</button>
+            {% for p in programs %}
+            <button class="tl-fbtn tl-fbtn--prog-{{ p.slug }}" data-prog="{{ p.slug }}">{{ p.label }}</button>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <div class="tl-filter-group">
+        <span class="tl-filter-label">Search</span>
+        <input type="text" id="tl-search" placeholder="keyword…">
+    </div>
+</div>
+
+{# ── Timeline entries ──────────────────────────────────────────────────────── #}
+<div class="tl-timeline" id="tl-list">
+
+{% set ns = namespace(cur_year=None, cur_era=None) %}
 {% for item in timeline %}
 
-{% set yr = item.date[:4] if item.date else "" %}
-{% if yr and yr != ns.last_year %}
-<div class="topic-year-marker" id="yr-{{ yr }}">{{ yr }}</div>
-{% set ns.last_year = yr %}
-{% endif %}
+  {# Extract year: natural language "May 2018" → last 4 chars; ISO "2024-04-26" → first 4 #}
+  {% set raw_date = item.date or '' %}
+  {% if raw_date[-4:]|int(-1) >= 2000 %}
+    {% set yr = raw_date[-4:] %}
+  {% elif raw_date[:4]|int(-1) >= 2000 %}
+    {% set yr = raw_date[:4] %}
+  {% else %}
+    {% set yr = '' %}
+  {% endif %}
 
-<div class="topic-entry topic-entry--{{ item.signalType }} fade-in" id="{{ item.date }}-{{ loop.index }}">
-    <div class="topic-entry-left">
-        <div class="topic-entry-date">{{ item.date[5:] if item.date|length > 7 else item.date }}</div>
-        {% set tl = item.typeLabel %}
-        {% if tl and tl != "other" and tl != "unknown" %}
-        <div class="topic-entry-kind topic-entry-kind--{{ item.itemClass }}">
-            {% if item.itemClass == "press" %}Statement{% else %}{{ tl }}{% endif %}
-        </div>
-        {% endif %}
+  {# Era band header when era changes #}
+  {% if item.era and item.era != ns.cur_era %}
+    {% set ns.cur_era = item.era %}
+    {% set ns.cur_year = None %}
+    {% if item.era == 'trump1' %}
+    <div class="tl-era-band tl-era-band--trump1" data-era-band="trump1">
+        <span class="tl-era-name">Trump Administration I</span>
+        <span class="tl-era-years">2017–2021</span>
     </div>
-    <div class="topic-entry-body">
-        <div class="topic-entry-title">
-            {% if item.courtId %}
-            <a href="{{ url_for('court', court_id=item.courtId) }}">{{ item.title }}</a>
-            {% elif item.documentId %}
-            <a href="{{ url_for('document', document_id=item.documentId) }}">{{ item.title }}</a>
-            {% elif item.pressId %}
-            <a href="{{ url_for('press', press_id=item.pressId) }}">{{ item.title }}</a>
-            {% elif item.docketId %}
-            <a href="{{ url_for('docket', docket_id=item.docketId) }}">{{ item.title }}</a>
-            {% elif item.externalUrl %}
-            <a href="{{ item.externalUrl }}" target="_blank" rel="noopener">{{ item.title }}</a>
-            {% else %}
-            {{ item.title }}
-            {% endif %}
-        </div>
-        {% if item.description %}
-        <p class="topic-entry-desc">{{ item.description }}</p>
-        {% endif %}
-        <div class="topic-entry-meta">
-            {% if (item.documentId or item.pressId or item.docketId) and item.externalUrl %}
-            <a href="{{ item.externalUrl }}" class="topic-entry-ext" target="_blank" rel="noopener">Source ↗</a>
-            {% endif %}
-            {% if item.get('era') %}
-            <span class="badge badge-era badge-era--{{ item.era }}">{% if item.era == 'trump1' %}Trump 1{% elif item.era == 'biden' %}Biden{% elif item.era == 'trump2' %}Trump 2{% endif %}</span>
-            {% endif %}
-        </div>
+    {% elif item.era == 'biden' %}
+    <div class="tl-era-band tl-era-band--biden" data-era-band="biden">
+        <span class="tl-era-name">Biden Administration</span>
+        <span class="tl-era-years">2021–2025</span>
     </div>
-</div>
+    {% elif item.era == 'trump2' %}
+    <div class="tl-era-band tl-era-band--trump2 tl-era-band--{{ topic.statusClass or '' }}" data-era-band="trump2">
+        <span class="tl-era-name">Trump Administration II</span>
+        <span class="tl-era-years">2025–present</span>
+    </div>
+    {% endif %}
+  {% endif %}
+
+  {# Year label when year changes within an era #}
+  {% if yr and yr != ns.cur_year %}
+    {% set ns.cur_year = yr %}
+    <div class="tl-year-label" data-year-label="{{ yr }}">{{ yr }}</div>
+  {% endif %}
+
+  {# Resolve URL #}
+  {% if item.courtId %}{% set item_url = url_for('court', court_id=item.courtId) %}{% set item_external = false %}
+  {% elif item.documentId %}{% set item_url = url_for('document', document_id=item.documentId) %}{% set item_external = false %}
+  {% elif item.pressId %}{% set item_url = url_for('press', press_id=item.pressId) %}{% set item_external = false %}
+  {% elif item.docketId %}{% set item_url = url_for('docket', docket_id=item.docketId) %}{% set item_external = false %}
+  {% elif item.externalUrl %}{% set item_url = item.externalUrl %}{% set item_external = true %}
+  {% else %}{% set item_url = '' %}{% set item_external = false %}
+  {% endif %}
+
+  {# Normalize signal for filter matching #}
+  {% set sig_raw = item.signalType or 'other' %}
+  {% if 'rollback' in sig_raw %}{% set sig_norm = 'rollback' %}
+  {% elif sig_raw in ('protection','retained','policy') %}{% set sig_norm = 'protection' %}
+  {% elif sig_raw in ('delay','under_reconsideration') %}{% set sig_norm = 'delay' %}
+  {% elif sig_raw == 'litigation' %}{% set sig_norm = 'litigation' %}
+  {% else %}{% set sig_norm = 'other' %}{% endif %}
+
+  <div class="tl-entry tl-entry--{{ sig_raw }}{% if item.major %} tl-entry--major{% endif %}"
+       id="tl-entry-{{ loop.index0 }}"
+       data-idx="{{ loop.index0 }}"
+       data-era="{{ item.era or '' }}"
+       data-sig="{{ sig_norm }}"
+       data-program="{{ item.programSlug or '' }}"
+       data-title="{{ (item.title or '') | lower | e }}">
+      <div class="tl-entry-left">
+          <div class="tl-date">{{ raw_date }}</div>
+          {% if item.programSlug == 'both' %}
+          <div class="tl-program tl-program--both"><span class="tl-program--drinking-water">Drinking Water Levels</span> &amp; <span class="tl-program--superfund">Hazardous Substance Designation</span></div>
+          {% elif item.programSlug %}
+          <div class="tl-program tl-program--{{ item.programSlug }}">{{ item.program }}</div>
+          {% endif %}
+          {% if item.typeLabel %}<div class="tl-type">{{ item.typeLabel }}</div>{% endif %}
+      </div>
+      <div class="tl-entry-right">
+          <div class="tl-title{% if item.major %} tl-title--major{% endif %}">
+              {% if item_url %}
+              <a href="{{ item_url }}"{% if item_external %} target="_blank" rel="noopener"{% endif %}>{{ item.title }}</a>
+              {% else %}{{ item.title }}{% endif %}
+          </div>
+          {% if item.description %}<p class="tl-desc">{{ item.description }}</p>{% endif %}
+          <div class="tl-footer">
+              <span class="tl-signal-badge tl-signal-badge--{{ sig_norm }}">{{ sig_raw | replace('_',' ') }}</span>
+              {% if item_url and item_external %}
+              {% endif %}
+          </div>
+      </div>
+  </div>
+
 {% endfor %}
-{% else %}
-<p class="empty-state">No timeline items yet.</p>
-{% endif %}
-</div>
+</div>{# /tl-list #}
 
+</div>{# /container #}
+
+{% endif %}
+{% endblock %}{# full_width_after #}
+
+
+{% block scripts %}
+{% if timeline %}
+<script>
+(function () {
+
+// ── Date parser: handles "May 2018", "2024-04-26", "April 2024", etc. ─────────
+var MONTHS = {
+    january:0, february:1, march:2, april:3, may:4, june:5,
+    july:6, august:7, september:8, october:9, november:10, december:11
+};
+function parseDate(s) {
+    if (!s) return null;
+    if (/^\d{4}/.test(s)) {
+        var d = new Date(s + (s.length === 4 ? '-07-01' : ''));
+        return isNaN(d) ? null : d;
+    }
+    var parts = s.toLowerCase().replace(/[,]/g, '').split(/\s+/);
+    var m = MONTHS[parts[0]];
+    var y = parseInt(parts[parts.length - 1]);
+    if (m !== undefined && y >= 2000) return new Date(y, m, 1);
+    return null;
+}
+
+// ── Barcode chart ──────────────────────────────────────────────────────────────
+(function () {
+    var container = document.getElementById('bcode-inner');
+    var tooltip   = document.getElementById('bcode-tooltip');
+    var entries   = Array.from(document.querySelectorAll('.tl-entry[data-idx]'));
+    if (!container || !entries.length) return;
+
+    {% set sc = topic.statusClass or '' %}
+    {% if 'rollback' in sc %}{% set trump2color = '#c0202a' %}
+    {% elif sc == 'retained' or sc == 'protection' %}{% set trump2color = '#1a6b35' %}
+    {% elif sc == 'delay' or 'reconsideration' in sc %}{% set trump2color = '#b85c00' %}
+    {% else %}{% set trump2color = '#2a9080' %}{% endif %}
+    var ERAS = [
+        { id:'trump1', start:new Date('2018-01-01'), end:new Date('2021-01-20'), color:'#a06820', label:'Trump I' },
+        { id:'biden',  start:new Date('2021-01-20'), end:new Date('2025-01-20'), color:'#1e5fa0', label:'Biden'   },
+        { id:'trump2', start:new Date('2025-01-20'), end:new Date(),              color:'{{ trump2color }}', label:'Trump II' },
+    ];
+    var SIG_COLORS = {
+        rollback:   '#e0202a',
+        protection: '#1a9040',
+        delay:      '#e07000',
+        rhetoric:   '#3a6fcc',
+        litigation: '#8040c0',
+        other:      '#999',
+    };
+
+    var minDate = ERAS[0].start;
+    var maxDate = ERAS[ERAS.length - 1].end;
+    var span    = maxDate - minDate;
+
+    function pct(d) {
+        return Math.max(0, Math.min(100, (d - minDate) / span * 100)).toFixed(2);
+    }
+
+    // Era bands
+    var html = '<div class="bcode-bands">';
+    ERAS.forEach(function (era) {
+        var l = +pct(era.start);
+        var w = (+pct(era.end) - l).toFixed(2);
+        html += '<div class="bcode-band bcode-band--' + era.id + '" style="left:' + l + '%;width:' + w + '%;background:' + era.color + '">'
+             + '<span class="bcode-era-name">' + era.label + '<span class="bcode-era-years"> ' + era.years + '</span></span></div>';
+    });
+    html += '</div>';
+
+    // Collect tick data and bucket by ~0.8% (≈ monthly resolution over the 8-year span)
+    var tickData = [];
+    entries.forEach(function (entry) {
+        var dateEl = entry.querySelector('.tl-date');
+        if (!dateEl) return;
+        var date = parseDate(dateEl.textContent.trim());
+        if (!date) return;
+        var color = SIG_COLORS[entry.dataset.sig] || '#bbb';
+        var titleEl = entry.querySelector('.tl-title');
+        tickData.push({
+            idx:   entry.dataset.idx,
+            pos:   parseFloat(pct(date)),
+            color: color,
+            date:  dateEl.textContent.trim(),
+            title: (titleEl ? titleEl.textContent.trim() : ''),
+        });
+    });
+
+    var BUCKET = 0.8;
+    var bucketMap = {};
+    tickData.forEach(function (t) {
+        var key = Math.round(t.pos / BUCKET);
+        if (!bucketMap[key]) bucketMap[key] = [];
+        bucketMap[key].push(t);
+    });
+
+    html += '<div class="bcode-ticks">';
+    Object.keys(bucketMap).map(Number).sort(function(a,b){return a-b;}).forEach(function(key) {
+        var group = bucketMap[key];
+        var avgPos = group.reduce(function(s,t){return s+t.pos;},0) / group.length;
+        var idxList = group.map(function (t) { return t.idx; }).join(',');
+        var isCluster = group.length > 1;
+
+        var bg, tooltipDate, tooltipTitle;
+        if (isCluster) {
+            var N = group.length, GAP = 1.5, stops = [];
+            group.forEach(function (t, i) {
+                var lo = i * 100 / N, hi = (i + 1) * 100 / N;
+                stops.push(t.color + ' ' + (i === 0 ? 0 : lo + GAP).toFixed(1) + '% ' + (i === N - 1 ? 100 : hi - GAP).toFixed(1) + '%');
+                if (i < N - 1) stops.push('rgba(255,255,255,0.9) ' + (hi - GAP).toFixed(1) + '% ' + (hi + GAP).toFixed(1) + '%');
+            });
+            bg = 'linear-gradient(to bottom,' + stops.join(',') + ')';
+            tooltipDate = group.length + ' events — click to cycle';
+            tooltipTitle = group.map(function (t) { return t.title; }).join(' · ');
+        } else {
+            bg = group[0].color;
+            tooltipDate = group[0].date;
+            tooltipTitle = group[0].title;
+        }
+
+        html += '<div class="bcode-tick' + (isCluster ? ' bcode-tick--cluster' : '') + '"'
+             + ' style="left:' + avgPos.toFixed(2) + '%;background:' + bg + '"'
+             + ' data-idx="' + group[0].idx + '"'
+             + ' data-idxlist="' + idxList + '"'
+             + ' data-color="' + group[0].color + '"'
+             + ' data-colors="' + group.map(function(t) { return t.color; }).join(',') + '"'
+             + ' data-count="' + group.length + '"'
+             + ' data-date="' + tooltipDate.replace(/"/g, '&quot;') + '"'
+             + ' data-title="' + tooltipTitle.replace(/"/g, '&quot;').replace(/</g, '&lt;') + '"'
+             + '></div>';
+    });
+    html += '</div>';
+
+    // Year labels
+
+    html += '<div class="bcode-years">';
+    for (var y = 2018; y <= maxDate.getFullYear(); y++) {
+        html += '<span class="bcode-year" data-year="' + y + '" style="left:' + pct(new Date(y, 0, 1)) + '%">' + y + '</span>';
+    }
+    html += '</div>';
+
+    // Scroll position indicator
+    html += '<div class="bcode-scroll-pos" id="bcode-scroll-pos"></div>';
+
+    container.innerHTML = html;
+
+    // Era label bar
+    var eraBar = document.getElementById('bcode-era-bar');
+    if (eraBar) {
+        var barHtml = '';
+        ERAS.forEach(function(era) {
+            var l = +pct(era.start);
+            var w = (+pct(era.end) - l).toFixed(2);
+            barHtml += '<div class="bcode-era-bar-item bcode-era-bar--' + era.id + '"'
+                     + ' style="left:' + l + '%;width:' + w + '%;color:' + era.color + ';border-top-color:' + era.color + '">'
+                     + era.label + '</div>';
+        });
+        eraBar.innerHTML = barHtml;
+    }
+
+    // Interactions
+    var activeTick    = null;
+    var clusterCycles = {};
+    container.querySelectorAll('.bcode-tick').forEach(function (tick) {
+        tick.addEventListener('mouseenter', function () {
+            var color = tick.dataset.color || '#888';
+            tooltip.style.setProperty('--tooltip-color', color);
+            var count = parseInt(tick.dataset.count) || 1;
+            if (count > 1) {
+                var titles = tick.dataset.title.split(' · ');
+                var colors = (tick.dataset.colors || '').split(',');
+                tooltip.innerHTML = titles.map(function (t, i) {
+                    return '<span class="bcode-tooltip-title" style="color:' + (colors[i] || color) + '">' + t + '</span>';
+                }).join('<span style="color:#999;margin:0 0.75em;font-weight:400"> / </span>');
+            } else {
+                tooltip.innerHTML = '<span class="bcode-tooltip-title">' + tick.dataset.title + '</span>';
+            }
+            tooltip.hidden = false;
+            // Move tracker bar to this tick and bold its era
+            var tickPct = parseFloat(tick.style.left);
+            if (scrollPos) {
+                scrollPos.style.left = tickPct + '%';
+            }
+            var hoverEra = null;
+            ERAS.forEach(function (e) {
+                var ePct = parseFloat(pct(e.start));
+                var endPct = parseFloat(pct(e.end));
+                if (tickPct >= ePct && tickPct <= endPct) hoverEra = e;
+            });
+            if (hoverEra) {
+                if (scrollPos) {
+                    scrollPos.style.background = hoverEra.color;
+                    scrollPos.style.boxShadow  = 'none';
+                }
+                eraBarItems.forEach(function (item) {
+                    var active = item.classList.contains('bcode-era-bar--' + hoverEra.id);
+                    item.style.fontWeight = active ? '900' : '400';
+                    item.style.opacity    = active ? '1'   : '0.4';
+                });
+            }
+        });
+        tick.addEventListener('mouseleave', function () {
+            tooltip.hidden = true;
+        });
+        tick.addEventListener('click', function () {
+            var idxList = tick.dataset.idxlist ? tick.dataset.idxlist.split(',') : [tick.dataset.idx];
+            var cycleKey = tick.dataset.idxlist || tick.dataset.idx;
+            var pos = clusterCycles[cycleKey] || 0;
+            var idx = idxList[pos % idxList.length];
+            clusterCycles[cycleKey] = (pos + 1) % idxList.length;
+
+            var entry = document.getElementById('tl-entry-' + idx);
+            if (!entry) return;
+            if (activeTick) activeTick.classList.remove('bcode-tick--active');
+            activeTick = tick;
+            tick.classList.add('bcode-tick--active');
+            var bcode = document.querySelector('.bcode-section');
+            var navH  = parseFloat(getComputedStyle(document.documentElement).fontSize) * 2.75;
+            var bcodeH = bcode ? bcode.getBoundingClientRect().height : 0;
+            entry.style.scrollMarginTop = (navH + bcodeH + 4) + 'px';
+            entry.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    // Scroll position indicator
+    var scrollPos = document.getElementById('bcode-scroll-pos');
+
+    var eraBarItems = Array.from(document.querySelectorAll('.bcode-era-bar-item'));
+    var yearTicks   = Array.from(document.querySelectorAll('.bcode-year[data-year]'));
+
+    function updateScrollPos() {
+        if (!scrollPos) return;
+        var atBottom = (window.innerHeight + window.scrollY) >= document.body.scrollHeight - 4;
+        if (atBottom) {
+            var lastEntry = null;
+            entries.forEach(function(entry) {
+                if (entry.style.display !== 'none') lastEntry = entry;
+            });
+            if (lastEntry && lastEntry.querySelector('.tl-date')) {
+                var date = parseDate(lastEntry.querySelector('.tl-date').textContent.trim());
+                if (date) {
+                    scrollPos.style.left = pct(date) + '%';
+                    var era = null;
+                    ERAS.forEach(function(e) { if (date >= e.start && date <= e.end) era = e; });
+                    if (era) {
+                        scrollPos.style.background = era.color;
+                        scrollPos.style.boxShadow  = 'none';
+                        eraBarItems.forEach(function(item) {
+                            var active = item.classList.contains('bcode-era-bar--' + era.id);
+                            item.style.fontWeight = active ? '900' : '400';
+                            item.style.opacity    = active ? '1'   : '0.4';
+                        });
+                    }
+
+                    var curYear = date.getFullYear();
+                    yearTicks.forEach(function(tick) {
+                        var active = parseInt(tick.dataset.year) === curYear;
+                        tick.style.fontWeight = active ? '700' : '';
+                        tick.style.color      = active ? '#111' : '';
+                    });
+                }
+            }
+            return;
+        }
+        var bcode = document.querySelector('.bcode-section');
+        var bcodeBottom = bcode ? bcode.getBoundingClientRect().bottom : 80;
+        var current = null;
+        entries.forEach(function (entry) {
+            if (entry.style.display === 'none') return;
+            if (entry.getBoundingClientRect().top <= bcodeBottom + 60) current = entry;
+        });
+        if (!current) {
+            entries.some(function (entry) {
+                if (entry.style.display !== 'none') { current = entry; return true; }
+            });
+        }
+        if (!current || !current.querySelector('.tl-date')) return;
+        var date = parseDate(current.querySelector('.tl-date').textContent.trim());
+        if (!date) return;
+        scrollPos.style.left = pct(date) + '%';
+
+        // Detect current era and apply color + glow to tracker bar
+        var era = null;
+        ERAS.forEach(function (e) { if (date >= e.start && date <= e.end) era = e; });
+        if (era) {
+            scrollPos.style.background = era.color;
+            scrollPos.style.boxShadow  = 'none';
+            eraBarItems.forEach(function (item) {
+                var active = item.classList.contains('bcode-era-bar--' + era.id);
+                item.style.fontWeight = active ? '900' : '400';
+                item.style.opacity    = active ? '1'   : '0.4';
+            });
+        }
+        var curYear = date.getFullYear();
+        yearTicks.forEach(function (tick) {
+            var active = parseInt(tick.dataset.year) === curYear;
+            tick.style.fontWeight = active ? '700' : '';
+            tick.style.color      = active ? '#111' : '';
+        });
+    }
+    window.addEventListener('scroll', updateScrollPos, { passive: true });
+    updateScrollPos();
+})();
+
+// ── Filter logic ───────────────────────────────────────────────────────────────
+(function () {
+    var entries    = Array.from(document.querySelectorAll('.tl-entry[data-idx]'));
+    var eraBands   = Array.from(document.querySelectorAll('[data-era-band]'));
+    var yearLabels = Array.from(document.querySelectorAll('[data-year-label]'));
+    var searchEl   = document.getElementById('tl-search');
+
+    var activeEra  = '';
+    var activeSig  = '';
+    var activeProg = '';
+    var activeQ    = '';
+
+    function applyFilters() {
+        var visibleEras = new Set();
+
+        entries.forEach(function (entry) {
+            var ok = (!activeEra  || entry.dataset.era     === activeEra)
+                  && (!activeSig  || entry.dataset.sig     === activeSig)
+                  && (!activeProg || entry.dataset.program === activeProg || entry.dataset.program === 'both')
+                  && (!activeQ    || entry.dataset.title.includes(activeQ));
+            entry.style.display = ok ? '' : 'none';
+            if (ok) visibleEras.add(entry.dataset.era);
+        });
+
+        var firstBandSeen = false;
+        eraBands.forEach(function (band) {
+            var show = visibleEras.has(band.dataset.eraBand);
+            band.style.display = show ? '' : 'none';
+            band.style.marginTop = (show && !firstBandSeen) ? '0' : '';
+            if (show) firstBandSeen = true;
+        });
+
+        // Show a year label only if it has at least one visible entry before the next label/band
+        yearLabels.forEach(function (lbl) {
+            var el = lbl.nextElementSibling;
+            var hasVisible = false;
+            while (el && !el.hasAttribute('data-year-label') && !el.hasAttribute('data-era-band')) {
+                if (el.hasAttribute('data-idx') && el.style.display !== 'none') { hasVisible = true; break; }
+                el = el.nextElementSibling;
+            }
+            lbl.style.display = hasVisible ? '' : 'none';
+        });
+    }
+
+    document.querySelectorAll('#era-btns .tl-fbtn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            activeEra = btn.dataset.era;
+            document.querySelectorAll('#era-btns .tl-fbtn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            applyFilters();
+        });
+    });
+
+    document.querySelectorAll('#sig-btns .tl-fbtn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            activeSig = btn.dataset.sig;
+            document.querySelectorAll('#sig-btns .tl-fbtn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            applyFilters();
+        });
+    });
+
+    document.querySelectorAll('#prog-btns .tl-fbtn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            activeProg = btn.dataset.prog;
+            document.querySelectorAll('#prog-btns .tl-fbtn').forEach(function (b) { b.classList.remove('active'); });
+            btn.classList.add('active');
+            applyFilters();
+        });
+    });
+
+    if (searchEl) {
+        searchEl.addEventListener('input', function () {
+            activeQ = searchEl.value.toLowerCase().trim();
+            applyFilters();
+        });
+    }
+
+    applyFilters();
+})();
+
+})(); // end IIFE
+</script>
+{% endif %}
 {% endblock %}
