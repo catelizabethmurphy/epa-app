@@ -162,10 +162,27 @@
 
 <div class="container">
     
-<a class="arc-back" href="../../federal-regulations/index.html">← Federal regulations timeline</a>
+<a class="arc-back" id="arc-back" href="../../federal-regulations/index.html">← Federal regulations timeline</a>
+<script>
+// If the user got here from the federal-regulations timeline, prefer
+// history.back() so the browser restores their scroll position on the
+// timeline. Falls back to the plain href if they entered the page cold
+// (direct link, new tab, etc.).
+(function () {
+    var back = document.getElementById('arc-back');
+    if (!back) return;
+    var ref = document.referrer || '';
+    if (ref && ref.indexOf(window.location.origin) === 0 && ref.indexOf('/federal-regulations/') !== -1) {
+        back.addEventListener('click', function (e) {
+            e.preventDefault();
+            history.back();
+        });
+    }
+})();
+</script>
 
 <header class="arc-lede">
-    <div class="arc-eyebrow">AMWA · PDF</div>
+    <div class="arc-eyebrow">AMWA</div>
     <h1 class="arc-hed">D.C. Circuit grants 21-day extension of delay in AWWA v. EPA</h1>
     <div class="arc-meta">
         <span>May 2025</span>

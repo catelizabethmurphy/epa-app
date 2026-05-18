@@ -162,20 +162,41 @@
 
 <div class="container">
     
-<a class="arc-back" href="../../federal-regulations/index.html">← Federal regulations timeline</a>
+<a class="arc-back" id="arc-back" href="../../federal-regulations/index.html">← Federal regulations timeline</a>
+<script>
+// If the user got here from the federal-regulations timeline, prefer
+// history.back() so the browser restores their scroll position on the
+// timeline. Falls back to the plain href if they entered the page cold
+// (direct link, new tab, etc.).
+(function () {
+    var back = document.getElementById('arc-back');
+    if (!back) return;
+    var ref = document.referrer || '';
+    if (ref && ref.indexOf(window.location.origin) === 0 && ref.indexOf('/federal-regulations/') !== -1) {
+        back.addEventListener('click', function (e) {
+            e.preventDefault();
+            history.back();
+        });
+    }
+})();
+</script>
 
 <header class="arc-lede">
     <div class="arc-eyebrow">regulations.gov</div>
     <h1 class="arc-hed">Biden EPA considers potential hazardous substance designation for additional PFAS compounds</h1>
     <div class="arc-meta">
         <span>April 2023</span>
-        
+        <span class="arc-meta-sep">·</span><span>EPA-HQ-OLEM-2022-0922-0001</span>
         
         
     </div>
     <div>
         
-        <a class="arc-source-btn" href="https://www.regulations.gov/document/EPA-HQ-OLEM-2022-0922-0001" target="_blank" rel="noopener">
+        <a class="arc-source-btn arc-source-btn--filled" href="../../static/data/archives/biden-epa-considers-potential-hazardous-substance-designatio.pdf" target="_blank" rel="noopener">
+            Download PDF ↓
+        </a>
+        
+        <a class="arc-source-btn" href="https://downloads.regulations.gov/EPA-HQ-OLEM-2022-0922-0001/content.pdf" target="_blank" rel="noopener">
             View on regulations.gov ↗
         </a>
     </div>
@@ -187,9 +208,10 @@
 
 <div class="arc-viewer">
 
-    <div class="arc-viewer-html">
-        <h1>Biden EPA considers potential hazardous substance designation for additional PFAS compounds</h1><dl><dt>Date</dt><dd>April 2023</dd><dt>Source</dt><dd>regulations.gov</dd></dl><p style="margin-top:1.5rem;"><a href="https://www.regulations.gov/document/EPA-HQ-OLEM-2022-0922-0001" target="_blank" rel="noopener">View original on regulations.gov ↗</a></p><p style="font-size:0.78rem;color:#888;margin-top:1.5rem;">This page was generated from metadata because the live source could not be archived (403 Client Error). Click through to read the original.</p>
-    </div>
+    <iframe class="arc-viewer-pdf"
+            src="../../static/data/archives/biden-epa-considers-potential-hazardous-substance-designatio.pdf"
+            title="Biden EPA considers potential hazardous substance designation for additional PFAS compounds"
+            loading="lazy"></iframe>
 
 </div>
 

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preliminary Regulatory Determinations for Contaminants on the Fourth Drinking Water Contaminant Candidate List — PFAS Federal Policy Record</title>
+    <title>EPA publicly commits to regulatory determination by end of year — PFAS Federal Policy Record</title>
     <meta name="description" content="A documentary record of U.S. federal policy on PFAS — per- and polyfluoroalkyl substances — from the first regulatory actions to today's partial rollback.">
-    <meta property="og:title" content="Preliminary Regulatory Determinations for Contaminants on the Fourth Drinking Water Contaminant Candidate List">
-    <meta property="og:description" content="The Safe Drinking Water Act (SDWA), as amended in 1996, requires the Environmental Protection Agency (EPA) to make regulatory determinations every five years on at least five unregulated contaminants.">
+    <meta property="og:title" content="EPA publicly commits to regulatory determination by end of year">
+    <meta property="og:description" content="EPA publicly commits to regulatory determination by end of year">
     <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -162,13 +162,30 @@
 
 <div class="container">
     
-<a class="arc-back" href="../../federal-regulations/index.html">← Federal regulations timeline</a>
+<a class="arc-back" id="arc-back" href="../../federal-regulations/index.html">← Federal regulations timeline</a>
+<script>
+// If the user got here from the federal-regulations timeline, prefer
+// history.back() so the browser restores their scroll position on the
+// timeline. Falls back to the plain href if they entered the page cold
+// (direct link, new tab, etc.).
+(function () {
+    var back = document.getElementById('arc-back');
+    if (!back) return;
+    var ref = document.referrer || '';
+    if (ref && ref.indexOf(window.location.origin) === 0 && ref.indexOf('/federal-regulations/') !== -1) {
+        back.addEventListener('click', function (e) {
+            e.preventDefault();
+            history.back();
+        });
+    }
+})();
+</script>
 
 <header class="arc-lede">
-    <div class="arc-eyebrow">Federal Register · PDF</div>
-    <h1 class="arc-hed">Preliminary Regulatory Determinations for Contaminants on the Fourth Drinking Water Contaminant Candidate List</h1>
+    <div class="arc-eyebrow">regulations.gov</div>
+    <h1 class="arc-hed">EPA publicly commits to regulatory determination by end of year</h1>
     <div class="arc-meta">
-        <span>2020-03-10</span>
+        <span>November 2019</span>
         <span class="arc-meta-sep">·</span><span>EPA-HQ-OW-2019-0583-0001</span>
         
         
@@ -179,14 +196,12 @@
             Download PDF ↓
         </a>
         
-        <a class="arc-source-btn" href="https://www.govinfo.gov/content/pkg/FR-2020-03-10/pdf/2020-04145.pdf" target="_blank" rel="noopener">
-            View on Federal Register ↗
+        <a class="arc-source-btn" href="https://downloads.regulations.gov/EPA-HQ-OW-2019-0583-0001/content.pdf" target="_blank" rel="noopener">
+            View on regulations.gov ↗
         </a>
     </div>
 </header>
 
-
-<div class="arc-abstract">The Safe Drinking Water Act (SDWA), as amended in 1996, requires the Environmental Protection Agency (EPA) to make regulatory determinations every five years on at least five unregulated contaminants. A regulatory determination is a decision about whether or not to begin the process to propose and promulgate a national primary drinking water regulation (NPDWR) for an unregulated contaminant. A preliminary regulatory determination lays out and takes comment on EPA&#39;s view about whether certain unregulated contaminants meet three statutory criteria. After EPA considers public comment, EPA makes a final determination. The unregulated contaminants included in a regulatory determination are chosen from the Contaminant Candidate List (CCL), which the SDWA requires the EPA to publish every five years. The EPA published the fourth CCL (CCL 4) in the Federal Register on November 17, 2016. This document presents the preliminary regulatory determinations and supporting rationale for the following eight of the 109 contaminants listed on CCL 4: Perfluorooctanesulfonic acid (PFOS), perfluorooctanoic acid (PFOA), 1,1-dichloroethane, acetochlor, methyl bromide (bromomethane), metolachlor, nitrobenzene, and Royal Demolition eXplosive (RDX). The Agency is making preliminary determinations to regulate two contaminants (i.e., PFOS and PFOA) and to not regulate six contaminants (i.e., 1,1-dichloroethane, acetochlor, methyl bromide, metolachlor, nitrobenzene, and RDX). The EPA seeks comment on these preliminary determinations. The EPA is also presenting an update on three other CCL 4 contaminants (strontium, 1,4-dioxane, and 1,2,3- trichloropropane).</div>
 
 
 
@@ -195,7 +210,7 @@
 
     <iframe class="arc-viewer-pdf"
             src="../../static/data/archives/epa-hq-ow-2019-0583-0001.pdf"
-            title="Preliminary Regulatory Determinations for Contaminants on the Fourth Drinking Water Contaminant Candidate List"
+            title="EPA publicly commits to regulatory determination by end of year"
             loading="lazy"></iframe>
 
 </div>
