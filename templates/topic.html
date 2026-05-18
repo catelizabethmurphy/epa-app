@@ -27,8 +27,6 @@
 .tl-chip--rollback   { --dir: #c0202a; --dir-bg: #c0202a; --dir-tint: #fff5f5; }
 .tl-chip--protection { --dir: #1a6b35; --dir-bg: #1a6b35; --dir-tint: #f3faf5; }
 .tl-chip--delay      { --dir: #935116; --dir-bg: #b85c00; --dir-tint: #fdf6ec; }
-.tl-chip--litigation { --dir: #5c3480; --dir-bg: #5c3480; --dir-tint: #f7f3fb; }
-.tl-chip--rhetoric   { --dir: #555;    --dir-bg: #777;    --dir-tint: #f4f4f4; }
 .tl-chip--other      { --dir: #666;    --dir-bg: #888;    --dir-tint: #f4f4f4; }
 
 /* Final / Court — solid filled */
@@ -107,7 +105,6 @@
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#e0202a"></span>Rollback</span>
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#1a9040"></span>Protection</span>
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#e07000"></span>Delay</span>
-            <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#8040c0"></span>Litigation</span>
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#999"></span>Other</span>
         </div>
     </div>
@@ -138,7 +135,6 @@
             <button class="tl-fbtn" data-sig="rollback">Rollback</button>
             <button class="tl-fbtn" data-sig="protection">Protection</button>
             <button class="tl-fbtn" data-sig="delay">Delay</button>
-            <button class="tl-fbtn" data-sig="litigation">Litigation</button>
             <button class="tl-fbtn" data-sig="other">Other</button>
         </div>
     </div>
@@ -212,41 +208,31 @@
   {% else %}{% set item_url = '' %}{% set item_external = false %}
   {% endif %}
 
-  {# Normalize signal for filter matching #}
+  {# Four categories: rollback, protection, delay, other. Court-ordered
+     protections (a court forcing EPA to act, etc.) demote to `other` so they
+     don't get the EPA-protection green; court-ordered delays/rollbacks keep
+     their direction. #}
   {% set sig_raw = item.signalType or 'other' %}
+  {% set tl_lc = (item.typeLabel or '') | lower %}
   {% if 'rollback' in sig_raw %}{% set sig_norm = 'rollback' %}
   {% elif sig_raw in ('protection','retained','policy') %}{% set sig_norm = 'protection' %}
   {% elif sig_raw in ('delay','under_reconsideration') %}{% set sig_norm = 'delay' %}
-  {% elif sig_raw == 'litigation' %}{% set sig_norm = 'litigation' %}
-  {% elif sig_raw == 'rhetoric' %}{% set sig_norm = 'rhetoric' %}
   {% else %}{% set sig_norm = 'other' %}{% endif %}
+  {% if sig_norm == 'protection' and ('court' in tl_lc or 'ruling' in tl_lc) %}{% set sig_norm = 'other' %}{% endif %}
 
-  {# Force (proposed / final / announced / withdrawn / court): prefer the
-     explicit `force` field on the item; fall back to a derivation for any
-     item that hasn't been hand-curated yet. #}
-  {% set tl_lc = (item.typeLabel or '') | lower %}
+  {# Force: explicit field wins, then a derivation pass. #}
   {% if item.force is defined and item.force %}{% set force = item.force %}
   {% elif item.withdrawn %}{% set force = 'withdrawn' %}
   {% elif 'proposed' in tl_lc or 'request for comment' in tl_lc or 'advanced notice' in tl_lc %}{% set force = 'proposed' %}
   {% elif 'final' in tl_lc or 'designation' in tl_lc or 'rule' == tl_lc %}{% set force = 'final' %}
-  {% elif sig_norm == 'litigation' or 'court' in tl_lc or 'ruling' in tl_lc %}{% set force = 'court' %}
-  {% elif sig_norm == 'rhetoric' or 'statement' in tl_lc or 'press' in tl_lc or 'commitment' in tl_lc or item.pressId %}{% set force = 'announced' %}
+  {% elif 'statement' in tl_lc or 'press' in tl_lc or 'commitment' in tl_lc or item.pressId %}{% set force = 'announced' %}
   {% else %}{% set force = '' %}{% endif %}
-  {# External-actor recolor: court rulings and congressional protections sit
-     in a different bucket from EPA action so they get a distinct blue hue.
-     We keep `sig_norm` intact for filtering/barcode and use a separate
-     `chip_variant` to drive the visual treatment + label. #}
-  {% set actor = '' %}
-  {% if 'court' in tl_lc or 'ruling' in tl_lc %}{% set actor = 'court' %}
-  {% elif 'congress' in tl_lc or 'legislation' in tl_lc %}{% set actor = 'congress' %}{% endif %}
-  {% if actor and sig_norm == 'protection' %}{% set chip_variant = actor ~ '-protection' %}
-  {% else %}{% set chip_variant = sig_norm %}{% endif %}
-  {% set dir_label = {'rollback':'Rollback','protection':'Protection','delay':'Delay','rhetoric':'Rhetoric','litigation':'Litigation','other':'Other'}.get(sig_norm, 'Protection') %}
-  {% if chip_variant == 'court-protection' %}{% set dir_label = 'Court ruling' %}
-  {% elif chip_variant == 'congress-protection' %}{% set dir_label = 'Congressional action' %}{% endif %}
-  {% set force_label = {'final':'Final','proposed':'Proposed','announced':'Announced','withdrawn':'Withdrawn','court':'Court'}.get(force, '') %}
-  {% if sig_norm == 'rhetoric' %}{% set chip_label = 'Announced' %}
-  {% elif force_label and force != 'court' %}{% set chip_label = force_label ~ ' ' ~ dir_label %}
+
+  {% set chip_variant = sig_norm %}
+  {% set dir_label = {'rollback':'Rollback','protection':'Protection','delay':'Delay','other':'Other'}.get(sig_norm, 'Other') %}
+  {% set force_label = {'final':'Final','proposed':'Proposed','announced':'Announced','withdrawn':'Withdrawn'}.get(force, '') %}
+  {% if sig_norm == 'other' %}{% set chip_label = dir_label %}
+  {% elif force_label %}{% set chip_label = force_label ~ ' ' ~ dir_label %}
   {% else %}{% set chip_label = dir_label %}{% endif %}
 
   <div class="tl-entry tl-entry--{{ sig_raw }}{% if item.major %} tl-entry--major{% endif %}"
@@ -352,8 +338,6 @@ function parseDate(s) {
         rollback:   '#e0202a',
         protection: '#1a9040',
         delay:      '#e07000',
-        rhetoric:   '#3a6fcc',
-        litigation: '#8040c0',
         other:      '#999',
     };
 
