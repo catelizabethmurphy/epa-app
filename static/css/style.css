@@ -66,11 +66,54 @@ nav.site-nav.nav-scrolled { box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
 }
 .nav-links a:hover { color: #fff; }
 
-@media (max-width: 600px) {
+.nav-toggle {
+    display: none;
+    background: transparent;
+    border: 0;
+    padding: 0.5rem;
+    margin-left: auto;
+    cursor: pointer;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+.nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: #fff;
+    margin: 4px auto;
+    transition: transform 0.2s, opacity 0.2s;
+}
+.nav-toggle.is-open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-toggle.is-open span:nth-child(2) { opacity: 0; }
+.nav-toggle.is-open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+@media (max-width: 700px) {
     nav.site-nav { padding: 0 0.75rem; }
-    .nav-inner { gap: 0; justify-content: space-between; }
-    .nav-brand { font-size: 0.72rem; }
-    .nav-links a { padding: 0 0.45rem; font-size: 0.7rem; letter-spacing: 0; }
+    .nav-inner { gap: 0; justify-content: space-between; height: 3rem; }
+    .nav-brand { font-size: 0.78rem; }
+    .nav-toggle { display: block; }
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 3rem;
+        left: 0;
+        right: 0;
+        background: #111;
+        flex-direction: column;
+        padding: 0.5rem 0;
+        border-top: 1px solid #2a2a2a;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+    .nav-links.is-open { display: flex; }
+    .nav-links a {
+        padding: 0.85rem 1rem;
+        line-height: 1.2;
+        font-size: 0.95rem;
+        letter-spacing: 0.02em;
+        border-bottom: 1px solid #1d1d1d;
+    }
+    .nav-links a:last-child { border-bottom: 0; }
 }
 
 /* ── Container / footer ──────────────────────────────────────────────────── */
@@ -79,6 +122,10 @@ nav.site-nav.nav-scrolled { box-shadow: 0 2px 8px rgba(0,0,0,0.5); }
     max-width: 1100px;
     margin: 0 auto;
     padding: 1.5rem;
+}
+
+@media (max-width: 600px) {
+    .container { padding: 1rem; }
 }
 
 footer {
@@ -1015,8 +1062,10 @@ table.doc-table tr:hover td { background: #fafaf8; }
     transition: left 0.15s ease-out, background 0.25s ease;
 }
 
+@media (max-width: 700px) {
+    .bcode-section { padding: 0.5rem 1.25rem 0.5rem; top: 3rem; }
+}
 @media (max-width: 600px) {
-    .bcode-section { padding: 0.5rem 0.75rem 0.5rem; }
     .bcode-legend { display: none; }
     .bcode-header { margin-bottom: 0.2rem; }
     .hide-mobile { display: none !important; }
@@ -1351,9 +1400,15 @@ table.doc-table tr:hover td { background: #fafaf8; }
 }
 .topic-handoffs {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1rem;
     margin: 2.5rem 0 1.5rem;
+}
+@media (max-width: 700px) {
+    .topic-handoffs { grid-template-columns: 1fr; }
+    .tl-filter-bar { gap: 0.6rem 1rem; padding: 0.75rem 0 0.7rem; }
+    .tl-filter-group input[type="text"] { width: 100%; }
+    .tl-filter-group { min-width: 0; }
 }
 .topic-handoff {
     padding: 1.1rem 1.15rem 1.2rem;
@@ -1648,7 +1703,6 @@ table.doc-table tr:hover td { background: #fafaf8; }
     }
     .cal-month-label::after { display: none; }
     .cal-events { padding-left: 0; }
-    .nav-links a { padding: 0 0.5rem; font-size: 0.75rem; }
     .dig-deeper-grid { grid-template-columns: 1fr; }
     .maha-header { flex-direction: column; gap: 0.4rem; align-items: flex-start; }
 }
@@ -1874,13 +1928,74 @@ details[open] .details-arrow { display: inline-block; transform: rotate(90deg); 
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-    .tl-entry { flex-direction: column; gap: 0.25rem; }
-    .tl-entry-left {
-        flex-direction: row; align-items: baseline; gap: 0.6rem;
-        min-width: unset; padding-right: 0; padding-bottom: 0.25rem;
+    .tl-entry {
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 0.85rem 0.9rem;
+        margin-bottom: 0.5rem;
+        border-bottom: none;
+        scroll-margin-top: 10rem;
+        background: #fafaf6;
     }
-    .tl-major-flag { margin-top: 0; }
-    .tl-entry-right { padding-left: 0.75rem; }
+    .tl-entry[class*="protection"],
+    .tl-entry[class*="policy"]      { background: #f4faf6; }
+    .tl-entry[class*="rollback"]    { background: #fdf5f5; }
+    .tl-entry[class*="delay"],
+    .tl-entry[class*="reconsider"]  { background: #fdf6ec; }
+    .tl-entry[class*="litigation"]  { background: #f7f3fb; }
+
+    .tl-entry-left {
+        width: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 0.4rem;
+        min-width: 0;
+        padding: 0;
+        text-align: left;
+    }
+    .tl-entry-left > * {
+        margin: 0; padding: 0; border: 0;
+        text-align: left;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+    }
+    /* Visual order: date | type on row 1, program on row 2 */
+    .tl-date    { order: 1; font-size: 0.78rem; font-weight: 700; color: #111; }
+    .tl-type    { order: 2; font-size: 0.7rem; color: #888; line-height: 1.3; }
+    .tl-type::before {
+        content: "|";
+        margin-right: 0.4rem;
+        color: #ccc;
+        font-weight: 400;
+    }
+    .tl-program {
+        order: 3;
+        flex-basis: 100%;
+        font-size: 0.62rem;
+        line-height: 1.3;
+        margin-top: 0.15rem;
+    }
+    .tl-major-flag { display: none; }
+
+    .tl-entry-right { padding-left: 0; min-width: 0; }
+    .tl-entry-right > * { max-width: 100%; overflow-wrap: anywhere; }
+
+    /* Neutralize the "major" treatment on mobile — every entry now gets the
+       tinted card via .tl-entry--<signal> above. */
+    .tl-entry--major { padding: 0.85rem 0.9rem; }
+    .tl-entry--major .tl-entry-right,
+    .tl-entry--major.tl-entry--protection .tl-entry-right,
+    .tl-entry--major.tl-entry--rollback .tl-entry-right,
+    .tl-entry--major.tl-entry--litigation .tl-entry-right {
+        background: transparent;
+        padding: 0;
+    }
+    .tl-title, .tl-title--major { font-size: 0.95rem; font-family: 'PT Sans', sans-serif; }
+    .tl-desc, .tl-entry--major .tl-desc { font-size: 0.82rem; color: #444; }
+
+    /* Hide the barcode-chart hover tooltip — taps should jump straight to the entry */
+    .bcode-tooltip { display: none !important; }
 }
 
 

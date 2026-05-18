@@ -93,7 +93,14 @@
     border-collapse: collapse;
     font-family: "PT Sans", sans-serif;
     font-size: 1rem;
+    table-layout: fixed;
 }
+#wt-state-table th, #wt-state-table td,
+.wt-worst th, .wt-worst td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.wt-worst td { white-space: normal; }
 .wt-table th, .wt-table td {
     padding: 0.65rem 0.7rem;
     border-bottom: 1px solid #eee;
@@ -128,6 +135,8 @@
     margin-right: 0.4rem;
     min-width: 1px;
     opacity: 0.85;
+    width: calc(var(--bar-pct, 0) * 5px);
+    max-width: 100%;
 }
 .wt-bar--low { background: #b85c00; }
 .wt-bar--ok  { background: #8a8a8a; opacity: 0.4; }
@@ -361,7 +370,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -484,6 +493,77 @@
     padding-top: 0.9rem;
     max-width: 760px;
 }
+
+/* ── Mobile tweaks ───────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .wt-strip { flex-wrap: wrap; }
+    .wt-stat { flex: 1 1 45%; min-width: 0; padding: 0.7rem 0.85rem; }
+    .wt-stat-num { font-size: 1.35rem; }
+    .wt-stat-lbl { font-size: 0.66rem; }
+
+    .wt-search { padding: 0.9rem 1rem 1rem; }
+    .wt-search-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.75rem 0;
+    }
+    .wt-search-result { width: 100%; gap: 0.7rem; }
+    .wt-search-count { min-width: 0; flex: 0 0 auto; }
+    .wt-search-num { font-size: 1.65rem; }
+    .wt-search-name { font-size: 0.95rem; }
+    .wt-search-jump { align-self: stretch; text-align: center; padding: 0.5rem 0.7rem; }
+
+    .wt-table { font-size: 0.85rem; }
+    .wt-table th, .wt-table td { padding: 0.55rem 0.4rem; }
+
+    /* Top-state ranking: hide system counts on mobile */
+    #wt-state-table .wt-col-tested,
+    #wt-state-table .wt-col-over { display: none; }
+    #wt-state-table th:first-child,
+    #wt-state-table td:first-child { padding-right: 1.5rem; width: 38%; }
+    #wt-state-table th:last-child,
+    #wt-state-table td:last-child { padding-left: 0; white-space: nowrap; }
+    /* Bar uses a smaller scale on mobile so the % stays on the same line */
+    #wt-state-table .wt-bar {
+        width: calc(var(--bar-pct, 0) * 1.5px);
+        max-width: 55%;
+        height: 8px;
+    }
+
+    /* Worst-25: hide state, residents, sample date so it fits the viewport */
+    .wt-worst .wt-col-state,
+    .wt-worst .wt-col-pop,
+    .wt-worst .wt-col-date { display: none; }
+    /* Re-allocate the freed colgroup width to the visible columns */
+    .wt-worst > colgroup > col:nth-child(1) { width: 48%; }
+    .wt-worst > colgroup > col:nth-child(4) { width: 26%; }
+    .wt-worst > colgroup > col:nth-child(5) { width: 26%; }
+    .wt-worst .wt-state-inline {
+        display: block;
+        font-size: 0.7rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-top: 0.15rem;
+    }
+
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
+}
+.wt-state-inline { display: none; }
 </style>
 {% endblock %}
 
@@ -535,11 +615,17 @@
 
 <div style="overflow-x:auto;">
 <table class="wt-table" id="wt-state-table">
+    <colgroup>
+        <col style="width:25%">
+        <col class="wt-col-tested" style="width:18%">
+        <col class="wt-col-over" style="width:17%">
+        <col style="width:40%">
+    </colgroup>
     <thead>
         <tr>
             <th>State</th>
-            <th class="num">Systems tested</th>
-            <th class="num">Over limit</th>
+            <th class="center wt-col-tested">Systems tested</th>
+            <th class="center wt-col-over">Over limit</th>
             <th>% over limit (any of five PFAS)</th>
         </tr>
     </thead>
@@ -553,11 +639,11 @@
                 {{ s.name }}
                 {% endif %}
             </td>
-            <td class="num">{{ s.n_pws }}</td>
-            <td class="num">{{ s.n_pws_any_exceed }}</td>
+            <td class="center wt-col-tested">{{ s.n_pws }}</td>
+            <td class="center wt-col-over">{{ s.n_pws_any_exceed }}</td>
             <td>
                 <span class="wt-bar{% if s.pct_any_exceed < 10 %} wt-bar--ok{% elif s.pct_any_exceed < 25 %} wt-bar--low{% endif %}"
-                      style="width: {{ (s.pct_any_exceed * 1.8)|round(1) }}px;"></span>
+                      style="--bar-pct: {{ s.pct_any_exceed|round(1) }};"></span>
                 {{ "%.1f"|format(s.pct_any_exceed) }}%
             </td>
         </tr>
@@ -576,15 +662,23 @@
 <p class="wt-section-sub">Ranked by how many times above the EPA standard the system's worst sample registered.</p>
 
 <div style="overflow-x:auto;">
-<table class="wt-table">
+<table class="wt-table wt-worst">
+    <colgroup>
+        <col style="width:25%">
+        <col class="wt-col-state" style="width:18%">
+        <col class="wt-col-pop" style="width:17%">
+        <col style="width:11%">
+        <col style="width:17%">
+        <col class="wt-col-date" style="width:12%">
+    </colgroup>
     <thead>
         <tr>
             <th>Water system</th>
-            <th class="center">State</th>
-            <th class="center">Residents served</th>
-            <th class="center">Contaminant</th>
+            <th class="center wt-col-state">State</th>
+            <th class="center wt-col-pop">Residents served</th>
+            <th>Contaminant</th>
             <th class="center">× EPA standard</th>
-            <th class="center">Sample date</th>
+            <th class="center wt-col-date">Sample date</th>
         </tr>
     </thead>
     <tbody>
@@ -592,18 +686,19 @@
         <tr>
             <td>
                 <div>{{ r.name }}</div>
+                <div class="wt-state-inline">{{ r.state }}{% if r.served_population %} · ~{{ r.served_population|pop }} served{% endif %}</div>
                 {% if r.zips %}<div style="font-size:0.72rem;color:#999;">Serves {{ r.zips|length }} ZIP code{{ '' if r.zips|length == 1 else 's' }}</div>{% endif %}
             </td>
-            <td class="center">{{ r.state }}</td>
-            <td class="center">{% if r.served_population %}~{{ "{:,}".format(r.served_population) }}{% else %}—{% endif %}</td>
-            <td class="center">{{ r.contaminant }}</td>
+            <td class="center wt-col-state">{{ r.state }}</td>
+            <td class="center wt-col-pop">{% if r.served_population %}~{{ r.served_population|pop }}{% else %}—{% endif %}</td>
+            <td>{{ r.contaminant }}</td>
             {%- set m = r.max_result_times_over_limit -%}
             {%- if m >= 50 %}{% set tier = 'sev' %}
             {%- elif m >= 25 %}{% set tier = 'high' %}
             {%- elif m >= 10 %}{% set tier = 'med' %}
             {%- else %}{% set tier = 'low' %}{% endif -%}
             <td class="center wt-times wt-times--{{ tier }}">{{ "%.0f"|format(m) }}×</td>
-            <td class="center">{{ r.peak_date or '—' }}</td>
+            <td class="center wt-col-date">{{ r.peak_date or '—' }}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -714,7 +809,7 @@
         }
         if (m.served_population) {
             metaRows += '<div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~' +
-                esc(fmtInt(m.served_population)) + '</dd></div>';
+                esc(m.served_population_label || fmtInt(m.served_population)) + '</dd></div>';
         }
         if (m.zips && m.zips.length) {
             metaRows += '<div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>' +

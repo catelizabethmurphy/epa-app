@@ -10,6 +10,41 @@ from flask import Flask, render_template, abort, send_from_directory, redirect, 
 
 app = Flask(__name__)
 app.config['FREEZER_RELATIVE_URLS'] = True
+
+
+def _round_to(n, step):
+    return int(round(n / step) * step)
+
+
+@app.template_filter('pop')
+def fmt_population(n):
+    """Format a served-population count with magnitude-aware rounding.
+
+    < 100        → nearest 10
+    100–999      → exact
+    1k–10k       → nearest 50
+    10k–100k     → nearest 100
+    100k–1M      → nearest 1,000
+    ≥ 1M         → "1.2 million" (1 decimal)
+    """
+    try:
+        n = int(n)
+    except (TypeError, ValueError):
+        return ""
+    if n <= 0:
+        return ""
+    if n >= 1_000_000:
+        val = n / 1_000_000
+        return f"{val:.1f} million" if val < 10 else f"{val:.0f} million"
+    if n >= 100_000:
+        return f"{_round_to(n, 1000):,}"
+    if n >= 10_000:
+        return f"{_round_to(n, 100):,}"
+    if n >= 5_000:
+        return f"{_round_to(n, 100):,}"
+    if n >= 1_000:
+        return f"{_round_to(n, 50):,}"
+    return f"{_round_to(n, 10):,}"
 # Some referenced documentIds (from similarities / press-release links) point to
 # regs.gov records that aren't in our local snapshot — skip-bake them instead of
 # aborting the whole freeze.
@@ -1253,6 +1288,7 @@ def pws_search_data():
             "zips": p["zips"],
             "n_exceedances": p["n_exceedances"],
             "served_population": p.get("served_population") or 0,
+            "served_population_label": fmt_population(p.get("served_population") or 0),
             "per_contaminant": p.get("per_contaminant") or [],
         }
         for p in get_pws_index()
