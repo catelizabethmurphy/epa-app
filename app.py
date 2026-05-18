@@ -112,10 +112,6 @@ def get_sources():
     return _load("sources.json", [])
 
 
-def get_agenda():
-    return _load("agenda.json", [])
-
-
 def get_pfas_context():
     return _load("pfas_context.json", {})
 
@@ -575,7 +571,6 @@ def index():
     status = get_status()
     all_events = sorted(get_events(), key=lambda e: e.get("date") or "", reverse=True)
     sources = get_sources()
-    agenda = [a for a in get_agenda() if a.get("stage") not in ("completed", "long_term")]
     pfas_context = get_pfas_context()
     trump1 = get_trump1_context()
     stats = build_stats(documents, press_releases)
@@ -607,7 +602,6 @@ def index():
                            status=status,
                            calendar=calendar,
                            sources=sources,
-                           agenda=agenda[:10],
                            pfas_context=pfas_context,
                            trump1=trump1,
                            recent=recent,
@@ -781,7 +775,7 @@ def pfas_reporting():
     return timeline_page("pfas-reporting")
 
 
-@app.route("/timelines/pfas-programs/")
+@app.route("/federal-regulations/")
 def pfas_programs():
     page = get_timeline_page("pfas-programs")
     if not page:
@@ -826,7 +820,7 @@ def glossary():
     return render_template("glossary.html")
 
 
-@app.route("/states/")
+@app.route("/state-legislation/")
 def state_tracker():
     items = [i for i in get_state_bills() if i.get("state")]
     by_state = defaultdict(list)
@@ -1130,8 +1124,22 @@ def water_testing():
 
 @app.route("/data/pws-search.json")
 def pws_search_data():
-    """Search-index JSON, fetched on demand by the water-testing page."""
-    return jsonify(get_pws_index())
+    """Search-index JSON, fetched on demand by the water-testing page.
+
+    Only the fields the client-side search and results use, so the payload
+    stays small.
+    """
+    slim = [
+        {
+            "id": p["id"],
+            "name": p["name"],
+            "state": p["state"],
+            "zips": p["zips"],
+            "n_exceedances": p["n_exceedances"],
+        }
+        for p in get_pws_index()
+    ]
+    return jsonify(slim)
 
 
 @app.route("/water-testing/<state_slug>/")

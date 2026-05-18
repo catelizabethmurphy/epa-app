@@ -5,13 +5,9 @@
 {% block og_description %}{{ topic.description }}{% endblock %}
 
 {% block content %}
-<p style="font-size:0.85rem; color:#666; margin-bottom:0.25rem;">
-    <a href="{{ url_for('explore') }}">Timelines</a> &rsaquo; {{ topic.title }}
-</p>
-
 <div class="topic-header">
-    {% set eyebrow = topic.eyebrow or topic.subtitle %}
-    {% if eyebrow %}<div class="topic-eyebrow">{{ eyebrow }}</div>{% endif %}
+    {% set eyebrow = topic.eyebrow or topic.subtitle or 'PFAS Federal Policy Record' %}
+    <div class="topic-eyebrow">{{ eyebrow }}</div>
     <h1 class="topic-title">{{ topic.title }}</h1>
     {% if topic.description %}<p class="topic-desc">{{ topic.description }}</p>{% endif %}
     {% if topic.currentStatus %}
@@ -189,6 +185,23 @@
 
 {% endfor %}
 </div>{# /tl-list #}
+
+<div class="topic-handoffs">
+  <section class="topic-handoff">
+    <h2 class="topic-handoff-hed">See how PFAS affects your community</h2>
+    <p class="topic-handoff-text">
+      1,716 U.S. water systems tested above the EPA standards Biden set in 2024 for PFAS in drinking water. See how your state's utilities tested.
+    </p>
+    <a class="topic-handoff-btn" href="{{ url_for('water_testing') }}">See PFAS in drinking water →</a>
+  </section>
+  <section class="topic-handoff">
+    <h2 class="topic-handoff-hed">What is your state doing about PFAS?</h2>
+    <p class="topic-handoff-text">
+      See how states are filling the gap with their own restrictions on PFAS in food packaging, firefighting foam and industrial discharges.
+    </p>
+    <a class="topic-handoff-btn" href="{{ url_for('state_tracker') }}">See state legislation →</a>
+  </section>
+</div>
 
 </div>{# /container #}
 

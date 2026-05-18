@@ -367,8 +367,8 @@
             <th>Water system</th>
             <th>State</th>
             <th>Contaminant</th>
-            <th>Sample date</th>
             <th class="num">× EPA standard</th>
+            <th>Sample date</th>
         </tr>
     </thead>
     <tbody>
@@ -380,8 +380,8 @@
             </td>
             <td>{{ r.state }}</td>
             <td>{{ r.contaminant }}</td>
-            <td>{{ r.peak_date or '—' }}</td>
             <td class="num">{{ "%.0f"|format(r.max_result_times_over_limit) }}×</td>
+            <td>{{ r.peak_date or '—' }}</td>
         </tr>
         {% endfor %}
     </tbody>

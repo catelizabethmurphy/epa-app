@@ -43,6 +43,42 @@
 }
 .state-lede-credit a { color: #999; }
 
+.state-water-cta {
+    margin: 2.5rem 0 1rem;
+    padding: 1.5rem 1.5rem 1.6rem;
+    background: #111;
+    color: #fff;
+    max-width: 760px;
+}
+.state-water-cta-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #fff;
+    margin: 0 0 0.6rem;
+    line-height: 1.25;
+}
+.state-water-cta-text {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.95rem;
+    color: #ddd;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+}
+.state-water-cta-btn {
+    display: inline-block;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-decoration: none;
+    padding: 0.55rem 0.95rem;
+    border: 2px solid #fff;
+}
+.state-water-cta-btn:hover { background: #fff; color: #111; }
+
 /* ── Stat strip ──────────────────────────────────────────────────────────── */
 .state-stat-strip {
     display: flex;
@@ -561,6 +597,14 @@
 </section>
 {% endfor %}
 </div>
+
+<section class="state-water-cta">
+    <h2 class="state-water-cta-hed">See how PFAS affects your community</h2>
+    <p class="state-water-cta-text">
+        1,716 U.S. water systems tested above the EPA standards Biden set in 2024 for PFAS in drinking water — standards the Trump EPA is now moving to roll back. See how your state's utilities tested.
+    </p>
+    <a class="state-water-cta-btn" href="{{ url_for('water_testing') }}">See PFAS in drinking water →</a>
+</section>
 
 <script>
 (function () {
