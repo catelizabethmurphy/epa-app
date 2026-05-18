@@ -3,16 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drinking Water &amp; Superfund — PFAS Federal Policy Record</title>
+    <title>Trump&#39;s history on PFAS regulation — PFAS Federal Policy Record</title>
     <meta name="description" content="A documentary record of U.S. federal policy on PFAS — per- and polyfluoroalkyl substances — from the first regulatory actions to today's partial rollback.">
-    <meta property="og:title" content="Drinking Water &amp; Superfund">
-    <meta property="og:description" content="Two regulatory programs — drinking water limits and Superfund designation — running in parallel across three administrations.">
+    <meta property="og:title" content="Trump&#39;s history on PFAS regulation">
+    <meta property="og:description" content="The first Trump administration made a number of commitments to address PFAS contamination, but ultimately failed to follow through on most of them. The Biden administration finalized many of them. But the second Trump administration is now trying to roll some of them back, despite much of its rhetoric on PFAS.">
     <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../static/css/style.css">
     
+<style>
+/* ── Timeline signal chip ───────────────────────────────────────────────
+   Direction sets the hue, force sets the treatment.
+   Label reads as a phrase: "Proposed Rollback", "Final Protection",
+   "Announced", "Court action", etc.                                    */
+.tl-chip {
+    display: inline-block;
+    padding: 0.28rem 0.55rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    border-radius: 2px;
+    --dir: #666;
+    --dir-bg: #f1f1f1;
+    --dir-tint: #fafafa;
+}
+.tl-chip--rollback   { --dir: #c0202a; --dir-bg: #c0202a; --dir-tint: #fff5f5; }
+.tl-chip--protection { --dir: #1a6b35; --dir-bg: #1a6b35; --dir-tint: #f3faf5; }
+.tl-chip--delay      { --dir: #935116; --dir-bg: #b85c00; --dir-tint: #fdf6ec; }
+.tl-chip--other      { --dir: #666;    --dir-bg: #888;    --dir-tint: #f4f4f4; }
+
+/* Final / Court — solid filled */
+.tl-chip--force-final,
+.tl-chip--force-court {
+    background: var(--dir-bg);
+    color: #fff;
+    border: 1px solid var(--dir-bg);
+}
+
+/* Proposed — outlined, hue-tinted */
+.tl-chip--force-proposed {
+    background: var(--dir-tint);
+    color: var(--dir);
+    border: 1px solid var(--dir);
+}
+
+/* Announced — ghost, italic */
+.tl-chip--force-announced {
+    background: transparent;
+    color: var(--dir);
+    border: 1px dashed #bbb;
+    font-style: italic;
+}
+
+/* Withdrawn — strikethrough + faded */
+.tl-chip--force-withdrawn {
+    background: #f4f4f4;
+    color: var(--dir);
+    border: 1px solid #ccc;
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+/* Force unknown — subdued tinted pill */
+.tl-chip--force-none {
+    background: var(--dir-tint);
+    color: var(--dir);
+    border: 1px solid var(--dir);
+}
+</style>
+
 </head>
 <body>
 <nav class="site-nav" id="site-nav">
@@ -33,8 +97,8 @@
 <div class="topic-header">
     
     <div class="topic-eyebrow">PFAS Federal Policy Record</div>
-    <h1 class="topic-title">Drinking Water &amp; Superfund</h1>
-    <p class="topic-desc">Two regulatory programs — drinking water limits and Superfund designation — running in parallel across three administrations.</p>
+    <h1 class="topic-title">Trump&#39;s history on PFAS regulation</h1>
+    <p class="topic-desc">The first Trump administration made a number of commitments to address PFAS contamination, but ultimately failed to follow through on most of them. The Biden administration finalized many of them. But the second Trump administration is now trying to roll some of them back, despite much of its rhetoric on PFAS.</p>
     
 </div>
 
@@ -52,7 +116,6 @@
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#e0202a"></span>Rollback</span>
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#1a9040"></span>Protection</span>
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#e07000"></span>Delay</span>
-            <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#8040c0"></span>Litigation</span>
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#999"></span>Other</span>
         </div>
     </div>
@@ -83,7 +146,6 @@
             <button class="tl-fbtn" data-sig="rollback">Rollback</button>
             <button class="tl-fbtn" data-sig="protection">Protection</button>
             <button class="tl-fbtn" data-sig="delay">Delay</button>
-            <button class="tl-fbtn" data-sig="litigation">Litigation</button>
             <button class="tl-fbtn" data-sig="other">Other</button>
         </div>
     </div>
@@ -132,12 +194,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection"
        id="tl-entry-0"
        data-idx="0"
        data-era="trump1"
        data-sig="protection"
+       data-force="announced"
        data-program="both"
        data-title="pfas national leadership summit">
       <div class="tl-entry-left">
@@ -155,9 +230,7 @@
           </div>
           <p class="tl-desc">The Environmental Protection Agency announces at a summit with federal, state and industry stakeholders a plan to &#34;initiate steps to evaluate the need for a maximum contaminant level (MCL) for PFOA and PFOS&#34; in drinking water. The agency also announces it is &#34;beginning the necessary steps to propose designating PFOA and PFOS as &#39;hazardous substances&#39;&#34; under Section 102 of the Comprehensive Environmental Response, Compensation, and Liability Act (CERCLA)</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-announced">Announced Protection</span>
           </div>
       </div>
   </div>
@@ -187,63 +260,25 @@
   
   
   
+  
+  
 
-  <div class="tl-entry tl-entry--protection"
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--protection tl-entry--major"
        id="tl-entry-1"
        data-idx="1"
        data-era="trump1"
        data-sig="protection"
-       data-program="both"
-       data-title="bipartisan pfas action act of 2019 introduced in congress">
-      <div class="tl-entry-left">
-          <div class="tl-date">January 2019</div>
-          
-          <div class="tl-program tl-program--both"><span class="tl-program--drinking-water">Drinking Water Protections</span> &amp; <span class="tl-program--superfund">Hazardous Substance Designation</span></div>
-          
-          <div class="tl-type">Proposed Legislation</div>
-      </div>
-      <div class="tl-entry-right">
-          <div class="tl-title">
-              
-              <a href="https://www.congress.gov/bill/116th-congress/house-bill/535/all-actions" target="_blank" rel="noopener">Bipartisan PFAS Action Act of 2019 introduced in Congress</a>
-              
-          </div>
-          <p class="tl-desc">House introduces bill that would require EPA to, among other things, enact a national primary drinking water regulation for PFOA and PFOS.</p>
-          <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
-              
-          </div>
-      </div>
-  </div>
-
-
-
-  
-  
-  
-    
-  
-
-  
-  
-
-  
-  
-
-  
-  
-  
-
-  
-  
-  
-
-  <div class="tl-entry tl-entry--commitment_to_protection tl-entry--major"
-       id="tl-entry-2"
-       data-idx="2"
-       data-era="trump1"
-       data-sig="other"
+       data-force="announced"
        data-program="superfund"
        data-title="pfas action plan commits to holding &#34;responsible parties accountable for pfas releases into the environment&#34;">
       <div class="tl-entry-left">
@@ -261,9 +296,7 @@
           </div>
           <p class="tl-desc">Trump EPA outlines a roadmap for addressing PFAS contamination in drinking water, including &#34;steps to evaluate the need for a maximum contaminant level&#34; for PFOA and PFOS. EPA also announces as part of its PFAS Action Plan that it has &#34;initiated the regulatory development process for listing PFOA and PFOS as CERCLA hazardous substances&#34; and says doing so would give the agency &#34;additional authority to address PFOA and PFOS, including the ability to require responsible parties to carry out and/or pay for response actions.&#34;</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">commitment to protection</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-announced">Announced Protection</span>
           </div>
       </div>
   </div>
@@ -290,12 +323,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection"
-       id="tl-entry-3"
-       data-idx="3"
+       id="tl-entry-2"
+       data-idx="2"
        data-era="trump1"
        data-sig="protection"
+       data-force="announced"
        data-program="drinking-water"
        data-title="epa official promises congress a regulatory determination by end of 2019">
       <div class="tl-entry-left">
@@ -313,9 +359,7 @@
           </div>
           <p class="tl-desc">EPA Assistant Administrator for the Office of Water David Ross tells the Senate Environment and Public Works Committee that the agency will propose a drinking water regulatory determination for PFOA and PFOS &#34;by the end of this year.&#34; He also agrees with the House Subcommittee on Environment that the potentially widespread contamination of America&#39;s drinking water with PFAS constitutes a &#34;national emergency.&#34;</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-announced">Announced Protection</span>
           </div>
       </div>
   </div>
@@ -342,12 +386,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection"
-       id="tl-entry-4"
-       data-idx="4"
+       id="tl-entry-3"
+       data-idx="3"
        data-era="trump1"
        data-sig="protection"
+       data-force="announced"
        data-program="drinking-water"
        data-title="epa publicly commits to regulatory determination by end of year">
       <div class="tl-entry-left">
@@ -365,59 +422,7 @@
           </div>
           <p class="tl-desc">The Environmental Protection Agency puts out a press release reiterating its intent to &#34;issue its proposed regulatory determination for PFOA and PFAS&#34; by the end of 2019, calling it &#34;the next step in the drinking water standard setting process.&#34;</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
-          </div>
-      </div>
-  </div>
-
-
-
-  
-  
-  
-    
-  
-
-  
-  
-
-  
-  
-
-  
-  
-  
-
-  
-  
-  
-
-  <div class="tl-entry tl-entry--other"
-       id="tl-entry-5"
-       data-idx="5"
-       data-era="trump1"
-       data-sig="other"
-       data-program="other"
-       data-title="congress mandates pfas reporting under toxic substances control act">
-      <div class="tl-entry-left">
-          <div class="tl-date">December 2019</div>
-          
-          <div class="tl-program tl-program--other">Other PFAS Actions</div>
-          
-          <div class="tl-type">Legislation</div>
-      </div>
-      <div class="tl-entry-right">
-          <div class="tl-title">
-              
-              <a href="https://www.congress.gov/116/plaws/publ92/PLAW-116publ92.pdf" target="_blank" rel="noopener">Congress mandates PFAS reporting under Toxic Substances Control Act</a>
-              
-          </div>
-          <p class="tl-desc">As part of the National Defense Authorization Act for Fiscal Year 2020, Congress amends the Toxic Substances Control Act (TSCA) to require post-2011 PFAS manufacturers and importers to report information about the production, use, disposal and effects of the chemicals.</p>
-          <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">other</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-announced">Announced Protection</span>
           </div>
       </div>
   </div>
@@ -446,12 +451,26 @@
   
   
   
+  
+  
+  
 
-  <div class="tl-entry tl-entry--other"
-       id="tl-entry-6"
-       data-idx="6"
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--rollback"
+       id="tl-entry-4"
+       data-idx="4"
        data-era="trump1"
-       data-sig="other"
+       data-sig="rollback"
+       data-force="final"
        data-program="both"
        data-title="pfas action act of 2019 dies in senate amid white house opposition">
       <div class="tl-entry-left">
@@ -467,11 +486,9 @@
               <a href="https://trumpwhitehouse.archives.gov/wp-content/uploads/2020/01/SAP_HR-535.pdf" target="_blank" rel="noopener">PFAS Action Act of 2019 dies in Senate amid White House opposition</a>
               
           </div>
-          <p class="tl-desc">The White House — a few weeks after missing its own deadline to propose a regulatory determination for PFOA and PFOS in drinking water — publishes a statement opposing the PFAS Action Act of 2019 on procedural grounds and threatens to veto it. The statement, released just days before Congress was scheduled to vote, acknowledges &#34;the public concern&#34; surrounding PFAS but argues the bill would require the administration to &#34;bypass well-established processes, procedures, and legal requirements,&#34; of existing environmental laws, including the Safe Drinking Water Act. The bill passes the House of Representatives by a vote of 247-159, with 24 Republicans voting with most Democrats in favor of the bill, but fails to advance in the Senate.</p>
+          <p class="tl-desc">The White House — a few weeks after missing its own deadline to propose a regulatory determination for PFOA and PFOS in drinking water — publishes a statement opposing the PFAS Action Act of 2019 on procedural grounds and threatens to veto it. The statement, released just days before Congress was scheduled to vote on the January 2019 bill, acknowledges &#34;the public concern&#34; surrounding PFAS but argues the bill would require the administration to &#34;bypass well-established processes, procedures, and legal requirements,&#34; of existing environmental laws, including the Safe Drinking Water Act. The bill passes the House of Representatives by a vote of 247-159, with 24 Republicans voting with most Democrats in favor of the bill, but fails to advance in the Senate.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">other</span>
-              
-              
+              <span class="tl-chip tl-chip--rollback tl-chip--force-final">Final Rollback</span>
           </div>
       </div>
   </div>
@@ -498,12 +515,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection"
-       id="tl-entry-7"
-       data-idx="7"
+       id="tl-entry-5"
+       data-idx="5"
        data-era="trump1"
        data-sig="protection"
+       data-force="proposed"
        data-program="drinking-water"
        data-title="trump epa initiates regulatory process for potential drinking water limits for pfoa and pfos">
       <div class="tl-entry-left">
@@ -521,8 +551,7 @@
           </div>
           <p class="tl-desc">The Environmental Protection Agency issues a proposed rule making preliminary determinations to regulate drinking water levels of PFOA and PFOS — the two most well-known &#34;forever chemicals&#34; — under the Safe Drinking Water Act. This action formally initiaties the regulatory process to determine whether to set legally enforceable limits for the two chemicals under the Safe Drinking Water Act.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-proposed">Proposed Protection</span>
           </div>
       </div>
   </div>
@@ -551,12 +580,26 @@
   
   
   
+  
+  
+  
 
-  <div class="tl-entry tl-entry--proposed_protection tl-entry--major"
-       id="tl-entry-8"
-       data-idx="8"
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--protection tl-entry--major"
+       id="tl-entry-6"
+       data-idx="6"
        data-era="trump1"
-       data-sig="other"
+       data-sig="protection"
+       data-force="proposed"
        data-program="superfund"
        data-title="trump administration initiates process for potentially designating pfoa and pfos as hazardous substances">
       <div class="tl-entry-left">
@@ -574,9 +617,7 @@
           </div>
           <p class="tl-desc">Less than a week before leaving office, the first Trump administration puts out a pre-publication advance notice of proposed rulemaking (ANPRM) seeking public comment on whether to designate PFOA and PFOS as hazardous substances under CERCLA and the Resource Conservation and Recovery Act (RCRA). The last-minute action begins the formal process for designating the chemicals as hazardous substances — but leaves the actual designation to the incoming administration.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">proposed protection</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-proposed">Proposed Protection</span>
           </div>
       </div>
   </div>
@@ -603,12 +644,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection tl-entry--major"
-       id="tl-entry-9"
-       data-idx="9"
+       id="tl-entry-7"
+       data-idx="7"
        data-era="trump1"
        data-sig="protection"
+       data-force="proposed"
        data-program="other"
        data-title="trump epa administrator issues anprm on potential pfas discharge limits for chemical plants">
       <div class="tl-entry-left">
@@ -626,9 +680,7 @@
           </div>
           <p class="tl-desc">One day after issuing an ANPRM on the potential designation of certain PFAS as regulated hazardous substances under CERCLA, Trump&#39;s EPA signs an early version of another ANPRM on potential Clean Water Act regulations limiting the amount of PFAS that manufacturers and formulators can discharge into wastewater. This would restrict the amount of PFAS that can be released into the environment to begin with, as opposed to standards under the Safe Drinking Water Act, which would limit the amount of PFAS drinking water can contain by the time it reaches consumers. Like the other ANPRM, this action is initiated in the final days of the Trump administration and leaves the actual rulemaking to the incoming administration.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-proposed">Proposed Protection</span>
           </div>
       </div>
   </div>
@@ -667,12 +719,23 @@
   
   
   
+  
+  
+
+  
+  
+
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--delay"
-       id="tl-entry-10"
-       data-idx="10"
+       id="tl-entry-8"
+       data-idx="8"
        data-era="biden"
        data-sig="delay"
+       data-force=""
        data-program="both"
        data-title="biden freezes all trump-era regulatory actions">
       <div class="tl-entry-left">
@@ -690,9 +753,7 @@
           </div>
           <p class="tl-desc">On his first day in office, President Biden&#39;s chief of staff, Ron Klain, issues a memo directing federal agencies to freeze all Trump-era regulatory actions that have not yet been finalized pending review. This order covers the Trump EPA&#39;s two last-minute ANPRMs on potential PFAS regulations, though the Biden EPA later re-initiates the rulemaking processes for both actions.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--delay">delay</span>
-              
-              
+              <span class="tl-chip tl-chip--delay tl-chip--force-none">Delay</span>
           </div>
       </div>
   </div>
@@ -719,12 +780,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection"
-       id="tl-entry-11"
-       data-idx="11"
+       id="tl-entry-9"
+       data-idx="9"
        data-era="biden"
        data-sig="protection"
+       data-force="final"
        data-program="drinking-water"
        data-title="biden epa finalizes trump-era proposal to regulate pfoa and pfos in drinking water">
       <div class="tl-entry-left">
@@ -742,8 +816,7 @@
           </div>
           <p class="tl-desc">The EPA finalizes the Trump administration&#39;s March 2020 preliminary determination to regulate PFOA and PFOS in drinking water under the Safe Drinking Water Act. Unlike the Trump EPA&#39;s action, which began the process for determining whether to regulate the chemicals, the Biden EPA&#39;s action initiates the process for actually setting drinking water limits for them.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-final">Final Protection</span>
           </div>
       </div>
   </div>
@@ -769,12 +842,26 @@
   
   
   
+  
+  
+  
 
-  <div class="tl-entry tl-entry--proposed_protection"
-       id="tl-entry-12"
-       data-idx="12"
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--protection"
+       id="tl-entry-10"
+       data-idx="10"
        data-era="biden"
-       data-sig="other"
+       data-sig="protection"
+       data-force="proposed"
        data-program="other"
        data-title="epa unfreezes rulemaking process for potential pfas discharge limits">
       <div class="tl-entry-left">
@@ -792,8 +879,7 @@
           </div>
           <p class="tl-desc">Biden&#39;s EPA re-initiates the rulemaking process for potential Clean Water Act regulations that would limit the amount of PFAS manufacturers and formulators can discharge into wastewater.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">proposed protection</span>
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-proposed">Proposed Protection</span>
           </div>
       </div>
   </div>
@@ -819,12 +905,26 @@
   
   
   
+  
+  
+  
 
-  <div class="tl-entry tl-entry--proposed_protection"
-       id="tl-entry-13"
-       data-idx="13"
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--protection"
+       id="tl-entry-11"
+       data-idx="11"
        data-era="biden"
-       data-sig="other"
+       data-sig="protection"
+       data-force="announced"
        data-program="both"
        data-title="biden administration releases pfas strategic roadmap">
       <div class="tl-entry-left">
@@ -840,10 +940,9 @@
               <a href="../../document/EPA-HQ-OW-2022-0114-0001/index.html">Biden administration releases PFAS Strategic Roadmap</a>
               
           </div>
-          <p class="tl-desc">The Environmental Protection Agency under the Biden administration holds two public meetings dedicated to environmental justice considerations surrounding the regulation of PFAS in drinking water.</p>
+          <p class="tl-desc">The Biden administration publishes a comprehensive roadmap for addressing PFAS contamination, which outlines plans to finalize PFAS regulations under the SDWA, CERCLA and others.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">proposed protection</span>
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-announced">Announced Protection</span>
           </div>
       </div>
   </div>
@@ -873,62 +972,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection"
-       id="tl-entry-14"
-       data-idx="14"
+       id="tl-entry-12"
+       data-idx="12"
        data-era="biden"
        data-sig="protection"
-       data-program="drinking-water"
-       data-title="epa solicits input on environmental justice considerations related to the development of a pfas drinking water regulation">
-      <div class="tl-entry-left">
-          <div class="tl-date">February 2022</div>
-          
-          <div class="tl-program tl-program--drinking-water">Drinking Water Protections</div>
-          
-          <div class="tl-type">Meeting</div>
-      </div>
-      <div class="tl-entry-right">
-          <div class="tl-title">
-              
-              <a href="../../document/EPA-HQ-OW-2022-0114-0001/index.html">EPA solicits input on environmental justice considerations related to the development of a PFAS drinking water regulation</a>
-              
-          </div>
-          <p class="tl-desc">The Environmental Protection Agency under the Biden administration holds two public meetings dedicated to environmental justice considerations surrounding the regulation of PFAS in drinking water.</p>
-          <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
-          </div>
-      </div>
-  </div>
-
-
-
-  
-  
-  
-    
-  
-
-  
-  
-
-  
-  
-
-  
-  
-  
-
-  
-  
-  
-
-  <div class="tl-entry tl-entry--proposed_protection"
-       id="tl-entry-15"
-       data-idx="15"
-       data-era="biden"
-       data-sig="other"
+       data-force="proposed"
        data-program="superfund"
        data-title="biden epa proposes designating pfoa and pfos as cercla hazardous substances">
       <div class="tl-entry-left">
@@ -946,9 +1008,7 @@
           </div>
           <p class="tl-desc">After freezing the Trump-era ANPRM, the Biden EPA issues a proposed rule to designate PFOA and PFOS as hazardous substances under Section 102 of CERCLA. If finalized, the designation would set a mandatory reporting threshold for accidental releases of one pound or more of PFOA and PFOS, and require them to be reported within 24 hours of the release. The rule would also give the EPA the authority to hold responsible parties accountable for cleanup and recovery costs.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">proposed protection</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-proposed">Proposed Protection</span>
           </div>
       </div>
   </div>
@@ -978,12 +1038,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection"
-       id="tl-entry-16"
-       data-idx="16"
+       id="tl-entry-13"
+       data-idx="13"
        data-era="biden"
        data-sig="protection"
+       data-force="proposed"
        data-program="drinking-water"
        data-title="biden epa proposes drinking water standards for six pfas compounds">
       <div class="tl-entry-left">
@@ -1001,8 +1074,7 @@
           </div>
           <p class="tl-desc">EPA publishes the proposed PFAS National Primary Drinking Water Regulation, which includes legally enforceable maximum contaminant levels, or MCLS, for six PFAS compounds: PFOA, PFOS, HFPO-DA (a.k.a., GenX), PFHxS, PFNA and PFBS. The proposed limits for the two most well-known PFAS compounds, PFOA and PFOS, are set at 4 parts per trillion — the lowest reliably detectable amount and the equivalent of one drop of water in five Olympic-sized swimming pools. For context, EPA data show PFOA or PFOS at levels above 4 parts per trillion in more than 16% of water systems tested between 2023 and 2025. The EPA estimates the rule will prevent &#34;thousands of premature deaths, tens of thousands of serious illnesses, including certain cancers and liver and heart impacts in adults, and immune and developmental impacts to infants and children.&#34;</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-proposed">Proposed Protection</span>
           </div>
       </div>
   </div>
@@ -1028,12 +1100,26 @@
   
   
   
+  
+  
+  
 
-  <div class="tl-entry tl-entry--proposed_protection"
-       id="tl-entry-17"
-       data-idx="17"
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--protection"
+       id="tl-entry-14"
+       data-idx="14"
        data-era="biden"
-       data-sig="other"
+       data-sig="protection"
+       data-force="proposed"
        data-program="superfund"
        data-title="biden epa considers potential hazardous substance designation for additional pfas compounds">
       <div class="tl-entry-left">
@@ -1051,9 +1137,7 @@
           </div>
           <p class="tl-desc">Biden EPA issues an advance notice of proposed rulemaking (ANPRM) seeking public input on whether to designate additional PFAS compounds — that is, other than PFOA and PFOS — as CERCLA hazardous substances. The ANPRM identifies seven PFAS compounds that were selected &#34;based on the availability of toxicity information&#34;</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">proposed protection</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-proposed">Proposed Protection</span>
           </div>
       </div>
   </div>
@@ -1083,12 +1167,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection tl-entry--major"
-       id="tl-entry-18"
-       data-idx="18"
+       id="tl-entry-15"
+       data-idx="15"
        data-era="biden"
        data-sig="protection"
+       data-force="final"
        data-program="drinking-water"
        data-title="biden epa finalizes first-ever binding drinking water limits for six pfas compounds">
       <div class="tl-entry-left">
@@ -1106,8 +1203,7 @@
           </div>
           <p class="tl-desc">Biden administration enacts legally enforceable drinking water limits — called maximum contaminant levels, or MCLs — for six PFAS compounds. This included defined limits for five individual PFAS compounds, including PFOA and PFOS, as well as a hazard index for mixtures of certain PFAS compounds. The EPA estimates the rule &#34;will prevent thousands of deaths and reduce tens of thousands of serious PFAS-attributable illnesses.&#34; Per the rule&#39;s compliance deadlines, water systems must meet sampling requirements by April 2027 and must reduce PFAS levels in their drinking water to at or below the maximum contaminant levels by April 2029.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-final">Final Protection</span>
           </div>
       </div>
   </div>
@@ -1134,12 +1230,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection tl-entry--major"
-       id="tl-entry-19"
-       data-idx="19"
+       id="tl-entry-16"
+       data-idx="16"
        data-era="biden"
        data-sig="protection"
+       data-force="final"
        data-program="superfund"
        data-title="biden epa finalizes cercla hazardous substance designation for pfoa and pfos">
       <div class="tl-entry-left">
@@ -1157,168 +1266,7 @@
           </div>
           <p class="tl-desc">EPA publishes the final rule designating PFOA and PFOS as CERCLA hazardous substances, effective July 8, 2024. The designation triggers mandatory release reporting at one pound or more and gives EPA authority to pursue cost recovery from polluters at contaminated sites.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
-              
-          </div>
-      </div>
-  </div>
-
-
-
-  
-  
-  
-    
-  
-
-  
-  
-
-  
-  
-
-  
-  
-  
-
-  
-  
-  
-  
-
-  <div class="tl-entry tl-entry--litigation"
-       id="tl-entry-20"
-       data-idx="20"
-       data-era="biden"
-       data-sig="litigation"
-       data-program="drinking-water"
-       data-title="industry groups challenge pfas drinking water rule in court">
-      <div class="tl-entry-left">
-          <div class="tl-date">June 2024</div>
-          
-          <div class="tl-program tl-program--drinking-water">Drinking Water Protections</div>
-          
-          <div class="tl-type">Court Filing</div>
-      </div>
-      <div class="tl-entry-right">
-          <div class="tl-title">
-              
-              <a href="https://www.epa.gov/system/files/documents/2024-06/awwa-v-epa-no-1188-dc-cir-filed-petition.pdf" target="_blank" rel="noopener">Industry groups challenge PFAS drinking water rule in court</a>
-              
-          </div>
-          <p class="tl-desc">The American Water Works Association (AWWA) and Association of Metropolitan Water Agencies (AMWA) file a petition for review in the U.S. Court of Appeals for the D.C. Circuit, arguing that while they support the goal of regulating PFAS, the rule itself is &#34;unreasonable, not feasible, and not supported by the best available health effects and occurrence data and science.&#34; The organizations release a separate statement saying the rule &#34;significantly underestimates nationwide costs, does not take into account the latest PFAS data, and will add to affordability challenges for many households without achieving the public health outcomes we all seek.&#34; The petition is later consolidated with similar petitions filed by the Chemours company, National Association of Manufacturers and American Chemical Council.</p>
-          <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--litigation">litigation</span>
-              
-              
-          </div>
-      </div>
-  </div>
-
-
-
-  
-  
-  
-    
-  
-
-  
-  
-
-  
-  
-
-  
-  
-  
-
-  
-  
-  
-  
-
-  <div class="tl-entry tl-entry--litigation"
-       id="tl-entry-21"
-       data-idx="21"
-       data-era="biden"
-       data-sig="litigation"
-       data-program="superfund"
-       data-title="industry groups challenge cercla designation in court">
-      <div class="tl-entry-left">
-          <div class="tl-date">June 2024</div>
-          
-          <div class="tl-program tl-program--superfund">Hazardous Substance Designation</div>
-          
-          <div class="tl-type">Court Filing</div>
-      </div>
-      <div class="tl-entry-right">
-          <div class="tl-title">
-              
-              <a href="https://www.uschamber.com/assets/documents/Petition-for-Review-with-Ex.-A-Chamber-v.-EPA-DC-Circuit.pdf" target="_blank" rel="noopener">Industry groups challenge CERCLA designation in court</a>
-              
-          </div>
-          <p class="tl-desc">The U.S. Chamber of Commerce, Associated General Contractors of America and National Waste &amp; Recycling Association file a petition for review in the D.C. Circuit challenging the CERCLA hazardous substance designation for PFOA and PFOS.</p>
-          <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--litigation">litigation</span>
-              
-              
-          </div>
-      </div>
-  </div>
-
-
-
-  
-  
-  
-    
-  
-
-  
-  
-
-  
-  
-    
-    <div class="tl-year-label" data-year-label="2025">2025</div>
-  
-
-  
-  
-  
-
-  
-  
-  
-  
-
-  <div class="tl-entry tl-entry--litigation"
-       id="tl-entry-22"
-       data-idx="22"
-       data-era="biden"
-       data-sig="litigation"
-       data-program="drinking-water"
-       data-title="states, environmental organizations file amicus briefs in support of epa&#39;s pfas drinking water rule">
-      <div class="tl-entry-left">
-          <div class="tl-date">January 2025</div>
-          
-          <div class="tl-program tl-program--drinking-water">Drinking Water Protections</div>
-          
-          <div class="tl-type">Court Filing</div>
-      </div>
-      <div class="tl-entry-right">
-          <div class="tl-title">
-              
-              <a href="https://www.epa.gov/newsreleases/epa-announces-next-steps-regulatory-pfoa-and-pfos-cleanup-efforts-provides" target="_blank" rel="noopener">States, environmental organizations file amicus briefs in support of EPA&#39;s PFAS drinking water rule</a>
-              
-          </div>
-          <p class="tl-desc">Three days before Trump is set to take office for a second term, 17 states, the District of Columbia and several environmental organizations file amicus briefs in support of EPA&#39;s maximum contaminant level (MCL) rule regulating PFAS in drinking water.</p>
-          <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--litigation">litigation</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-final">Final Protection</span>
           </div>
       </div>
   </div>
@@ -1357,12 +1305,23 @@
   
   
   
+  
+  
 
-  <div class="tl-entry tl-entry--partial_rollback"
-       id="tl-entry-23"
-       data-idx="23"
+  
+  
+
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--delay"
+       id="tl-entry-17"
+       data-idx="17"
        data-era="trump2"
-       data-sig="rollback"
+       data-sig="delay"
+       data-force=""
        data-program="other"
        data-title="trump administration freezes biden-era regulatory actions pending review">
       <div class="tl-entry-left">
@@ -1380,9 +1339,7 @@
           </div>
           <p class="tl-desc">Trump, like Biden, immediately halts all pending regulatory actions, the result of which is the withdrawal of the March 2021 ANPRM on PFAS discharge limits - a rulemaking process that the first Trump administration initiated.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--rollback">partial rollback</span>
-              
-              
+              <span class="tl-chip tl-chip--delay tl-chip--force-none">Delay</span>
           </div>
       </div>
   </div>
@@ -1408,12 +1365,26 @@
   
   
   
+  
+  
+  
 
-  <div class="tl-entry tl-entry--other"
-       id="tl-entry-24"
-       data-idx="24"
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--rollback"
+       id="tl-entry-18"
+       data-idx="18"
        data-era="trump2"
-       data-sig="other"
+       data-sig="rollback"
+       data-force="final"
        data-program="other"
        data-title="trump white house revokes clinton-era executive order on environmental justice">
       <div class="tl-entry-left">
@@ -1431,9 +1402,7 @@
           </div>
           <p class="tl-desc">One day after taking office, Trump revokes Executive Order 12898, a 1994 directive requiring federal agencies to address environmental harms resulting from their actions that disproportionately affected minority and low-income communities. The Biden administration had previously leaned on this directive to factor environmental justice considerations into its PFAS regulatory efforts.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">other</span>
-              
-              
+              <span class="tl-chip tl-chip--rollback tl-chip--force-final">Final Rollback</span>
           </div>
       </div>
   </div>
@@ -1460,12 +1429,23 @@
   
   
   
+  
+  
+
+  
+  
+
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--delay"
-       id="tl-entry-25"
-       data-idx="25"
+       id="tl-entry-19"
+       data-idx="19"
        data-era="trump2"
        data-sig="delay"
+       data-force=""
        data-program="drinking-water"
        data-title="d.c. circuit grants motion to delay proceedings in awwa v. epa by 60 days">
       <div class="tl-entry-left">
@@ -1483,9 +1463,7 @@
           </div>
           <p class="tl-desc">Trump&#39;s EPA, citing the change of administration and need for more time to familiarize itself with the case, is granted a request to delay litigation challenging the PFAS drinking water rule until early April.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--delay">delay</span>
-              
-              
+              <span class="tl-chip tl-chip--delay tl-chip--force-none">Delay</span>
           </div>
       </div>
   </div>
@@ -1512,12 +1490,25 @@
   
   
   
+  
+  
 
-  <div class="tl-entry tl-entry--policy"
-       id="tl-entry-26"
-       data-idx="26"
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--partial_rollback"
+       id="tl-entry-20"
+       data-idx="20"
        data-era="trump2"
-       data-sig="protection"
+       data-sig="rollback"
+       data-force="announced"
        data-program="drinking-water"
        data-title="trump ii epa administrator promises pfas discharge limits while signaling future rollbacks to drinking water standards">
       <div class="tl-entry-left">
@@ -1535,9 +1526,7 @@
           </div>
           <p class="tl-desc">EPA Administrator Lee Zeldin outlines a series of upcoming EPA actions &#34;to combat PFAS contamination,&#34; including a commitment to developing discharge standards for PFAS manufacturers — the same action already initiated under the first Trump administration but withdrawn in January 2025 as part of the government-wide regulatory freeze. Zeldin also highlighted upcoming agency action to address &#34;the most significant compliance challenges and requests from Congress and drinking water systems related to national primary drinking water regulations for certain PFAS.&#34; This language points to potential rollbacks of the Biden-era PFAS drinking water standards amid industry and political pushback.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">policy</span>
-              
-              
+              <span class="tl-chip tl-chip--rollback tl-chip--force-announced">Announced Rollback</span>
           </div>
       </div>
   </div>
@@ -1564,12 +1553,23 @@
   
   
   
+  
+  
+
+  
+  
+
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--delay"
-       id="tl-entry-27"
-       data-idx="27"
+       id="tl-entry-21"
+       data-idx="21"
        data-era="trump2"
        data-sig="delay"
+       data-force=""
        data-program="drinking-water"
        data-title="d.c. circuit grants 30-day extension of delay in awwa v. epa">
       <div class="tl-entry-left">
@@ -1587,9 +1587,7 @@
           </div>
           <p class="tl-desc">Trump administration granted second request to further delay litigation in AWWA v. EPA until mid May.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--delay">delay</span>
-              
-              
+              <span class="tl-chip tl-chip--delay tl-chip--force-none">Delay</span>
           </div>
       </div>
   </div>
@@ -1616,12 +1614,23 @@
   
   
   
+  
+  
+
+  
+  
+
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--delay"
-       id="tl-entry-28"
-       data-idx="28"
+       id="tl-entry-22"
+       data-idx="22"
        data-era="trump2"
        data-sig="delay"
+       data-force=""
        data-program="drinking-water"
        data-title="d.c. circuit grants 21-day extension of delay in awwa v. epa">
       <div class="tl-entry-left">
@@ -1639,9 +1648,7 @@
           </div>
           <p class="tl-desc">Trump administration granted third request to delay proceedings in AWWA v. EPA until early June.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--delay">delay</span>
-              
-              
+              <span class="tl-chip tl-chip--delay tl-chip--force-none">Delay</span>
           </div>
       </div>
   </div>
@@ -1668,12 +1675,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--partial_rollback tl-entry--major"
-       id="tl-entry-29"
-       data-idx="29"
+       id="tl-entry-23"
+       data-idx="23"
        data-era="trump2"
        data-sig="rollback"
+       data-force="announced"
        data-program="drinking-water"
        data-title="epa announces plan to keep two pfas drinking water standards, roll back four others">
       <div class="tl-entry-left">
@@ -1691,9 +1711,7 @@
           </div>
           <p class="tl-desc">EPA Administrator Lee Zeldin announces the agency&#39;s intention to keep the Biden-era maximum contaminant levels for PFOA and PFOS but extend the compliance deadline from 2029 to 2031. But, as Zeldin&#39;s March 2025 statement had foreshadowed, EPA simultaneously announces its intent to rescind the regulations and reconsider the regulatory determinations for four other PFAS compounds.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--rollback">partial rollback</span>
-              
-              
+              <span class="tl-chip tl-chip--rollback tl-chip--force-announced">Announced Rollback</span>
           </div>
       </div>
   </div>
@@ -1720,12 +1738,23 @@
   
   
   
+  
+  
+
+  
+  
+
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--delay"
-       id="tl-entry-30"
-       data-idx="30"
+       id="tl-entry-24"
+       data-idx="24"
        data-era="trump2"
        data-sig="delay"
+       data-force=""
        data-program="drinking-water"
        data-title="d.c. circuit grants 45-day extension of delay in awwa v. epa">
       <div class="tl-entry-left">
@@ -1743,9 +1772,7 @@
           </div>
           <p class="tl-desc">Trump administration granted fourth request to delay proceedings in AWWA v. EPA until the end of July.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--delay">delay</span>
-              
-              
+              <span class="tl-chip tl-chip--delay tl-chip--force-none">Delay</span>
           </div>
       </div>
   </div>
@@ -1772,12 +1799,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--partial_rollback tl-entry--major"
-       id="tl-entry-31"
-       data-idx="31"
+       id="tl-entry-25"
+       data-idx="25"
        data-era="trump2"
        data-sig="rollback"
+       data-force="proposed"
        data-program="drinking-water"
        data-title="epa files to reverse four of six pfas drinking water standards">
       <div class="tl-entry-left">
@@ -1795,9 +1835,7 @@
           </div>
           <p class="tl-desc">Trump&#39;s EPA, following through on its commitment to roll back some of the Biden-era drinking water regulations, files a motion in AWWA v. EPA asking the D.C. Circuit to partially vacate its April 2024 PFAS rule. The agency&#39;s motion seeks to rescind the standards for four of the six PFAS compounds - GenX (HFPO-DA), PFHxS, PFNA, and PFBS - while retaining the standards for PFOA and PFOS. The agency says it had &#34;initially attempted to defend the Rule against forceful legal challenges&#34; but upon review concluded that &#34;parts of the rulemaking process were unlawful and parts of the Rule are thus invalid.&#34;</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--rollback">partial rollback</span>
-              
-              
+              <span class="tl-chip tl-chip--rollback tl-chip--force-proposed">Proposed Rollback</span>
           </div>
       </div>
   </div>
@@ -1824,12 +1862,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection tl-entry--major"
-       id="tl-entry-32"
-       data-idx="32"
+       id="tl-entry-26"
+       data-idx="26"
        data-era="trump2"
        data-sig="protection"
+       data-force="announced"
        data-program="superfund"
        data-title="trump ii epa announces it will retain pfoa and pfos cercla designation">
       <div class="tl-entry-left">
@@ -1847,9 +1898,7 @@
           </div>
           <p class="tl-desc">EPA Administrator Lee Zeldin criticizes the Biden administration for taking steps to designate PFAS as hazardous substances &#34;without first establishing the rules of the road&#34; and says EPA will outline a &#34;Framework Rule&#34; to clarify how the agency will implement the CERCLA designations and enforce liability going forward. But Zeldin - a founding member of the PFAS Congressional Taskforce and a &#39;strong supporter of the PFAS Action Act&#39; - also announces the Trump administration will keep the Biden-era CERCLA designations for PFOA and PFOS and defend them in court.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-announced">Announced Protection</span>
           </div>
       </div>
   </div>
@@ -1876,12 +1925,23 @@
   
   
   
+  
+  
 
-  <div class="tl-entry tl-entry--litigation"
-       id="tl-entry-33"
-       data-idx="33"
+  
+  
+
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--delay"
+       id="tl-entry-27"
+       data-idx="27"
        data-era="trump2"
-       data-sig="litigation"
+       data-sig="delay"
+       data-force=""
        data-program="drinking-water"
        data-title="government shutdown further delays proceedings in awwa v. epa">
       <div class="tl-entry-left">
@@ -1899,9 +1959,7 @@
           </div>
           <p class="tl-desc">D.C. Circuit delays litigation in AWWA v. EPA amid lapse in appropriations caused by the 43-day government shutdown lasting from Oct. 1 to Nov. 12.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--litigation">litigation</span>
-              
-              
+              <span class="tl-chip tl-chip--delay tl-chip--force-none">Delay</span>
           </div>
       </div>
   </div>
@@ -1931,12 +1989,24 @@
   
   
   
+  
+  
 
-  <div class="tl-entry tl-entry--litigation tl-entry--major"
-       id="tl-entry-34"
-       data-idx="34"
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--protection tl-entry--major"
+       id="tl-entry-28"
+       data-idx="28"
        data-era="trump2"
-       data-sig="litigation"
+       data-sig="other"
+       data-force=""
        data-program="drinking-water"
        data-title="d.c. circuit denies epa&#39;s motion to partially vacate pfas rule">
       <div class="tl-entry-left">
@@ -1954,9 +2024,7 @@
           </div>
           <p class="tl-desc">Court keeps EPA&#39;s PFAS drinking water rule in place while litigation in AWWA v. EPA moves forward.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--litigation">litigation</span>
-              
-              
+              <span class="tl-chip tl-chip--other tl-chip--force-none">Other</span>
           </div>
       </div>
   </div>
@@ -1983,12 +2051,25 @@
   
   
   
+  
+  
 
-  <div class="tl-entry tl-entry--litigation"
-       id="tl-entry-35"
-       data-idx="35"
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--rollback"
+       id="tl-entry-29"
+       data-idx="29"
        data-era="trump2"
-       data-sig="litigation"
+       data-sig="rollback"
+       data-force="proposed"
        data-program="drinking-water"
        data-title="epa asks d.c. circuit to sever pfoa and pfos drinking water standards in awwa v. epa">
       <div class="tl-entry-left">
@@ -2006,9 +2087,7 @@
           </div>
           <p class="tl-desc">EPA looks to stall litigation on the drinking water standards for the four PFAS standards it plans to roll back. This would pave the way for the agency to continue defending the two PFAS drinking water standards it intends to uphold while pursuing a separate rulemaking to roll back the others.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--litigation">litigation</span>
-              
-              
+              <span class="tl-chip tl-chip--rollback tl-chip--force-proposed">Proposed Rollback</span>
           </div>
       </div>
   </div>
@@ -2035,12 +2114,24 @@
   
   
   
+  
+  
 
-  <div class="tl-entry tl-entry--litigation"
-       id="tl-entry-36"
-       data-idx="36"
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--protection"
+       id="tl-entry-30"
+       data-idx="30"
        data-era="trump2"
-       data-sig="litigation"
+       data-sig="other"
+       data-force=""
        data-program="drinking-water"
        data-title="d.c. circuit rejects epa&#39;s motion to sever litigation in awwa v. epa">
       <div class="tl-entry-left">
@@ -2058,9 +2149,7 @@
           </div>
           <p class="tl-desc">Court ruling prevents EPA from bowing out of litigation over the four PFAS standards it is separately working to rescind.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--litigation">litigation</span>
-              
-              
+              <span class="tl-chip tl-chip--other tl-chip--force-none">Other</span>
           </div>
       </div>
   </div>
@@ -2087,12 +2176,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--policy"
-       id="tl-entry-37"
-       data-idx="37"
+       id="tl-entry-31"
+       data-idx="31"
        data-era="trump2"
        data-sig="protection"
+       data-force="announced"
        data-program="drinking-water"
        data-title="epa launches pfas outreach initiative">
       <div class="tl-entry-left">
@@ -2110,9 +2212,7 @@
           </div>
           <p class="tl-desc">Trump EPA announces program designed to connect ~3,000 PFOA/PFOS-contaminated water systems with compliance resources and funding ahead of the 2031 deadline.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">policy</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-announced">Announced Protection</span>
           </div>
       </div>
   </div>
@@ -2138,12 +2238,26 @@
   
   
   
+  
+  
+  
 
-  <div class="tl-entry tl-entry--regulatory"
-       id="tl-entry-38"
-       data-idx="38"
+  
+  
+  
+
+  
+  
+  
+  
+  
+
+  <div class="tl-entry tl-entry--protection"
+       id="tl-entry-32"
+       data-idx="32"
        data-era="trump2"
-       data-sig="other"
+       data-sig="protection"
+       data-force="proposed"
        data-program="drinking-water"
        data-title="epa lists pfas as priority group, signals possible expansion of drinking water regulations">
       <div class="tl-entry-left">
@@ -2161,9 +2275,7 @@
           </div>
           <p class="tl-desc">EPA and HHS list PFAS on a draft list of substances to potentially consider regulating in drinking water. The list excludes the six PFAS compounds already covered by the 2024 rule, pointing to a future increase in PFAS regulations.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">regulatory</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-proposed">Proposed Protection</span>
           </div>
       </div>
   </div>
@@ -2271,8 +2383,6 @@ function parseDate(s) {
         rollback:   '#e0202a',
         protection: '#1a9040',
         delay:      '#e07000',
-        rhetoric:   '#3a6fcc',
-        litigation: '#8040c0',
         other:      '#999',
     };
 
@@ -2307,12 +2417,17 @@ function parseDate(s) {
         var bucketKey = (entryEra || '') + ':' + date.getFullYear() + '-' + date.getMonth();
         var color = SIG_COLORS[entry.dataset.sig] || '#bbb';
         var titleEl = entry.querySelector('.tl-title');
+        var force = entry.dataset.force || '';
+        // Proposed / announced / withdrawn ticks are visually lighter so the
+        // eye lands on actual final actions first.
+        var isLight = (force === 'proposed' || force === 'announced' || force === 'withdrawn');
         tickData.push({
             idx:    entry.dataset.idx,
             pos:    parseFloat(pct(date)),
             era:    entryEra || '',
             bucket: bucketKey,
             color:  color,
+            light:  isLight,
             date:   dateEl.textContent.trim(),
             title:  (titleEl ? titleEl.textContent.trim() : ''),
         });
@@ -2388,7 +2503,9 @@ function parseDate(s) {
             ? 'calc(' + avgPos.toFixed(2) + '% + ' + item.pxOffset + 'px)'
             : avgPos.toFixed(2) + '%';
         group.forEach(function (t) { entryPosCSS[t.idx] = leftValue; });
-        html += '<div class="bcode-tick' + (isCluster ? ' bcode-tick--cluster' : '') + '"'
+        // If every event in this bucket is non-final, lighten the whole tick.
+        var allLight = group.every(function (t) { return t.light; });
+        html += '<div class="bcode-tick' + (isCluster ? ' bcode-tick--cluster' : '') + (allLight ? ' bcode-tick--light' : '') + '"'
              + ' style="left:' + leftValue + ';background:' + bg + '"'
              + ' data-era="' + (item.era || '') + '"'
              + ' data-idx="' + group[0].idx + '"'
@@ -2646,6 +2763,7 @@ function parseDate(s) {
     var entries    = Array.from(document.querySelectorAll('.tl-entry[data-idx]'));
     var eraBands   = Array.from(document.querySelectorAll('[data-era-band]'));
     var yearLabels = Array.from(document.querySelectorAll('[data-year-label]'));
+    var bcodeTicks = Array.from(document.querySelectorAll('.bcode-tick[data-idxlist]'));
     var searchEl   = document.getElementById('tl-search');
 
     var activeEra  = '';
@@ -2655,6 +2773,7 @@ function parseDate(s) {
 
     function applyFilters() {
         var visibleEras = new Set();
+        var visibleIdx  = new Set();
 
         entries.forEach(function (entry) {
             var ok = (!activeEra  || entry.dataset.era     === activeEra)
@@ -2662,7 +2781,18 @@ function parseDate(s) {
                   && (!activeProg || entry.dataset.program === activeProg || entry.dataset.program === 'both')
                   && (!activeQ    || entry.dataset.title.includes(activeQ));
             entry.style.display = ok ? '' : 'none';
-            if (ok) visibleEras.add(entry.dataset.era);
+            if (ok) {
+                visibleEras.add(entry.dataset.era);
+                visibleIdx.add(entry.dataset.idx);
+            }
+        });
+
+        // Barcode ticks: a tick can represent a cluster of entries
+        // (data-idxlist). Show it if any of its entries are still visible.
+        bcodeTicks.forEach(function (tick) {
+            var idxs = (tick.dataset.idxlist || '').split(',');
+            var anyVisible = idxs.some(function (i) { return visibleIdx.has(i); });
+            tick.style.display = anyVisible ? '' : 'none';
         });
 
         var firstBandSeen = false;

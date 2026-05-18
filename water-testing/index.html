@@ -100,16 +100,16 @@
     width: 100%;
     border-collapse: collapse;
     font-family: "PT Sans", sans-serif;
-    font-size: 0.92rem;
+    font-size: 1rem;
 }
 .wt-table th, .wt-table td {
-    padding: 0.55rem 0.6rem;
+    padding: 0.65rem 0.7rem;
     border-bottom: 1px solid #eee;
     text-align: left;
     vertical-align: top;
 }
 .wt-table th {
-    font-size: 0.7rem;
+    font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: #888;
@@ -117,7 +117,14 @@
     border-bottom: 2px solid #111;
 }
 .wt-table td.num, .wt-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
-.wt-table tr:hover td { background: #fafafa; }
+.wt-table td.center, .wt-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
+
+.wt-times { font-weight: 700; }
+.wt-times--low  { background: #fdecec; color: #c0202a; }
+.wt-times--med  { background: #f7c5c6; color: #8e1a22; }
+.wt-times--high { background: #d9484c; color: #fff; }
+.wt-times--sev  { background: #8e1a22; color: #fff; }
+.wt-table tr:hover td:not(.wt-times) { background: #fafafa; }
 .wt-table a { color: #111; text-decoration: none; border-bottom: 1px dotted #888; }
 .wt-table a:hover { border-bottom-style: solid; }
 
@@ -169,7 +176,6 @@
     margin: 1.5rem 0 0.5rem;
     padding: 1.1rem 1.25rem 1.2rem;
     background: #fafaf8;
-    border-left: 3px solid #111;
 }
 .wt-search-hed {
     font-family: 'Libre Baskerville', Georgia, serif;
@@ -277,6 +283,15 @@
     white-space: nowrap;
 }
 .wt-search-jump:hover { background: #c0202a; border-color: #c0202a; }
+.wt-search-row--state .wt-search-name {
+    font-size: 1.1rem;
+}
+.wt-search-row--state {
+    background: #fafaf0;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    margin-bottom: 0.4rem;
+}
 .wt-search-jump--muted {
     color: #888;
     background: transparent;
@@ -319,6 +334,153 @@
     border: 2px solid #fff;
 }
 .wt-statelink-btn:hover { background: #fff; color: #111; }
+
+/* ── Per-row result tooltip (shared with state page) ─────────────────── */
+.ws-tip-host { position: relative; display: inline-block; margin-left: 0.4rem; }
+.ws-tip-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.05rem;
+    height: 1.05rem;
+    border-radius: 50%;
+    background: #ecebe4;
+    color: #555;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.66rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    vertical-align: middle;
+}
+.ws-tip-btn:hover, .ws-tip-btn:focus,
+.ws-tip-host[data-open="1"] .ws-tip-btn { background: #111; color: #fff; outline: none; }
+.ws-tip-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.35); z-index: 49; display: none;
+}
+.ws-tip-backdrop.is-open { display: block; }
+.ws-tip-panel {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    box-sizing: border-box;
+    width: min(38rem, calc(100vw - 2rem));
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #fff;
+    border: 1px solid #111;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    padding: 1rem 1.1rem 1.3rem;
+    font-family: "PT Sans", sans-serif;
+    color: #222;
+    line-height: 1.4;
+    display: none;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+.ws-tip-panel, .ws-tip-panel * { white-space: normal; }
+.ws-tip-panel * { min-width: 0; max-width: 100%; }
+.ws-tip-close {
+    position: absolute;
+    top: 0.4rem; right: 0.55rem;
+    background: none; border: none;
+    font-size: 1.2rem; line-height: 1;
+    color: #888; cursor: pointer;
+    padding: 0.2rem 0.35rem;
+}
+.ws-tip-close:hover { color: #111; }
+.ws-tip-host[data-open="1"] .ws-tip-panel { display: block; }
+.ws-tip-title {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0 0 0.55rem;
+    color: #111;
+    line-height: 1.25;
+}
+.ws-tip-state {
+    margin: -0.3rem 0 0.7rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+}
+.ws-tip-meta {
+    margin: 0 0 0.7rem;
+    padding: 0 0 0.7rem;
+    border-bottom: 1px solid #eee;
+    font-size: 0.85rem;
+    color: #333;
+    line-height: 1.45;
+}
+.ws-tip-meta-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+}
+.ws-tip-meta-row:last-child { margin-bottom: 0; }
+.ws-tip-meta dt {
+    flex: 0 0 7rem;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+}
+.ws-tip-meta dd {
+    flex: 1 1 auto;
+    margin: 0;
+    text-align: left;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+.ws-tip-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    table-layout: fixed;
+}
+.ws-tip-table col.col-pfas { width: 22%; }
+.ws-tip-table col.col-peak { width: 38%; }
+.ws-tip-table col.col-lim  { width: 18%; }
+.ws-tip-table col.col-date { width: 22%; }
+.ws-tip-table th, .ws-tip-table td {
+    padding: 0.35rem 0.5rem 0.35rem 0;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-variant-numeric: tabular-nums;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+.ws-tip-table th:last-child, .ws-tip-table td:last-child { padding-right: 0; }
+.ws-tip-table th {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+    padding-top: 0;
+}
+.ws-tip-row--over td { color: #c0202a; font-weight: 700; }
+.ws-tip-row--ok  td { color: #1a6b35; }
+.ws-tip-row--nd  td { color: #1a6b35; }
+.ws-tip-foot {
+    font-size: 0.7rem;
+    color: #999;
+    margin: 0.6rem 0 0;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
 
 .wt-foot {
     font-family: "PT Sans", sans-serif;
@@ -1176,8 +1338,9 @@
 </div>
 
 <button class="wt-show-more" id="wt-show-more"
-        data-total="51"
-        data-shown="10">Show all 51 states</button>
+        data-expanded="0"
+        data-label-more="See all states"
+        data-label-less="Show top 10 only">See all states</button>
 
 
 <h2 class="wt-section-hed">25 water systems with the highest reported exceedances</h2>
@@ -1188,10 +1351,11 @@
     <thead>
         <tr>
             <th>Water system</th>
-            <th>State</th>
-            <th>Contaminant</th>
-            <th class="num">× EPA standard</th>
-            <th>Sample date</th>
+            <th class="center">State</th>
+            <th class="center">Residents served</th>
+            <th class="center">Contaminant</th>
+            <th class="center">× EPA standard</th>
+            <th class="center">Sample date</th>
         </tr>
     </thead>
     <tbody>
@@ -1199,276 +1363,276 @@
         <tr>
             <td>
                 <div>Nashville, Town of</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 2 ZIP codes</div>
             </td>
-            <td>NC</td>
-            <td>PFOS</td>
-            <td class="num">122×</td>
-            <td>2024-09-23</td>
+            <td class="center">NC</td>
+            <td class="center">~20,025</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--sev">122×</td>
+            <td class="center">2024-09-23</td>
         </tr>
         
         <tr>
             <td>
                 <div>Running Springs Water District</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>CA</td>
-            <td>PFOS</td>
-            <td class="num">59×</td>
-            <td>2025-07-29</td>
+            <td class="center">CA</td>
+            <td class="center">~4,884</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--sev">59×</td>
+            <td class="center">2025-07-29</td>
         </tr>
         
         <tr>
             <td>
                 <div>Collegeville Trappe Joint PWD</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>PA</td>
-            <td>PFOA</td>
-            <td class="num">59×</td>
-            <td>2023-03-22</td>
+            <td class="center">PA</td>
+            <td class="center">~42,656</td>
+            <td class="center">PFOA</td><td class="center wt-times wt-times--sev">59×</td>
+            <td class="center">2023-03-22</td>
         </tr>
         
         <tr>
             <td>
                 <div>Potrero Elementary School</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>CA</td>
-            <td>PFOA</td>
-            <td class="num">47×</td>
-            <td>2024-05-15</td>
+            <td class="center">CA</td>
+            <td class="center">~624</td>
+            <td class="center">PFOA</td><td class="center wt-times wt-times--high">47×</td>
+            <td class="center">2024-05-15</td>
         </tr>
         
         <tr>
             <td>
                 <div>Lubeck PSD</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 5 ZIP codes</div>
             </td>
-            <td>WV</td>
-            <td>PFOA</td>
-            <td class="num">45×</td>
-            <td>2024-03-19</td>
+            <td class="center">WV</td>
+            <td class="center">~50,098</td>
+            <td class="center">PFOA</td><td class="center wt-times wt-times--high">45×</td>
+            <td class="center">2024-03-19</td>
         </tr>
         
         <tr>
             <td>
                 <div>Artondale Water System</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>WA</td>
-            <td>PFOS</td>
-            <td class="num">38×</td>
-            <td>2023-04-17</td>
+            <td class="center">WA</td>
+            <td class="center">~42,263</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--high">38×</td>
+            <td class="center">2023-04-17</td>
         </tr>
         
         <tr>
             <td>
                 <div>Emmaus Borough Public Water</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>PA</td>
-            <td>PFOS</td>
-            <td class="num">38×</td>
-            <td>2024-08-01</td>
+            <td class="center">PA</td>
+            <td class="center">~18,727</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--high">38×</td>
+            <td class="center">2024-08-01</td>
         </tr>
         
         <tr>
             <td>
                 <div>New Martinsville</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>WV</td>
-            <td>PFOS</td>
-            <td class="num">30×</td>
-            <td>2023-05-16</td>
+            <td class="center">WV</td>
+            <td class="center">~7,833</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--high">30×</td>
+            <td class="center">2023-05-16</td>
         </tr>
         
         <tr>
             <td>
                 <div>Pequenakonck Elementary School</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>NY</td>
-            <td>PFOA</td>
-            <td class="num">28×</td>
-            <td>2025-08-26</td>
+            <td class="center">NY</td>
+            <td class="center">~4,975</td>
+            <td class="center">PFOA</td><td class="center wt-times wt-times--high">28×</td>
+            <td class="center">2025-08-26</td>
         </tr>
         
         <tr>
             <td>
                 <div>Yeshiva Farm Settlement</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater under surface influence</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>NY</td>
-            <td>PFOS</td>
-            <td class="num">26×</td>
-            <td>2023-10-24</td>
+            <td class="center">NY</td>
+            <td class="center">~15,800</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--high">26×</td>
+            <td class="center">2023-10-24</td>
         </tr>
         
         <tr>
             <td>
                 <div>Potrero Elementary School</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>CA</td>
-            <td>PFHxS</td>
-            <td class="num">25×</td>
-            <td>2024-05-15</td>
+            <td class="center">CA</td>
+            <td class="center">~624</td>
+            <td class="center">PFHxS</td><td class="center wt-times wt-times--high">25×</td>
+            <td class="center">2024-05-15</td>
         </tr>
         
         <tr>
             <td>
                 <div>Raynham Center Water District</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 2 ZIP codes</div>
             </td>
-            <td>MA</td>
-            <td>PFOA</td>
-            <td class="num">23×</td>
-            <td>2025-08-11</td>
+            <td class="center">MA</td>
+            <td class="center">~15,432</td>
+            <td class="center">PFOA</td><td class="center wt-times wt-times--med">23×</td>
+            <td class="center">2025-08-11</td>
         </tr>
         
         <tr>
             <td>
                 <div>City of Grand Prairie</div>
-                <div style="font-size:0.72rem;color:#999;">Surface water</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 6 ZIP codes</div>
             </td>
-            <td>TX</td>
-            <td>PFOS</td>
-            <td class="num">20×</td>
-            <td>2024-08-13</td>
+            <td class="center">TX</td>
+            <td class="center">~287,625</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--med">20×</td>
+            <td class="center">2024-08-13</td>
         </tr>
         
         <tr>
             <td>
                 <div>Orangewood Water System</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 2 ZIP codes</div>
             </td>
-            <td>FL</td>
-            <td>PFOS</td>
-            <td class="num">20×</td>
-            <td>2023-02-28</td>
+            <td class="center">FL</td>
+            <td class="center">~31,744</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--med">20×</td>
+            <td class="center">2023-02-28</td>
         </tr>
         
         <tr>
             <td>
                 <div>City of Oxford</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>MS</td>
-            <td>PFOS</td>
-            <td class="num">18×</td>
-            <td>2025-03-03</td>
+            <td class="center">MS</td>
+            <td class="center">~45,290</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--med">18×</td>
+            <td class="center">2025-03-03</td>
         </tr>
         
         <tr>
             <td>
                 <div>Potrero Elementary School</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>CA</td>
-            <td>PFOS</td>
-            <td class="num">16×</td>
-            <td>2024-11-19</td>
+            <td class="center">CA</td>
+            <td class="center">~624</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--med">16×</td>
+            <td class="center">2024-11-19</td>
         </tr>
         
         <tr>
             <td>
                 <div>Bayleaf Master</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>NC</td>
-            <td>PFHxS</td>
-            <td class="num">15×</td>
-            <td>2024-12-09</td>
+            <td class="center">NC</td>
+            <td class="center">~33,609</td>
+            <td class="center">PFHxS</td><td class="center wt-times wt-times--med">15×</td>
+            <td class="center">2024-12-09</td>
         </tr>
         
         <tr>
             <td>
                 <div>Irondale Water System</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 3 ZIP codes</div>
             </td>
-            <td>AL</td>
-            <td>PFOS</td>
-            <td class="num">15×</td>
-            <td>2023-10-12</td>
+            <td class="center">AL</td>
+            <td class="center">~44,187</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--med">15×</td>
+            <td class="center">2023-10-12</td>
         </tr>
         
         <tr>
             <td>
                 <div>Liberty Utilities - Bellflower-Norwalk</div>
-                <div style="font-size:0.72rem;color:#999;">Surface water</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 5 ZIP codes</div>
             </td>
-            <td>CA</td>
-            <td>PFOS</td>
-            <td class="num">15×</td>
-            <td>2024-02-14</td>
+            <td class="center">CA</td>
+            <td class="center">~214,128</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--med">15×</td>
+            <td class="center">2024-02-14</td>
         </tr>
         
         <tr>
             <td>
                 <div>Audubon Water Company</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 2 ZIP codes</div>
             </td>
-            <td>PA</td>
-            <td>PFOS</td>
-            <td class="num">14×</td>
-            <td>2024-03-11</td>
+            <td class="center">PA</td>
+            <td class="center">~44,111</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center">2024-03-11</td>
         </tr>
         
         <tr>
             <td>
                 <div>Abbeville City of</div>
-                <div style="font-size:0.72rem;color:#999;">Surface water</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>SC</td>
-            <td>HFPO-DA</td>
-            <td class="num">14×</td>
-            <td>2025-11-04</td>
+            <td class="center">SC</td>
+            <td class="center">~2,456</td>
+            <td class="center">HFPO-DA</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center">2025-11-04</td>
         </tr>
         
         <tr>
             <td>
                 <div>Lafayette</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater under surface influence</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 3 ZIP codes</div>
             </td>
-            <td>GA</td>
-            <td>PFOS</td>
-            <td class="num">14×</td>
-            <td>2025-04-16</td>
+            <td class="center">GA</td>
+            <td class="center">~43,494</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center">2025-04-16</td>
         </tr>
         
         <tr>
             <td>
                 <div>Caernarvon Twp Auth</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 2 ZIP codes</div>
             </td>
-            <td>PA</td>
-            <td>PFOA</td>
-            <td class="num">14×</td>
-            <td>2025-04-14</td>
+            <td class="center">PA</td>
+            <td class="center">~12,052</td>
+            <td class="center">PFOA</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center">2025-04-14</td>
         </tr>
         
         <tr>
             <td>
                 <div>Tempe City of</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 6 ZIP codes</div>
             </td>
-            <td>AZ</td>
-            <td>PFOS</td>
-            <td class="num">14×</td>
-            <td>2025-01-14</td>
+            <td class="center">AZ</td>
+            <td class="center">~186,340</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center">2025-01-14</td>
         </tr>
         
         <tr>
             <td>
                 <div>Somers Town House/hall</div>
-                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+                <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td>NY</td>
-            <td>PFOS</td>
-            <td class="num">14×</td>
-            <td>2024-11-07</td>
+            <td class="center">NY</td>
+            <td class="center">~7,159</td>
+            <td class="center">PFOS</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center">2024-11-07</td>
         </tr>
         
     </tbody>
@@ -1483,6 +1647,8 @@
     <a class="wt-statelink-btn" href="../state-legislation/index.html">See the state legislation tracker →</a>
 </section>
 
+<div class="ws-tip-backdrop" id="ws-tip-backdrop"></div>
+
 <p class="wt-foot">
     The five PFAS maximum contaminant levels — 4 parts per trillion for PFOA and PFOS, 10 ppt for PFHxS, PFNA, and HFPO-DA (GenX) — were finalized by the Biden EPA in April 2024 as part of the National Primary Drinking Water Regulation. In May 2025 the Trump EPA announced it would keep the PFOA and PFOS standards but rescind the limits for the other three compounds, and proposed extending compliance deadlines to 2031. "Over limit" means a system reported at least one sample above its compound's EPA standard.
 </p>
@@ -1492,10 +1658,24 @@
     // ── Show-more toggle for the state ranking ────────────────────────────
     var btn = document.getElementById('wt-show-more');
     if (btn) {
+        // Stash the rows that start hidden so we can re-hide them on collapse.
+        var collapsibleRows = Array.prototype.slice.call(
+            document.querySelectorAll('#wt-state-table tr.wt-row-hidden')
+        );
         btn.addEventListener('click', function () {
-            var rows = document.querySelectorAll('#wt-state-table tr.wt-row-hidden');
-            rows.forEach(function (r) { r.classList.remove('wt-row-hidden'); });
-            btn.remove();
+            var expanded = btn.dataset.expanded === '1';
+            if (expanded) {
+                collapsibleRows.forEach(function (r) { r.classList.add('wt-row-hidden'); });
+                btn.dataset.expanded = '0';
+                btn.textContent = btn.dataset.labelMore;
+                // Scroll the table back into view so the user isn't stranded below.
+                var tbl = document.getElementById('wt-state-table');
+                if (tbl) tbl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                collapsibleRows.forEach(function (r) { r.classList.remove('wt-row-hidden'); });
+                btn.dataset.expanded = '1';
+                btn.textContent = btn.dataset.labelLess;
+            }
         });
     }
 
@@ -1558,6 +1738,15 @@
         "HI": {"name": "Hawaii", "url": "hawaii/index.html"},
         "ND": {"name": "North Dakota", "url": "north-dakota/index.html"}
     };
+    // Flat list for name-based state matching.
+    var stateList = Object.keys(stateLinks).map(function (abbr) {
+        return {
+            abbr: abbr,
+            name: stateLinks[abbr].name,
+            url: stateLinks[abbr].url,
+            lname: stateLinks[abbr].name.toLowerCase(),
+        };
+    });
 
     var systems = null;
     var loadPromise = null;
@@ -1576,6 +1765,63 @@
         });
     }
 
+    function fmtInt(n) {
+        return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function tooltipHtml(m, stateLabel) {
+        var rows = '';
+        var perContam = m.per_contaminant || [];
+        for (var i = 0; i < perContam.length; i++) {
+            var c = perContam[i];
+            var cls = c.over_limit ? 'over' : (c.detected ? 'ok' : 'nd');
+            var peak = c.detected ? (c.ppt.toFixed(1) + ' ppt') : 'Not detected';
+            var limit = c.limit ? (c.limit + ' ppt') : '—';
+            var date = c.date || '—';
+            rows += '<tr class="ws-tip-row--' + cls + '">' +
+                '<td>' + esc(c.contaminant) + '</td>' +
+                '<td>' + esc(peak) + '</td>' +
+                '<td>' + esc(limit) + '</td>' +
+                '<td>' + esc(date) + '</td>' +
+                '</tr>';
+        }
+        var metaRows = '';
+        if (stateLabel) {
+            // State is shown beneath the title as a separate line, not in the meta list.
+        }
+        if (m.served_population) {
+            metaRows += '<div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~' +
+                esc(fmtInt(m.served_population)) + '</dd></div>';
+        }
+        if (m.zips && m.zips.length) {
+            metaRows += '<div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>' +
+                esc(m.zips.join(', ')) + '</dd></div>';
+        }
+        var stateLine = stateLabel
+            ? '<p class="ws-tip-state">' + esc(stateLabel.toUpperCase()) + '</p>'
+            : '';
+        return '<span class="ws-tip-host" data-open="0">' +
+            '<button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>' +
+            '<div class="ws-tip-panel" role="dialog" aria-label="' + esc(m.name) + ' test results">' +
+                '<button type="button" class="ws-tip-close" aria-label="Close">×</button>' +
+                '<p class="ws-tip-title">' + esc(m.name) + '</p>' +
+                stateLine +
+                (metaRows ? '<dl class="ws-tip-meta">' + metaRows + '</dl>' : '') +
+                '<table class="ws-tip-table">' +
+                    '<colgroup>' +
+                        '<col class="col-pfas">' +
+                        '<col class="col-peak">' +
+                        '<col class="col-lim">' +
+                        '<col class="col-date">' +
+                    '</colgroup>' +
+                    '<thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>' +
+                    '<tbody>' + rows + '</tbody>' +
+                '</table>' +
+                '<p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR 5 monitoring window. Non-detections fell below the minimum reporting level.</p>' +
+            '</div>' +
+        '</span>';
+    }
+
     function render(query) {
         var q = query.trim().toLowerCase();
         if (q.length < 2) {
@@ -1591,6 +1837,15 @@
         var zipMatch = q.match(/^(\d{5})(?:-\d{4})?$/);
         var matches = [];
         var mode = 'text';
+
+        // State-name match: prefix on the full state name (so "mary" → Maryland).
+        var stateMatches = [];
+        if (!zipMatch && q.length >= 2) {
+            for (var si = 0; si < stateList.length; si++) {
+                if (stateList[si].lname.indexOf(q) === 0) stateMatches.push(stateList[si]);
+            }
+            stateMatches.sort(function (a, b) { return a.name.localeCompare(b.name); });
+        }
         if (zipMatch) {
             mode = 'zip';
             var zip = zipMatch[1];
@@ -1611,7 +1866,7 @@
                 }
             }
         }
-        if (!matches.length) {
+        if (!matches.length && !stateMatches.length) {
             out.innerHTML = '<div class="wt-search-status">' +
                 (mode === 'zip'
                     ? 'No water systems in EPA\'s dataset list ZIP ' + esc(zipMatch[1]) + ' in their service area.'
@@ -1619,12 +1874,32 @@
                 '</div>';
             return;
         }
-        var html = '<div class="wt-search-status">' +
-            matches.length + (matches.length >= 50 ? '+ ' : ' ') +
-            (mode === 'zip'
-                ? 'water system' + (matches.length === 1 ? '' : 's') + ' serving ZIP ' + esc(zipMatch[1])
-                : 'match' + (matches.length === 1 ? '' : 'es')) +
-            '</div>';
+        var html = '';
+        if (stateMatches.length) {
+            html += '<div class="wt-search-status">State page' +
+                (stateMatches.length === 1 ? '' : 's') + '</div>';
+            for (var sj = 0; sj < stateMatches.length; sj++) {
+                var sm = stateMatches[sj];
+                html += '<div class="wt-search-row wt-search-row--state">' +
+                    '<div class="wt-search-result">' +
+                      '<div class="wt-search-meta">' +
+                        '<div class="wt-search-name">' + esc(sm.name) + '</div>' +
+                        '<div class="wt-search-state">All water systems in ' + esc(sm.name) + '</div>' +
+                      '</div>' +
+                    '</div>' +
+                    '<a class="wt-search-jump" href="' + esc(sm.url) + '">' +
+                      'See ' + esc(sm.abbr) + ' →</a>' +
+                '</div>';
+            }
+        }
+        if (matches.length) {
+            html += '<div class="wt-search-status">' +
+                matches.length + (matches.length >= 50 ? '+ ' : ' ') +
+                (mode === 'zip'
+                    ? 'water system' + (matches.length === 1 ? '' : 's') + ' serving ZIP ' + esc(zipMatch[1])
+                    : 'match' + (matches.length === 1 ? '' : 'es')) +
+                '</div>';
+        }
         for (var j = 0; j < matches.length; j++) {
             var m = matches[j];
             var n = m.n_exceedances || 0;
@@ -1642,7 +1917,9 @@
                     '<span class="wt-search-count-lbl">of 5 PFAS<br>over EPA limit</span>' +
                   '</div>' +
                   '<div class="wt-search-meta">' +
-                    '<div class="wt-search-name">' + esc(m.name) + '</div>' +
+                    '<div class="wt-search-name">' + esc(m.name) +
+                      tooltipHtml(m, link ? link.name : '') +
+                    '</div>' +
                     '<div class="wt-search-state">' + stateLabel + '</div>' +
                   '</div>' +
                 '</div>' +
@@ -1657,6 +1934,38 @@
         clearTimeout(timer);
         var v = input.value;
         timer = setTimeout(function () { render(v); }, 80);
+    });
+
+    // ── Per-result tooltip modal (delegated; results re-render on input) ──
+    var openTip = null;
+    var backdrop = document.getElementById('ws-tip-backdrop');
+    function closeTip() {
+        if (openTip) { openTip.dataset.open = '0'; openTip = null; }
+        if (backdrop) backdrop.classList.remove('is-open');
+    }
+    function openHost(host) {
+        if (openTip && openTip !== host) openTip.dataset.open = '0';
+        host.dataset.open = '1';
+        openTip = host;
+        if (backdrop) backdrop.classList.add('is-open');
+    }
+    out.addEventListener('click', function (e) {
+        var closeBtn = e.target.closest && e.target.closest('.ws-tip-close');
+        if (closeBtn) { e.stopPropagation(); closeTip(); return; }
+        var panel = e.target.closest && e.target.closest('.ws-tip-panel');
+        if (panel) { e.stopPropagation(); return; }
+        var btn = e.target.closest && e.target.closest('.ws-tip-btn');
+        if (!btn) return;
+        e.stopPropagation();
+        e.preventDefault();
+        var host = btn.closest('.ws-tip-host');
+        if (!host) return;
+        if (host.dataset.open === '1') closeTip();
+        else openHost(host);
+    });
+    if (backdrop) backdrop.addEventListener('click', closeTip);
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeTip();
     });
 })();
 </script>

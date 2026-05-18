@@ -998,6 +998,10 @@ table.doc-table tr:hover td { background: #fafaf8; }
     width: 8px;
     z-index: 4;
 }
+/* Proposed / announced / withdrawn ticks render lighter so final actions
+   stand out at a glance. Hover/active restores full opacity. */
+.bcode-tick--light { opacity: 0.35; }
+.bcode-tick--light:hover, .bcode-tick--light.bcode-tick--active { opacity: 1; }
 /* Scroll position indicator */
 .bcode-scroll-pos {
     position: absolute;
@@ -2591,10 +2595,11 @@ details[open] > .faq-q::after {
     grid-template-columns: 32% 68%;
     padding: 6rem clamp(1.5rem, 6vw, 5rem);
     border-top: 1px solid rgba(255,255,255,0.07);
-    align-items: start;
+    align-items: center;
     gap: 0;
     background: #111;
     color: #e8e4dc;
+    min-height: 100vh;
 }
 .st-chapter-single {
     padding: 6rem clamp(1.5rem, 6vw, 5rem);

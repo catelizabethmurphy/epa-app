@@ -174,6 +174,22 @@
     border-bottom: 2px solid #111;
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
+.ws-pop-cell { font-size: 1.05rem; color: #111; }
+.ws-sortable { cursor: pointer; user-select: none; }
+.ws-sortable:hover { color: #c0202a; }
+.ws-sort-indicator {
+    display: inline-block;
+    margin-left: 0.2rem;
+    font-size: 0.7rem;
+    color: #ccc;
+    transition: color 0.1s;
+}
+.ws-sortable.ws-sort-desc .ws-sort-indicator,
+.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sortable .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -193,8 +209,8 @@
 }
 .ws-meta {
     color: #888;
-    font-size: 0.74rem;
-    margin-top: 0.1rem;
+    font-size: 0.78rem;
+    margin-top: 0.25rem;
     font-family: "PT Sans", sans-serif;
     line-height: 1.3;
 }
@@ -232,10 +248,177 @@
     max-width: 640px;
 }
 .ws-zips-line {
-    margin-top: 0.25rem;
-    font-size: 0.78rem;
     font-style: italic;
+}
+
+/* ── Per-row result tooltip ─────────────────────────────────────────── */
+.ws-tip-host { position: relative; display: inline-block; margin-left: 0.4rem; }
+.ws-name-tail { white-space: nowrap; }
+.ws-tip-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.05rem;
+    height: 1.05rem;
+    border-radius: 50%;
+    background: #ecebe4;
+    color: #555;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.66rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    vertical-align: middle;
+}
+.ws-tip-btn:hover, .ws-tip-btn:focus,
+.ws-tip-host[data-open="1"] .ws-tip-btn { background: #111; color: #fff; outline: none; }
+.ws-tip-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 49;
+    display: none;
+}
+.ws-tip-backdrop.is-open { display: block; }
+.ws-tip-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    box-sizing: border-box;
+    width: min(38rem, calc(100vw - 2rem));
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #fff;
+    border: 1px solid #111;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    padding: 1rem 1.1rem 1.3rem;
+    font-family: "PT Sans", sans-serif;
+    color: #222;
+    line-height: 1.4;
+    display: none;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+.ws-tip-panel, .ws-tip-panel * { white-space: normal; }
+.ws-tip-panel * { min-width: 0; max-width: 100%; }
+.ws-tip-close {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.55rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    line-height: 1;
     color: #888;
+    cursor: pointer;
+    padding: 0.2rem 0.35rem;
+}
+.ws-tip-close:hover { color: #111; }
+.ws-tip-host[data-open="1"] .ws-tip-panel { display: block; }
+.ws-tip-title {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0 0 0.55rem;
+    color: #111;
+    line-height: 1.25;
+}
+.ws-tip-meta {
+    margin: 0 0 0.7rem;
+    padding: 0 0 0.7rem;
+    border-bottom: 1px solid #eee;
+    font-size: 0.85rem;
+    color: #333;
+    line-height: 1.45;
+}
+.ws-tip-meta-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+}
+.ws-tip-meta-row:last-child { margin-bottom: 0; }
+.ws-tip-meta dt {
+    flex: 0 0 7rem;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+}
+.ws-tip-meta dd {
+    flex: 1 1 auto;
+    margin: 0;
+    text-align: left;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+.ws-tip-state {
+    margin: -0.3rem 0 0.7rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+}
+.ws-tip-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    table-layout: fixed;
+}
+.ws-tip-table col.col-pfas { width: 22%; }
+.ws-tip-table col.col-peak { width: 38%; }
+.ws-tip-table col.col-lim  { width: 18%; }
+.ws-tip-table col.col-date { width: 22%; }
+.ws-tip-table th, .ws-tip-table td {
+    padding: 0.35rem 0.5rem 0.35rem 0;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-variant-numeric: tabular-nums;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+.ws-tip-table th:last-child, .ws-tip-table td:last-child { padding-right: 0; }
+.ws-tip-table th {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+    padding-top: 0;
+}
+/* Keep last-row border visible — was getting clipped under the panel's overflow. */
+.ws-tip-row--over td { color: #c0202a; font-weight: 700; }
+.ws-tip-row--ok  td { color: #1a6b35; }
+.ws-tip-row--nd  td { color: #1a6b35; }
+.ws-tip-foot {
+    font-size: 0.7rem;
+    color: #999;
+    margin: 0.6rem 0 0;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+.ws-pop {
+    margin-top: 0.3rem;
+    font-family: "PT Sans", sans-serif;
+    color: #444;
+    font-size: 0.92rem;
+    line-height: 1.2;
+}
+.ws-pop strong {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    color: #111;
+    font-size: 1.15rem;
 }
 
 .ws-statelink {
@@ -359,27 +542,95 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:38%">
-        <col style="width:62%">
+        <col style="width:32%">
+        <col style="width:14%">
+        <col style="width:54%">
     </colgroup>
     <thead>
         <tr>
             <th>Water system</th>
+            <th class="center ws-sortable" data-sort="pop">
+                Residents served
+                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            </th>
             <th>PFAS over the EPA limit</th>
         </tr>
     </thead>
     <tbody>
         
         
-        <tr data-name="georgetown water department" data-zips="19947" data-status="over">
-            <td>
-                <div class="ws-name">Georgetown Water Department</div>
+        <tr data-name="georgetown water department" data-zips="19947" data-status="over" data-pop="19513">
+            <td><div class="ws-name">Georgetown Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Georgetown Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Georgetown Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,513</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19947</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>36.0 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2025-09-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOS</td>
+                                <td>14.0 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2025-03-05</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--ok">
+                                <td>PFHxS</td>
+                                <td>5.1 ppt</td>
+                                <td>10 ppt</td>
+                                <td>2025-03-05</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFNA</td>
+                                <td>20.0 ppt</td>
+                                <td>10 ppt</td>
+                                <td>2025-10-22</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-10-22</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>2 facilities
+                    <span class="ws-meta-sep">·</span>2 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19947</div>
             </td>
+            <td class="center ws-pop-cell">~19,513</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -396,15 +647,78 @@
         </tr>
         
         
-        <tr data-name="newark water department, de" data-zips="19711" data-status="over">
-            <td>
-                <div class="ws-name">Newark Water Department, de</div>
+        <tr data-name="newark water department, de" data-zips="19711" data-status="over" data-pop="49746">
+            <td><div class="ws-name">Newark Water Department,
+                        <span class="ws-name-tail">de<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Newark Water Department, de test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Newark Water Department, de</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,746</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19711</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>25.3 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2023-07-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOS</td>
+                                <td>7.5 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2023-07-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--ok">
+                                <td>PFHxS</td>
+                                <td>5.5 ppt</td>
+                                <td>10 ppt</td>
+                                <td>2023-07-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-12-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-12-06</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--sw">Surface water</span>
-                    <span class="ws-meta-sep">·</span>2 facilities
+                    <span class="ws-meta-sep">·</span>2 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19711</div>
             </td>
+            <td class="center ws-pop-cell">~49,746</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -421,15 +735,78 @@
         </tr>
         
         
-        <tr data-name="suez water delaware" data-zips="19701 19702 19703 19711 19713 19720 19733 19801 19802 19803 19804 19809 19810" data-status="over">
-            <td>
-                <div class="ws-name">Suez Water Delaware</div>
+        <tr data-name="suez water delaware" data-zips="19701 19702 19703 19711 19713 19720 19733 19801 19802 19803 19804 19809 19810" data-status="over" data-pop="381016">
+            <td><div class="ws-name">Suez Water
+                        <span class="ws-name-tail">Delaware<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Suez Water Delaware test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Suez Water Delaware</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~381,016</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19701, 19702, 19703, 19711, 19713, 19720, 19733, 19801, 19802, 19803, 19804, 19809, 19810</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>24.4 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2023-10-26</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-12-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-12-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFNA</td>
+                                <td>11.6 ppt</td>
+                                <td>10 ppt</td>
+                                <td>2023-10-26</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-12-11</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--sw">Surface water</span>
-                    <span class="ws-meta-sep">·</span>2 facilities
+                    <span class="ws-meta-sep">·</span>2 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19701, 19702, 19703, 19711, 19713, 19720, 19733, 19801, 19802, 19803, 19804, 19809, 19810</div>
             </td>
+            <td class="center ws-pop-cell">~381,016</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -446,15 +823,78 @@
         </tr>
         
         
-        <tr data-name="artesian water company" data-zips="19701 19702 19707 19711 19713 19720 19804 19805" data-status="over">
-            <td>
-                <div class="ws-name">Artesian Water Company</div>
+        <tr data-name="artesian water company" data-zips="19701 19702 19707 19711 19713 19720 19804 19805" data-status="over" data-pop="315943">
+            <td><div class="ws-name">Artesian Water
+                        <span class="ws-name-tail">Company<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Artesian Water Company test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Artesian Water Company</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~315,943</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19701, 19702, 19707, 19711, 19713, 19720, 19804, 19805</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>23.1 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-05-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOS</td>
+                                <td>6.0 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-05-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--ok">
+                                <td>PFHxS</td>
+                                <td>8.9 ppt</td>
+                                <td>10 ppt</td>
+                                <td>2024-05-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-02-19</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-02-19</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>22 facilities
+                    <span class="ws-meta-sep">·</span>22 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19701, 19702, 19707, 19711, 19713, 19720, 19804, 19805</div>
             </td>
+            <td class="center ws-pop-cell">~315,943</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -471,15 +911,78 @@
         </tr>
         
         
-        <tr data-name="rehoboth beach water department" data-zips="19971" data-status="over">
-            <td>
-                <div class="ws-name">Rehoboth Beach Water Department</div>
+        <tr data-name="rehoboth beach water department" data-zips="19971" data-status="over" data-pop="15043">
+            <td><div class="ws-name">Rehoboth Beach Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Rehoboth Beach Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Rehoboth Beach Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,043</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19971</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>14.9 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-08-26</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOS</td>
+                                <td>6.2 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-08-26</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--ok">
+                                <td>PFHxS</td>
+                                <td>6.9 ppt</td>
+                                <td>10 ppt</td>
+                                <td>2024-08-26</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-08-26</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-08-26</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>3 facilities
+                    <span class="ws-meta-sep">·</span>3 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19971</div>
             </td>
+            <td class="center ws-pop-cell">~15,043</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -496,15 +999,78 @@
         </tr>
         
         
-        <tr data-name="dewey beach water department" data-zips="19971" data-status="over">
-            <td>
-                <div class="ws-name">Dewey Beach Water Department</div>
+        <tr data-name="dewey beach water department" data-zips="19971" data-status="over" data-pop="15043">
+            <td><div class="ws-name">Dewey Beach Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Dewey Beach Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Dewey Beach Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,043</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19971</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>11.0 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-12-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-12-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--ok">
+                                <td>PFHxS</td>
+                                <td>3.5 ppt</td>
+                                <td>10 ppt</td>
+                                <td>2024-12-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-12-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-12-09</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19971</div>
             </td>
+            <td class="center ws-pop-cell">~15,043</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -521,15 +1087,78 @@
         </tr>
         
         
-        <tr data-name="wilmington water department" data-zips="19082 19701 19702 19707 19708 19710 19720 19732 19801 19802 19803 19804 19805 19806 19807 19808 19809 19810 19850 19880 19884 19898 19899" data-status="over">
-            <td>
-                <div class="ws-name">Wilmington Water Department</div>
+        <tr data-name="wilmington water department" data-zips="19082 19701 19702 19707 19708 19710 19720 19732 19801 19802 19803 19804 19805 19806 19807 19808 19809 19810 19850 19880 19884 19898 19899" data-status="over" data-pop="440853">
+            <td><div class="ws-name">Wilmington Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Wilmington Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Wilmington Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~440,853</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19082, 19701, 19702, 19707, 19708, 19710, 19720, 19732, 19801, 19802, 19803, 19804, 19805, 19806, 19807, 19808, 19809, 19810, 19850, 19880, 19884, 19898, 19899</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>9.9 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-01-31</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-01-31</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-01-31</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-01-31</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-01-31</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--sw">Surface water</span>
-                    <span class="ws-meta-sep">·</span>2 facilities
+                    <span class="ws-meta-sep">·</span>2 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19082, 19701, 19702, 19707, 19708, 19710, 19720, 19732, 19801, 19802, 19803, 19804, 19805, 19806, 19807, 19808, 19809, 19810, 19850, 19880, 19884, 19898, 19899</div>
             </td>
+            <td class="center ws-pop-cell">~440,853</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -546,15 +1175,78 @@
         </tr>
         
         
-        <tr data-name="smyrna water department" data-zips="19977" data-status="over">
-            <td>
-                <div class="ws-name">Smyrna Water Department</div>
+        <tr data-name="smyrna water department" data-zips="19977" data-status="over" data-pop="26204">
+            <td><div class="ws-name">Smyrna Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Smyrna Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Smyrna Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,204</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19977</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>9.8 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-04-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOS</td>
+                                <td>6.7 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-02-05</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-04-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-04-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-04-09</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>3 facilities
+                    <span class="ws-meta-sep">·</span>3 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19977</div>
             </td>
+            <td class="center ws-pop-cell">~26,204</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -571,15 +1263,78 @@
         </tr>
         
         
-        <tr data-name="lewes board of public works" data-zips="19958" data-status="over">
-            <td>
-                <div class="ws-name">Lewes Board of Public Works</div>
+        <tr data-name="lewes board of public works" data-zips="19958" data-status="over" data-pop="28761">
+            <td><div class="ws-name">Lewes Board of Public
+                        <span class="ws-name-tail">Works<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Lewes Board of Public Works test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Lewes Board of Public Works</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,761</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19958</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>6.1 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-02-05</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOS</td>
+                                <td>9.5 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-02-05</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--ok">
+                                <td>PFHxS</td>
+                                <td>3.5 ppt</td>
+                                <td>10 ppt</td>
+                                <td>2024-02-05</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-08-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-08-07</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19958</div>
             </td>
+            <td class="center ws-pop-cell">~28,761</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -596,15 +1351,78 @@
         </tr>
         
         
-        <tr data-name="stage village mhc" data-zips="19940" data-status="over">
-            <td>
-                <div class="ws-name">Stage Village Mhc</div>
+        <tr data-name="stage village mhc" data-zips="19940" data-status="over" data-pop="6818">
+            <td><div class="ws-name">Stage Village
+                        <span class="ws-name-tail">Mhc<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Stage Village Mhc test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Stage Village Mhc</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,818</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19940</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>7.6 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2023-08-08</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOS</td>
+                                <td>8.5 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2023-08-08</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-08-08</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-08-08</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-08-08</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19940</div>
             </td>
+            <td class="center ws-pop-cell">~6,818</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -621,15 +1439,78 @@
         </tr>
         
         
-        <tr data-name="bethany bay pump district" data-zips="19939 19945 19967 19970" data-status="over">
-            <td>
-                <div class="ws-name">Bethany Bay Pump District</div>
+        <tr data-name="bethany bay pump district" data-zips="19939 19945 19967 19970" data-status="over" data-pop="25876">
+            <td><div class="ws-name">Bethany Bay Pump
+                        <span class="ws-name-tail">District<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Bethany Bay Pump District test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Bethany Bay Pump District</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,876</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19939, 19945, 19967, 19970</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-10-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOS</td>
+                                <td>6.1 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2025-04-15</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-10-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-10-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-10-06</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>5 facilities
+                    <span class="ws-meta-sep">·</span>5 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19939, 19945, 19967, 19970</div>
             </td>
+            <td class="center ws-pop-cell">~25,876</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -646,15 +1527,78 @@
         </tr>
         
         
-        <tr data-name="artesian northern sussex regional" data-zips="19947 19951 19966 19968" data-status="over">
-            <td>
-                <div class="ws-name">Artesian Northern Sussex Regional</div>
+        <tr data-name="artesian northern sussex regional" data-zips="19947 19951 19966 19968" data-status="over" data-pop="69324">
+            <td><div class="ws-name">Artesian Northern Sussex
+                        <span class="ws-name-tail">Regional<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Artesian Northern Sussex Regional test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Artesian Northern Sussex Regional</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,324</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19947, 19951, 19966, 19968</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>5.7 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2025-03-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-09-08</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-09-08</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-09-08</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-09-08</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>3 facilities
+                    <span class="ws-meta-sep">·</span>3 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19947, 19951, 19966, 19968</div>
             </td>
+            <td class="center ws-pop-cell">~69,324</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -671,15 +1615,78 @@
         </tr>
         
         
-        <tr data-name="south bethany" data-zips="19930 19939 19944 19945 19975" data-status="over">
-            <td>
-                <div class="ws-name">South Bethany</div>
+        <tr data-name="south bethany" data-zips="19930 19939 19944 19945 19975" data-status="over" data-pop="29340">
+            <td><div class="ws-name">South
+                        <span class="ws-name-tail">Bethany<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="South Bethany test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">South Bethany</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,340</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19930, 19939, 19944, 19945, 19975</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-11-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOS</td>
+                                <td>4.7 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2023-11-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-11-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-11-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-11-06</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>3 facilities
+                    <span class="ws-meta-sep">·</span>3 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19930, 19939, 19944, 19945, 19975</div>
             </td>
+            <td class="center ws-pop-cell">~29,340</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -696,15 +1703,78 @@
         </tr>
         
         
-        <tr data-name="rehoboth pump district" data-zips="19951 19958 19966 19968 19969 19971" data-status="over">
-            <td>
-                <div class="ws-name">Rehoboth Pump District</div>
+        <tr data-name="rehoboth pump district" data-zips="19951 19958 19966 19968 19969 19971" data-status="over" data-pop="93615">
+            <td><div class="ws-name">Rehoboth Pump
+                        <span class="ws-name-tail">District<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Rehoboth Pump District test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Rehoboth Pump District</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~93,615</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19951, 19958, 19966, 19968, 19969, 19971</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--over">
+                                <td>PFOA</td>
+                                <td>4.4 ppt</td>
+                                <td>4 ppt</td>
+                                <td>2024-04-24</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-10-16</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-10-16</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-10-16</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-10-16</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>12 facilities
+                    <span class="ws-meta-sep">·</span>12 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19951, 19958, 19966, 19968, 19969, 19971</div>
             </td>
+            <td class="center ws-pop-cell">~93,615</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -721,15 +1791,78 @@
         </tr>
         
         
-        <tr data-name="bayside pump district" data-zips="19975" data-status="ok">
-            <td>
-                <div class="ws-name">Bayside Pump District</div>
+        <tr data-name="bayside pump district" data-zips="19975" data-status="ok" data-pop="9693">
+            <td><div class="ws-name">Bayside Pump
+                        <span class="ws-name-tail">District<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Bayside Pump District test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Bayside Pump District</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,693</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19975</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-07-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-07-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-07-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-07-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-07-11</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>2 facilities
+                    <span class="ws-meta-sep">·</span>2 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19975</div>
             </td>
+            <td class="center ws-pop-cell">~9,693</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -745,15 +1878,78 @@
         </tr>
         
         
-        <tr data-name="bethany beach water department" data-zips="19930" data-status="ok">
-            <td>
-                <div class="ws-name">Bethany Beach Water Department</div>
+        <tr data-name="bethany beach water department" data-zips="19930" data-status="ok" data-pop="2878">
+            <td><div class="ws-name">Bethany Beach Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Bethany Beach Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Bethany Beach Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,878</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19930</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-10-03</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-10-03</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-10-03</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-10-03</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-10-03</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19930</div>
             </td>
+            <td class="center ws-pop-cell">~2,878</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -769,15 +1965,76 @@
         </tr>
         
         
-        <tr data-name="bridgeville water department" data-zips="NA" data-status="ok">
-            <td>
-                <div class="ws-name">Bridgeville Water Department</div>
+        <tr data-name="bridgeville water department" data-zips="NA" data-status="ok" data-pop="0">
+            <td><div class="ws-name">Bridgeville Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Bridgeville Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Bridgeville Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>NA</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-10-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-10-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-10-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-10-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-10-06</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>3 facilities
+                    <span class="ws-meta-sep">·</span>3 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
+            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -793,15 +2050,78 @@
         </tr>
         
         
-        <tr data-name="camden pump district" data-zips="19901 19904 19934 19943 19962 19979" data-status="ok">
-            <td>
-                <div class="ws-name">Camden Pump District</div>
+        <tr data-name="camden pump district" data-zips="19901 19904 19934 19943 19962 19979" data-status="ok" data-pop="116468">
+            <td><div class="ws-name">Camden Pump
+                        <span class="ws-name-tail">District<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Camden Pump District test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Camden Pump District</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~116,468</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19901, 19904, 19934, 19943, 19962, 19979</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-07-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-07-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-07-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-07-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-07-07</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>5 facilities
+                    <span class="ws-meta-sep">·</span>5 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19901, 19904, 19934, 19943, 19962, 19979</div>
             </td>
+            <td class="center ws-pop-cell">~116,468</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -817,15 +2137,78 @@
         </tr>
         
         
-        <tr data-name="camden wyoming sewer and water authority" data-zips="19901 19934" data-status="ok">
-            <td>
-                <div class="ws-name">Camden Wyoming Sewer and Water Authority</div>
+        <tr data-name="camden wyoming sewer and water authority" data-zips="19901 19934" data-status="ok" data-pop="53663">
+            <td><div class="ws-name">Camden Wyoming Sewer and Water
+                        <span class="ws-name-tail">Authority<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Camden Wyoming Sewer and Water Authority test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Camden Wyoming Sewer and Water Authority</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,663</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19901, 19934</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-08-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-08-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-08-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-08-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-08-04</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>3 facilities
+                    <span class="ws-meta-sep">·</span>3 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19901, 19934</div>
             </td>
+            <td class="center ws-pop-cell">~53,663</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -841,15 +2224,78 @@
         </tr>
         
         
-        <tr data-name="church creek" data-zips="19946 19962" data-status="ok">
-            <td>
-                <div class="ws-name">Church Creek</div>
+        <tr data-name="church creek" data-zips="19946 19962" data-status="ok" data-pop="17774">
+            <td><div class="ws-name">Church
+                        <span class="ws-name-tail">Creek<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Church Creek test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Church Creek</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,774</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19946, 19962</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-10-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-10-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-10-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-10-07</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-10-07</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>5 facilities
+                    <span class="ws-meta-sep">·</span>5 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19946, 19962</div>
             </td>
+            <td class="center ws-pop-cell">~17,774</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -865,15 +2311,78 @@
         </tr>
         
         
-        <tr data-name="delmar utility comm (tn of delmar)" data-zips="19940" data-status="ok">
-            <td>
-                <div class="ws-name">Delmar Utility Comm (Tn of Delmar)</div>
+        <tr data-name="delmar utility comm (tn of delmar)" data-zips="19940" data-status="ok" data-pop="6818">
+            <td><div class="ws-name">Delmar Utility Comm (Tn of
+                        <span class="ws-name-tail">Delmar)<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Delmar Utility Comm (Tn of Delmar) test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Delmar Utility Comm (Tn of Delmar)</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,818</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19940</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-12-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-12-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-12-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-12-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-12-04</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19940</div>
             </td>
+            <td class="center ws-pop-cell">~6,818</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -889,15 +2398,78 @@
         </tr>
         
         
-        <tr data-name="dover air force base" data-zips="19902" data-status="ok">
-            <td>
-                <div class="ws-name">Dover Air Force Base</div>
+        <tr data-name="dover air force base" data-zips="19902" data-status="ok" data-pop="64">
+            <td><div class="ws-name">Dover Air Force
+                        <span class="ws-name-tail">Base<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Dover Air Force Base test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Dover Air Force Base</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~64</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19902</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-09-12</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-09-12</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-09-12</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-09-12</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-09-12</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19902</div>
             </td>
+            <td class="center ws-pop-cell">~64</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -913,15 +2485,78 @@
         </tr>
         
         
-        <tr data-name="dover water department" data-zips="19901 19903 19904" data-status="ok">
-            <td>
-                <div class="ws-name">Dover Water Department</div>
+        <tr data-name="dover water department" data-zips="19901 19903 19904" data-status="ok" data-pop="76484">
+            <td><div class="ws-name">Dover Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Dover Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Dover Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,484</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19901, 19903, 19904</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-05-01</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-05-01</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-05-01</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-05-01</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-05-01</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>16 facilities
+                    <span class="ws-meta-sep">·</span>16 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19901, 19903, 19904</div>
             </td>
+            <td class="center ws-pop-cell">~76,484</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -937,15 +2572,78 @@
         </tr>
         
         
-        <tr data-name="east ncc district" data-zips="19709" data-status="ok">
-            <td>
-                <div class="ws-name">East Ncc District</div>
+        <tr data-name="east ncc district" data-zips="19709" data-status="ok" data-pop="48954">
+            <td><div class="ws-name">East Ncc
+                        <span class="ws-name-tail">District<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="East Ncc District test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">East Ncc District</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,954</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19709</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-07-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-07-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-07-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-07-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-07-10</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>2 facilities
+                    <span class="ws-meta-sep">·</span>2 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19709</div>
             </td>
+            <td class="center ws-pop-cell">~48,954</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -961,15 +2659,78 @@
         </tr>
         
         
-        <tr data-name="garrison lake pump district" data-zips="19901 19904 19936 19977" data-status="ok">
-            <td>
-                <div class="ws-name">Garrison Lake Pump District</div>
+        <tr data-name="garrison lake pump district" data-zips="19901 19904 19936 19977" data-status="ok" data-pop="102910">
+            <td><div class="ws-name">Garrison Lake Pump
+                        <span class="ws-name-tail">District<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Garrison Lake Pump District test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Garrison Lake Pump District</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~102,910</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19901, 19904, 19936, 19977</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-08-05</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-08-05</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-08-05</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-08-05</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-08-05</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>3 facilities
+                    <span class="ws-meta-sep">·</span>3 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19901, 19904, 19936, 19977</div>
             </td>
+            <td class="center ws-pop-cell">~102,910</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -985,15 +2746,78 @@
         </tr>
         
         
-        <tr data-name="laurel water department" data-zips="19956" data-status="ok">
-            <td>
-                <div class="ws-name">Laurel Water Department</div>
+        <tr data-name="laurel water department" data-zips="19956" data-status="ok" data-pop="15822">
+            <td><div class="ws-name">Laurel Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Laurel Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Laurel Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,822</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19956</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-09-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-09-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-09-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-09-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-09-10</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19956</div>
             </td>
+            <td class="center ws-pop-cell">~15,822</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1009,15 +2833,78 @@
         </tr>
         
         
-        <tr data-name="long neck water company" data-zips="19966" data-status="ok">
-            <td>
-                <div class="ws-name">Long Neck Water Company</div>
+        <tr data-name="long neck water company" data-zips="19966" data-status="ok" data-pop="32513">
+            <td><div class="ws-name">Long Neck Water
+                        <span class="ws-name-tail">Company<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Long Neck Water Company test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Long Neck Water Company</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,513</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19966</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-05-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-05-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-05-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-05-06</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-05-06</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>4 facilities
+                    <span class="ws-meta-sep">·</span>4 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19966</div>
             </td>
+            <td class="center ws-pop-cell">~32,513</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1033,15 +2920,78 @@
         </tr>
         
         
-        <tr data-name="meadows pump district" data-zips="19966 19971" data-status="ok">
-            <td>
-                <div class="ws-name">Meadows Pump District</div>
+        <tr data-name="meadows pump district" data-zips="19966 19971" data-status="ok" data-pop="47556">
+            <td><div class="ws-name">Meadows Pump
+                        <span class="ws-name-tail">District<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Meadows Pump District test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Meadows Pump District</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,556</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19966, 19971</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-09-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-09-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-09-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-09-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-09-09</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>3 facilities
+                    <span class="ws-meta-sep">·</span>3 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19966, 19971</div>
             </td>
+            <td class="center ws-pop-cell">~47,556</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1057,15 +3007,78 @@
         </tr>
         
         
-        <tr data-name="middletown water department, de" data-zips="19709" data-status="ok">
-            <td>
-                <div class="ws-name">Middletown Water Department, de</div>
+        <tr data-name="middletown water department, de" data-zips="19709" data-status="ok" data-pop="48954">
+            <td><div class="ws-name">Middletown Water Department,
+                        <span class="ws-name-tail">de<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Middletown Water Department, de test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Middletown Water Department, de</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,954</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19709</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-08-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-08-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-08-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-08-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-08-11</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>2 facilities
+                    <span class="ws-meta-sep">·</span>2 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19709</div>
             </td>
+            <td class="center ws-pop-cell">~48,954</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1081,15 +3094,78 @@
         </tr>
         
         
-        <tr data-name="milford water department" data-zips="19963" data-status="ok">
-            <td>
-                <div class="ws-name">Milford Water Department</div>
+        <tr data-name="milford water department" data-zips="19963" data-status="ok" data-pop="21394">
+            <td><div class="ws-name">Milford Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Milford Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Milford Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,394</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19963</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-07-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-07-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-07-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-07-09</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-07-09</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>5 facilities
+                    <span class="ws-meta-sep">·</span>5 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19963</div>
             </td>
+            <td class="center ws-pop-cell">~21,394</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1105,15 +3181,78 @@
         </tr>
         
         
-        <tr data-name="millsboro water department" data-zips="19966" data-status="ok">
-            <td>
-                <div class="ws-name">Millsboro Water Department</div>
+        <tr data-name="millsboro water department" data-zips="19966" data-status="ok" data-pop="32513">
+            <td><div class="ws-name">Millsboro Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Millsboro Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Millsboro Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,513</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19966</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-11-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-11-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-11-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-11-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-11-04</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19966</div>
             </td>
+            <td class="center ws-pop-cell">~32,513</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1129,15 +3268,78 @@
         </tr>
         
         
-        <tr data-name="municipal services commission" data-zips="19720" data-status="ok">
-            <td>
-                <div class="ws-name">Municipal Services Commission</div>
+        <tr data-name="municipal services commission" data-zips="19720" data-status="ok" data-pop="60514">
+            <td><div class="ws-name">Municipal Services
+                        <span class="ws-name-tail">Commission<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Municipal Services Commission test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Municipal Services Commission</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,514</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19720</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-09-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-09-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-09-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-09-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-09-11</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19720</div>
             </td>
+            <td class="center ws-pop-cell">~60,514</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1153,15 +3355,78 @@
         </tr>
         
         
-        <tr data-name="north west pump district" data-zips="19709" data-status="ok">
-            <td>
-                <div class="ws-name">North West Pump District</div>
+        <tr data-name="north west pump district" data-zips="19709" data-status="ok" data-pop="48954">
+            <td><div class="ws-name">North West Pump
+                        <span class="ws-name-tail">District<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="North West Pump District test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">North West Pump District</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,954</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19709</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-09-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-09-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-09-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-09-11</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-09-11</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>3 facilities
+                    <span class="ws-meta-sep">·</span>3 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19709</div>
             </td>
+            <td class="center ws-pop-cell">~48,954</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1177,15 +3442,78 @@
         </tr>
         
         
-        <tr data-name="seaford water department" data-zips="19973" data-status="ok">
-            <td>
-                <div class="ws-name">Seaford Water Department</div>
+        <tr data-name="seaford water department" data-zips="19973" data-status="ok" data-pop="26070">
+            <td><div class="ws-name">Seaford Water
+                        <span class="ws-name-tail">Department<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Seaford Water Department test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Seaford Water Department</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,070</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19973</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-12-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2023-12-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-12-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-12-04</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2023-12-04</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>2 facilities
+                    <span class="ws-meta-sep">·</span>2 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19973</div>
             </td>
+            <td class="center ws-pop-cell">~26,070</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1201,15 +3529,78 @@
         </tr>
         
         
-        <tr data-name="sussex shores water company" data-zips="19930 19970" data-status="ok">
-            <td>
-                <div class="ws-name">Sussex Shores Water Company</div>
+        <tr data-name="sussex shores water company" data-zips="19930 19970" data-status="ok" data-pop="10517">
+            <td><div class="ws-name">Sussex Shores Water
+                        <span class="ws-name-tail">Company<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Sussex Shores Water Company test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Sussex Shores Water Company</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,517</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19930, 19970</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-06-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2025-06-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-06-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-06-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2025-06-10</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
-                    <span class="ws-meta-sep">·</span>2 facilities
+                    <span class="ws-meta-sep">·</span>2 sites
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19930, 19970</div>
             </td>
+            <td class="center ws-pop-cell">~10,517</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1225,15 +3616,78 @@
         </tr>
         
         
-        <tr data-name="swann keys" data-zips="19975" data-status="ok">
-            <td>
-                <div class="ws-name">Swann Keys</div>
+        <tr data-name="swann keys" data-zips="19975" data-status="ok" data-pop="9693">
+            <td><div class="ws-name">Swann
+                        <span class="ws-name-tail">Keys<span class="ws-tip-host" data-open="0"><button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="Swann Keys test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">Swann Keys</p>
+                        <p class="ws-tip-state">DELAWARE</p>
+                        <dl class="ws-tip-meta">
+                            
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,693</dd></div>
+                            
+                            
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19975</dd></div>
+                            
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOA</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-07-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFOS</td>
+                                <td>Not detected</td>
+                                <td>4 ppt</td>
+                                <td>2024-07-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFHxS</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-07-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>PFNA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-07-10</td>
+                            </tr>
+                            
+                            <tr class="ws-tip-row--nd">
+                                <td>HFPO-DA</td>
+                                <td>Not detected</td>
+                                <td>10 ppt</td>
+                                <td>2024-07-10</td>
+                            </tr>
+                            
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19975</div>
             </td>
+            <td class="center ws-pop-cell">~9,693</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1264,10 +3718,14 @@
     Source: EPA Fifth Unregulated Contaminant Monitoring Rule (UCMR 5). "Worst exceedance" shows how many times above the EPA standard the system's highest sample registered, and which compound it was. Biden's 2024 rule set limits of 4 ppt for PFOA and PFOS and 10 ppt for PFHxS, PFNA, and HFPO-DA (GenX). The Trump EPA proposed rescinding the latter three in May 2025.
 </p>
 
+<div class="ws-tip-backdrop" id="ws-tip-backdrop"></div>
+
 <script>
 (function () {
     var input = document.getElementById('ws-search-input');
-    var rows = Array.prototype.slice.call(document.querySelectorAll('#ws-table tbody tr'));
+    // Direct-child selector so we don't also pick up <tr>s nested inside each
+    // row's tooltip <table>.
+    var rows = Array.prototype.slice.call(document.querySelectorAll('#ws-table > tbody > tr'));
     var count = document.getElementById('ws-search-count');
     var buttons = document.querySelectorAll('.ws-filter-btn');
     var total = rows.length;
@@ -1303,6 +3761,63 @@
             b.classList.add('active');
             filter = b.dataset.filter;
             apply();
+        });
+    });
+
+    // ── Per-row result modal ─────────────────────────────────────────────
+    var openTip = null;
+    var backdrop = document.getElementById('ws-tip-backdrop');
+
+    function closeTip() {
+        if (openTip) { openTip.dataset.open = '0'; openTip = null; }
+        if (backdrop) backdrop.classList.remove('is-open');
+    }
+    function openHost(host) {
+        if (openTip && openTip !== host) openTip.dataset.open = '0';
+        host.dataset.open = '1';
+        openTip = host;
+        if (backdrop) backdrop.classList.add('is-open');
+    }
+
+    document.querySelectorAll('.ws-tip-host').forEach(function (host) {
+        var btn = host.querySelector('.ws-tip-btn');
+        if (!btn) return;
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (host.dataset.open === '1') closeTip();
+            else openHost(host);
+        });
+        var panel = host.querySelector('.ws-tip-panel');
+        if (panel) panel.addEventListener('click', function (e) { e.stopPropagation(); });
+        var close = host.querySelector('.ws-tip-close');
+        if (close) close.addEventListener('click', function (e) { e.stopPropagation(); closeTip(); });
+    });
+    if (backdrop) backdrop.addEventListener('click', closeTip);
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeTip();
+    });
+
+    // ── Sortable Residents column ────────────────────────────────────────
+    var tbody = document.querySelector('#ws-table tbody');
+    var originalOrder = rows.slice();  // snapshot for restore
+    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+        var state = 0;  // 0 = default, 1 = desc, 2 = asc
+        th.addEventListener('click', function () {
+            state = (state + 1) % 3;
+            th.classList.remove('ws-sort-desc', 'ws-sort-asc');
+            var sorted;
+            if (state === 0) {
+                sorted = originalOrder.slice();
+            } else {
+                var dir = state === 1 ? -1 : 1;
+                sorted = rows.slice().sort(function (a, b) {
+                    var av = parseInt(a.dataset.pop || '0', 10);
+                    var bv = parseInt(b.dataset.pop || '0', 10);
+                    return dir * (av - bv);
+                });
+                th.classList.add(state === 1 ? 'ws-sort-desc' : 'ws-sort-asc');
+            }
+            sorted.forEach(function (r) { tbody.appendChild(r); });
         });
     });
 })();

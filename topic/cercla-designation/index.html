@@ -13,6 +13,70 @@
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../static/css/style.css">
     
+<style>
+/* ── Timeline signal chip ───────────────────────────────────────────────
+   Direction sets the hue, force sets the treatment.
+   Label reads as a phrase: "Proposed Rollback", "Final Protection",
+   "Announced", "Court action", etc.                                    */
+.tl-chip {
+    display: inline-block;
+    padding: 0.28rem 0.55rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    border-radius: 2px;
+    --dir: #666;
+    --dir-bg: #f1f1f1;
+    --dir-tint: #fafafa;
+}
+.tl-chip--rollback   { --dir: #c0202a; --dir-bg: #c0202a; --dir-tint: #fff5f5; }
+.tl-chip--protection { --dir: #1a6b35; --dir-bg: #1a6b35; --dir-tint: #f3faf5; }
+.tl-chip--delay      { --dir: #935116; --dir-bg: #b85c00; --dir-tint: #fdf6ec; }
+.tl-chip--other      { --dir: #666;    --dir-bg: #888;    --dir-tint: #f4f4f4; }
+
+/* Final / Court — solid filled */
+.tl-chip--force-final,
+.tl-chip--force-court {
+    background: var(--dir-bg);
+    color: #fff;
+    border: 1px solid var(--dir-bg);
+}
+
+/* Proposed — outlined, hue-tinted */
+.tl-chip--force-proposed {
+    background: var(--dir-tint);
+    color: var(--dir);
+    border: 1px solid var(--dir);
+}
+
+/* Announced — ghost, italic */
+.tl-chip--force-announced {
+    background: transparent;
+    color: var(--dir);
+    border: 1px dashed #bbb;
+    font-style: italic;
+}
+
+/* Withdrawn — strikethrough + faded */
+.tl-chip--force-withdrawn {
+    background: #f4f4f4;
+    color: var(--dir);
+    border: 1px solid #ccc;
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+/* Force unknown — subdued tinted pill */
+.tl-chip--force-none {
+    background: var(--dir-tint);
+    color: var(--dir);
+    border: 1px solid var(--dir);
+}
+</style>
+
 </head>
 <body>
 <nav class="site-nav" id="site-nav">
@@ -57,7 +121,6 @@
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#e0202a"></span>Rollback</span>
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#1a9040"></span>Protection</span>
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#e07000"></span>Delay</span>
-            <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#8040c0"></span>Litigation</span>
             <span class="bcode-leg"><span class="bcode-leg-dot" style="background:#999"></span>Other</span>
         </div>
     </div>
@@ -88,7 +151,6 @@
             <button class="tl-fbtn" data-sig="rollback">Rollback</button>
             <button class="tl-fbtn" data-sig="protection">Protection</button>
             <button class="tl-fbtn" data-sig="delay">Delay</button>
-            <button class="tl-fbtn" data-sig="litigation">Litigation</button>
             <button class="tl-fbtn" data-sig="other">Other</button>
         </div>
     </div>
@@ -136,12 +198,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--commitment_to_protection"
        id="tl-entry-0"
        data-idx="0"
        data-era="trump1"
        data-sig="other"
+       data-force="announced"
        data-program=""
        data-title="pfas national leadership summit">
       <div class="tl-entry-left">
@@ -157,9 +232,7 @@
           </div>
           <p class="tl-desc">Trump EPA announces it is &#34;beginning the necessary steps to propose designating PFOA and PFOS as &#39;hazardous substances&#39;&#34; under Section 102 of the Comprehensive Environmental Response, Compensation, and Liability Act (CERCLA)</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">commitment to protection</span>
-              
-              
+              <span class="tl-chip tl-chip--other tl-chip--force-announced">Other</span>
           </div>
       </div>
   </div>
@@ -188,12 +261,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--proposed_protection"
        id="tl-entry-1"
        data-idx="1"
        data-era="trump1"
        data-sig="other"
+       data-force="proposed"
        data-program=""
        data-title="bipartisan pfas action act of 2019 introduced in congress">
       <div class="tl-entry-left">
@@ -209,9 +295,7 @@
           </div>
           <p class="tl-desc">House introduces bill that would require EPA to, among other things, designate PFOA and PFOS as hazardous substances under Section 102 of CERCLA.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">proposed protection</span>
-              
-              
+              <span class="tl-chip tl-chip--other tl-chip--force-proposed">Other</span>
           </div>
       </div>
   </div>
@@ -237,12 +321,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--commitment_to_protection tl-entry--major"
        id="tl-entry-2"
        data-idx="2"
        data-era="trump1"
        data-sig="other"
+       data-force="announced"
        data-program=""
        data-title="pfas action plan commits to holding &#34;responsible parties accountable for pfas releases into the environment&#34;">
       <div class="tl-entry-left">
@@ -258,9 +355,7 @@
           </div>
           <p class="tl-desc">EPA announces as part of the PFAS Action Plan that it has &#34;initiated the regulatory development process for listing PFOA and PFOS as CERCLA hazardous substances&#34; and says doing so would give the agency &#34;additional authority to address PFOA and PFOS, including the ability to require responsible parties to carry out and/or pay for response actions.&#34;</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">commitment to protection</span>
-              
-              
+              <span class="tl-chip tl-chip--other tl-chip--force-announced">Other</span>
           </div>
       </div>
   </div>
@@ -289,12 +384,24 @@
   
   
   
+  
+  
+
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--other"
        id="tl-entry-3"
        data-idx="3"
        data-era="trump1"
        data-sig="other"
+       data-force=""
        data-program=""
        data-title="pfas action act of 2019 dies in senate amid white house opposition">
       <div class="tl-entry-left">
@@ -310,9 +417,7 @@
           </div>
           <p class="tl-desc">Three days before Congress is set to vote on the PFAS Action Act of 2019, the White House publishes a statement opposing the bill on procedural grounds and threatens to veto it. The statement that acknowledges &#34;the public concern&#34; surrounding PFAS but argues the bill would &#34;bypass well-established processes, procedures, and legal requirements&#34; of existing environmental laws, including CERCLA. The bill passes the House of Representatives by a vote of 247-159, with 24 Republicans voting with most Democrats in favor of the bill, but fails to advance in the Senate.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">other</span>
-              
-              
+              <span class="tl-chip tl-chip--other tl-chip--force-none">Other</span>
           </div>
       </div>
   </div>
@@ -341,12 +446,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--proposed_protection tl-entry--major"
        id="tl-entry-4"
        data-idx="4"
        data-era="trump1"
        data-sig="other"
+       data-force="proposed"
        data-program=""
        data-title="trump administration publishes early rulemaking document on hazardous substance designation">
       <div class="tl-entry-left">
@@ -362,9 +480,7 @@
           </div>
           <p class="tl-desc">Less than a week before leaving office, the first Trump administration publishes an advance notice of proposed rulemaking (ANPRM) seeking public comment on whether to designate PFOA and PFOS as hazardous substances under CERCLA and the Resource Conservation and Recovery Act (RCRA). The action begins the formal process — but leaves the actual designation to the incoming administration.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">proposed protection</span>
-              
-              
+              <span class="tl-chip tl-chip--other tl-chip--force-proposed">Other</span>
           </div>
       </div>
   </div>
@@ -402,12 +518,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--proposed_protection"
        id="tl-entry-5"
        data-idx="5"
        data-era="biden"
        data-sig="other"
+       data-force="proposed"
        data-program=""
        data-title="biden epa proposes designating pfoa and pfos as cercla hazardous substances">
       <div class="tl-entry-left">
@@ -423,9 +552,7 @@
           </div>
           <p class="tl-desc">EPA issues a proposed rule to designate PFOA and PFOS as hazardous substances under Section 102 of CERCLA. If finalized, the designation would set a mandatory reporting threshold for accidental releases of one pound or more of PFOA and PFOS, and require them to be reported within 24 hours of the release. The rule would also give the EPA the authority to hold responsible parties accountable for cleanup and recovery costs.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">proposed protection</span>
-              
-              
+              <span class="tl-chip tl-chip--other tl-chip--force-proposed">Other</span>
           </div>
       </div>
   </div>
@@ -454,12 +581,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--proposed_protection"
        id="tl-entry-6"
        data-idx="6"
        data-era="biden"
        data-sig="other"
+       data-force="proposed"
        data-program=""
        data-title="epa considers potential hazardous substance designation for additional pfas compounds">
       <div class="tl-entry-left">
@@ -475,9 +615,7 @@
           </div>
           <p class="tl-desc">Biden EPA issues an advance notice of proposed rulemaking (ANPRM) seeking public input on whether to designate additional PFAS compounds — that is, other than PFOA and PFOS — as CERCLA hazardous substances. The ANPRM identifies seven PFAS compounds that were selected &#34;based on the availability of toxicity information&#34;</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--other">proposed protection</span>
-              
-              
+              <span class="tl-chip tl-chip--other tl-chip--force-proposed">Other</span>
           </div>
       </div>
   </div>
@@ -507,12 +645,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection tl-entry--major"
        id="tl-entry-7"
        data-idx="7"
        data-era="biden"
        data-sig="protection"
+       data-force="final"
        data-program=""
        data-title="biden epa finalizes cercla hazardous substance designation for pfoa and pfos">
       <div class="tl-entry-left">
@@ -528,9 +679,7 @@
           </div>
           <p class="tl-desc">EPA publishes the final rule designating PFOA and PFOS as CERCLA hazardous substances, effective July 8, 2024. The designation triggers mandatory release reporting at one pound or more and gives EPA authority to pursue cost recovery from polluters at contaminated sites.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-final">Final Protection</span>
           </div>
       </div>
   </div>
@@ -557,12 +706,23 @@
   
   
   
+  
+
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--litigation"
        id="tl-entry-8"
        data-idx="8"
        data-era="biden"
-       data-sig="litigation"
+       data-sig="other"
+       data-force=""
        data-program=""
        data-title="industry groups challenge cercla designation in court">
       <div class="tl-entry-left">
@@ -578,9 +738,7 @@
           </div>
           <p class="tl-desc">The U.S. Chamber of Commerce, Associated General Contractors of America and National Waste &amp; Recycling Association file a petition for review in the D.C. Circuit challenging the CERCLA hazardous substance designation for PFOA and PFOS.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--litigation">litigation</span>
-              
-              
+              <span class="tl-chip tl-chip--other tl-chip--force-none">Other</span>
           </div>
       </div>
   </div>
@@ -619,12 +777,25 @@
   
   
   
+  
+  
+
+  
+  
+  
+
+  
+  
+  
+  
+  
 
   <div class="tl-entry tl-entry--protection tl-entry--major"
        id="tl-entry-9"
        data-idx="9"
        data-era="trump2"
        data-sig="protection"
+       data-force="announced"
        data-program=""
        data-title="trump ii epa announces it will retain pfoa and pfos cercla designation">
       <div class="tl-entry-left">
@@ -640,9 +811,7 @@
           </div>
           <p class="tl-desc">EPA Administrator Lee Zeldin criticizes the Biden administration for taking steps to designate PFAS as hazardous substances &#34;without first establishing the rules of the road&#34; and says EPA will outline a &#34;Framework Rule&#34; to clarify how the agency will implement the CERCLA designations and enforce liability going forward. But Zeldin - a founding member of the PFAS Congressional Taskforce and a &#39;strong supporter of the PFAS Action Act&#39; - also announces the Trump administration will keep the Biden-era CERCLA designations for PFOA and PFOS and defend them in court.</p>
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--protection">protection</span>
-              
-              
+              <span class="tl-chip tl-chip--protection tl-chip--force-announced">Announced Protection</span>
           </div>
       </div>
   </div>
@@ -751,8 +920,6 @@ function parseDate(s) {
         rollback:   '#e0202a',
         protection: '#1a9040',
         delay:      '#e07000',
-        rhetoric:   '#3a6fcc',
-        litigation: '#8040c0',
         other:      '#999',
     };
 
@@ -787,12 +954,17 @@ function parseDate(s) {
         var bucketKey = (entryEra || '') + ':' + date.getFullYear() + '-' + date.getMonth();
         var color = SIG_COLORS[entry.dataset.sig] || '#bbb';
         var titleEl = entry.querySelector('.tl-title');
+        var force = entry.dataset.force || '';
+        // Proposed / announced / withdrawn ticks are visually lighter so the
+        // eye lands on actual final actions first.
+        var isLight = (force === 'proposed' || force === 'announced' || force === 'withdrawn');
         tickData.push({
             idx:    entry.dataset.idx,
             pos:    parseFloat(pct(date)),
             era:    entryEra || '',
             bucket: bucketKey,
             color:  color,
+            light:  isLight,
             date:   dateEl.textContent.trim(),
             title:  (titleEl ? titleEl.textContent.trim() : ''),
         });
@@ -868,7 +1040,9 @@ function parseDate(s) {
             ? 'calc(' + avgPos.toFixed(2) + '% + ' + item.pxOffset + 'px)'
             : avgPos.toFixed(2) + '%';
         group.forEach(function (t) { entryPosCSS[t.idx] = leftValue; });
-        html += '<div class="bcode-tick' + (isCluster ? ' bcode-tick--cluster' : '') + '"'
+        // If every event in this bucket is non-final, lighten the whole tick.
+        var allLight = group.every(function (t) { return t.light; });
+        html += '<div class="bcode-tick' + (isCluster ? ' bcode-tick--cluster' : '') + (allLight ? ' bcode-tick--light' : '') + '"'
              + ' style="left:' + leftValue + ';background:' + bg + '"'
              + ' data-era="' + (item.era || '') + '"'
              + ' data-idx="' + group[0].idx + '"'
@@ -1126,6 +1300,7 @@ function parseDate(s) {
     var entries    = Array.from(document.querySelectorAll('.tl-entry[data-idx]'));
     var eraBands   = Array.from(document.querySelectorAll('[data-era-band]'));
     var yearLabels = Array.from(document.querySelectorAll('[data-year-label]'));
+    var bcodeTicks = Array.from(document.querySelectorAll('.bcode-tick[data-idxlist]'));
     var searchEl   = document.getElementById('tl-search');
 
     var activeEra  = '';
@@ -1135,6 +1310,7 @@ function parseDate(s) {
 
     function applyFilters() {
         var visibleEras = new Set();
+        var visibleIdx  = new Set();
 
         entries.forEach(function (entry) {
             var ok = (!activeEra  || entry.dataset.era     === activeEra)
@@ -1142,7 +1318,18 @@ function parseDate(s) {
                   && (!activeProg || entry.dataset.program === activeProg || entry.dataset.program === 'both')
                   && (!activeQ    || entry.dataset.title.includes(activeQ));
             entry.style.display = ok ? '' : 'none';
-            if (ok) visibleEras.add(entry.dataset.era);
+            if (ok) {
+                visibleEras.add(entry.dataset.era);
+                visibleIdx.add(entry.dataset.idx);
+            }
+        });
+
+        // Barcode ticks: a tick can represent a cluster of entries
+        // (data-idxlist). Show it if any of its entries are still visible.
+        bcodeTicks.forEach(function (tick) {
+            var idxs = (tick.dataset.idxlist || '').split(',');
+            var anyVisible = idxs.some(function (i) { return visibleIdx.has(i); });
+            tick.style.display = anyVisible ? '' : 'none';
         });
 
         var firstBandSeen = false;
