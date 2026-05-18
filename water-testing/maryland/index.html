@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,412</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21788</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~11,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21788</div>
             </td>
-            <td class="center ws-pop-cell">~11,412</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,081</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21921</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~45,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21921</div>
             </td>
-            <td class="center ws-pop-cell">~45,081</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,488</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21801, 21804</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~69,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21801, 21804</div>
             </td>
-            <td class="center ws-pop-cell">~69,488</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,606</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21703</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~39,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21703</div>
             </td>
-            <td class="center ws-pop-cell">~39,606</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -920,7 +985,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,653</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21771</dd></div>
@@ -980,9 +1045,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~31,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21771</div>
             </td>
-            <td class="center ws-pop-cell">~31,653</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1008,7 +1073,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,816</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21157</dd></div>
@@ -1068,9 +1133,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>10 sites
                 </div>
+                <div class="ws-meta">~39,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21157</div>
             </td>
-            <td class="center ws-pop-cell">~39,816</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1096,7 +1161,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,879</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21787</dd></div>
@@ -1156,9 +1221,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~10,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21787</div>
             </td>
-            <td class="center ws-pop-cell">~10,879</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1184,7 +1249,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,528</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21042</dd></div>
@@ -1244,9 +1309,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~42,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21042</div>
             </td>
-            <td class="center ws-pop-cell">~42,528</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1272,7 +1337,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~99,077</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~99,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21014, 21015, 21047, 21050</dd></div>
@@ -1332,9 +1397,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~99,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21014, 21015, 21047, 21050</div>
             </td>
-            <td class="center ws-pop-cell">~99,077</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1360,7 +1425,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,146</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21074</dd></div>
@@ -1420,9 +1485,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>10 sites
                 </div>
+                <div class="ws-meta">~15,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21074</div>
             </td>
-            <td class="center ws-pop-cell">~15,146</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1448,7 +1513,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,611</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21001, 21005</dd></div>
@@ -1508,9 +1573,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~28,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21001, 21005</div>
             </td>
-            <td class="center ws-pop-cell">~28,611</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1536,7 +1601,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,302</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21713, 21756</dd></div>
@@ -1596,9 +1661,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~13,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21713, 21756</div>
             </td>
-            <td class="center ws-pop-cell">~13,302</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1624,7 +1689,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,651</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20837</dd></div>
@@ -1684,9 +1749,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>9 sites
                 </div>
+                <div class="ws-meta">~6,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20837</div>
             </td>
-            <td class="center ws-pop-cell">~6,651</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1712,7 +1777,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,562</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21769</dd></div>
@@ -1772,9 +1837,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~12,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21769</div>
             </td>
-            <td class="center ws-pop-cell">~12,562</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1800,7 +1865,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,024</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21102</dd></div>
@@ -1860,9 +1925,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>11 sites
                 </div>
+                <div class="ws-meta">~12,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21102</div>
             </td>
-            <td class="center ws-pop-cell">~12,024</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1888,7 +1953,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,291</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21804, 21826</dd></div>
@@ -1948,9 +2013,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~44,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21804, 21826</div>
             </td>
-            <td class="center ws-pop-cell">~44,291</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1976,7 +2041,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,502</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21037, 21401</dd></div>
@@ -2036,9 +2101,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~61,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21037, 21401</div>
             </td>
-            <td class="center ws-pop-cell">~61,502</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2063,7 +2128,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,421</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20616, 20640</dd></div>
@@ -2123,9 +2188,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~17,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20616, 20640</div>
             </td>
-            <td class="center ws-pop-cell">~17,421</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2150,7 +2215,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,919</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21005, 21010</dd></div>
@@ -2210,9 +2275,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21005, 21010</div>
             </td>
-            <td class="center ws-pop-cell">~2,919</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2237,7 +2302,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,471</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20622</dd></div>
@@ -2297,9 +2362,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20622</div>
             </td>
-            <td class="center ws-pop-cell">~5,471</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2324,7 +2389,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,444</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21122</dd></div>
@@ -2384,9 +2449,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~61,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21122</div>
             </td>
-            <td class="center ws-pop-cell">~61,444</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2411,7 +2476,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,054</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20657</dd></div>
@@ -2471,9 +2536,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~21,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20657</div>
             </td>
-            <td class="center ws-pop-cell">~21,054</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2498,7 +2563,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~72,649</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~72,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21401, 21403</dd></div>
@@ -2558,9 +2623,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~72,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21401, 21403</div>
             </td>
-            <td class="center ws-pop-cell">~72,649</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2585,7 +2650,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,414,939</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1.4 million</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21013, 21027, 21030, 21031, 21043, 21051, 21052, 21065, 21071, 21082, 21085, 21087, 21092, 21104, 21117, 21128, 21131, 21133, 21136, 21139, 21156, 21162, 21163, 21201, 21202, 21203, 21204, 21205, 21206, 21207, 21208, 21209, 21210, 21211, 21212, 21213, 21214, 21215, 21216, 21217, 21218, 21219, 21220, 21221, 21222, 21223, 21224, 21227, 21228, 21229, 21230, 21231, 21233, 21234, 21235, 21236, 21237, 21239, 21240, 21241, 21244, 21250, 21251, 21263, 21264, 21270, 21273, 21275, 21278, 21279, 21281, 21282, 21286, 21287, 21289, 21290, 21297, 21298</dd></div>
@@ -2645,9 +2710,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~1.4 million residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21013, 21027, 21030, 21031, 21043, 21051, 21052, 21065, 21071, 21082, 21085, 21087, 21092, 21104, 21117, 21128, 21131, 21133, 21136, 21139, 21156, 21162, 21163, 21201, 21202, 21203, 21204, 21205, 21206, 21207, 21208, 21209, 21210, 21211, 21212, 21213, 21214, 21215, 21216, 21217, 21218, 21219, 21220, 21221, 21222, 21223, 21224, 21227, 21228, 21229, 21230, 21231, 21233, 21234, 21235, 21236, 21237, 21239, 21240, 21241, 21244, 21250, 21251, 21263, 21264, 21270, 21273, 21275, 21278, 21279, 21281, 21282, 21286, 21287, 21289, 21290, 21297, 21298</div>
             </td>
-            <td class="center ws-pop-cell">~1,414,939</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2672,7 +2737,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,244</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20715</dd></div>
@@ -2732,9 +2797,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~26,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20715</div>
             </td>
-            <td class="center ws-pop-cell">~26,244</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2759,7 +2824,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,336</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21716, 21755</dd></div>
@@ -2819,9 +2884,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~12,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21716, 21755</div>
             </td>
-            <td class="center ws-pop-cell">~12,336</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2846,7 +2911,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,945</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21613</dd></div>
@@ -2906,9 +2971,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~17,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21613</div>
             </td>
-            <td class="center ws-pop-cell">~17,945</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2933,7 +2998,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,291</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21502</dd></div>
@@ -2993,9 +3058,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~41,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21502</div>
             </td>
-            <td class="center ws-pop-cell">~41,291</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3020,7 +3085,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~126,989</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~127,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21701, 21702, 21703</dd></div>
@@ -3080,9 +3145,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~127,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21701, 21702, 21703</div>
             </td>
-            <td class="center ws-pop-cell">~126,989</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3107,7 +3172,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,229</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21532</dd></div>
@@ -3167,9 +3232,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~13,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21532</div>
             </td>
-            <td class="center ws-pop-cell">~13,229</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3194,7 +3259,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~121,294</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~121,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21720, 21721, 21734, 21740, 21741, 21742, 21746, 21747, 21767, 21783, 21795</dd></div>
@@ -3254,9 +3319,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~121,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21720, 21721, 21734, 21740, 21741, 21742, 21746, 21747, 21767, 21783, 21795</div>
             </td>
-            <td class="center ws-pop-cell">~121,294</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3281,7 +3346,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,820</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21078</dd></div>
@@ -3341,9 +3406,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~19,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21078</div>
             </td>
-            <td class="center ws-pop-cell">~19,820</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3368,7 +3433,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,072</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21851</dd></div>
@@ -3428,9 +3493,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21851</div>
             </td>
-            <td class="center ws-pop-cell">~7,072</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3455,7 +3520,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~163,430</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~163,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20850, 20851, 20852, 20854</dd></div>
@@ -3515,9 +3580,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~163,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20850, 20851, 20852, 20854</div>
             </td>
-            <td class="center ws-pop-cell">~163,430</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3541,7 +3606,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,621</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21113, 21114</dd></div>
@@ -3601,9 +3666,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~61,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21113, 21114</div>
             </td>
-            <td class="center ws-pop-cell">~61,621</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3628,7 +3693,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,747</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,750</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21871</dd></div>
@@ -3688,9 +3753,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,750 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21871</div>
             </td>
-            <td class="center ws-pop-cell">~1,747</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3715,7 +3780,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,291</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21502</dd></div>
@@ -3775,9 +3840,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~41,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21502</div>
             </td>
-            <td class="center ws-pop-cell">~41,291</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3802,7 +3867,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,589</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21601</dd></div>
@@ -3862,9 +3927,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~23,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21601</div>
             </td>
-            <td class="center ws-pop-cell">~23,589</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3889,7 +3954,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,081</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21921</dd></div>
@@ -3949,9 +4014,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~45,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21921</div>
             </td>
-            <td class="center ws-pop-cell">~45,081</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3976,7 +4041,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~87,383</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~87,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21701, 21702</dd></div>
@@ -4036,9 +4101,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~87,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21701, 21702</div>
             </td>
-            <td class="center ws-pop-cell">~87,383</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4063,7 +4128,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,011</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20755</dd></div>
@@ -4123,9 +4188,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~10,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20755</div>
             </td>
-            <td class="center ws-pop-cell">~10,011</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4150,7 +4215,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,219</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21784</dd></div>
@@ -4210,9 +4275,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~37,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21784</div>
             </td>
-            <td class="center ws-pop-cell">~37,219</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4237,7 +4302,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~243,937</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~244,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20724, 20794, 21012, 21061, 21076, 21108, 21122, 21146</dd></div>
@@ -4297,9 +4362,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~244,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20724, 20794, 21012, 21061, 21076, 21108, 21122, 21146</div>
             </td>
-            <td class="center ws-pop-cell">~243,937</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4324,7 +4389,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~225,268</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~225,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21001, 21009, 21014, 21015, 21017, 21040, 21047, 21050, 21078, 21085, 21130</dd></div>
@@ -4384,9 +4449,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~225,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21001, 21009, 21014, 21015, 21017, 21040, 21047, 21050, 21078, 21085, 21130</div>
             </td>
-            <td class="center ws-pop-cell">~225,268</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4411,7 +4476,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,980</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21045</dd></div>
@@ -4471,9 +4536,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~41,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21045</div>
             </td>
-            <td class="center ws-pop-cell">~40,980</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4498,7 +4563,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,291</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21502</dd></div>
@@ -4558,9 +4623,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~41,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21502</div>
             </td>
-            <td class="center ws-pop-cell">~41,291</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4585,7 +4650,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~59,920</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~59,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20619, 20634, 20636, 20653</dd></div>
@@ -4645,9 +4710,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~59,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20619, 20634, 20636, 20653</div>
             </td>
-            <td class="center ws-pop-cell">~59,920</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4730,9 +4795,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4757,7 +4822,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,355</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20745</dd></div>
@@ -4817,9 +4882,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~29,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20745</div>
             </td>
-            <td class="center ws-pop-cell">~29,355</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4843,7 +4908,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,324</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21532, 21539</dd></div>
@@ -4903,9 +4968,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~15,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21532, 21539</div>
             </td>
-            <td class="center ws-pop-cell">~15,324</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4930,7 +4995,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,407</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21811, 21842</dd></div>
@@ -4990,9 +5055,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~35,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21811, 21842</div>
             </td>
-            <td class="center ws-pop-cell">~35,407</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5017,7 +5082,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,629</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20640</dd></div>
@@ -5077,9 +5142,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~10,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20640</div>
             </td>
-            <td class="center ws-pop-cell">~10,629</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5104,7 +5169,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~136,356</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~136,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21701, 21703, 21704, 21710, 21754, 21770, 21774, 21777</dd></div>
@@ -5164,9 +5229,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~136,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21701, 21703, 21704, 21710, 21754, 21770, 21774, 21777</div>
             </td>
-            <td class="center ws-pop-cell">~136,356</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5191,7 +5256,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,346</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20659</dd></div>
@@ -5251,9 +5316,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~23,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20659</div>
             </td>
-            <td class="center ws-pop-cell">~23,346</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5278,7 +5343,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,456</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21811</dd></div>
@@ -5338,9 +5403,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~24,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21811</div>
             </td>
-            <td class="center ws-pop-cell">~24,456</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5365,7 +5430,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,403</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20670</dd></div>
@@ -5425,9 +5490,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>13 sites
                 </div>
+                <div class="ws-meta">~1,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20670</div>
             </td>
-            <td class="center ws-pop-cell">~1,403</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5452,7 +5517,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,051</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,050</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21053</dd></div>
@@ -5512,9 +5577,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~3,050 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21053</div>
             </td>
-            <td class="center ws-pop-cell">~3,051</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5539,7 +5604,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~807</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~810</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20674</dd></div>
@@ -5599,9 +5664,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~810 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20674</div>
             </td>
-            <td class="center ws-pop-cell">~807</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5626,7 +5691,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,874</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20610, 20678</dd></div>
@@ -5686,9 +5751,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~12,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20610, 20678</div>
             </td>
-            <td class="center ws-pop-cell">~12,874</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5713,7 +5778,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,041</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21144</dd></div>
@@ -5773,9 +5838,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~37,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21144</div>
             </td>
-            <td class="center ws-pop-cell">~37,041</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5799,7 +5864,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,296</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20629, 20657, 20688</dd></div>
@@ -5859,9 +5924,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~23,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20629, 20657, 20688</div>
             </td>
-            <td class="center ws-pop-cell">~23,296</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5943,9 +6008,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5970,7 +6035,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,041</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21144</dd></div>
@@ -6030,9 +6095,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~37,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21144</div>
             </td>
-            <td class="center ws-pop-cell">~37,041</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6057,7 +6122,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,456</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21811</dd></div>
@@ -6117,9 +6182,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~24,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21811</div>
             </td>
-            <td class="center ws-pop-cell">~24,456</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6144,7 +6209,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~805</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21671</dd></div>
@@ -6204,9 +6269,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21671</div>
             </td>
-            <td class="center ws-pop-cell">~805</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6231,7 +6296,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,676</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20732</dd></div>
@@ -6291,9 +6356,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~10,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20732</div>
             </td>
-            <td class="center ws-pop-cell">~10,676</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6376,9 +6441,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6403,7 +6468,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,264</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19940, 21875</dd></div>
@@ -6463,9 +6528,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~14,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19940, 21875</div>
             </td>
-            <td class="center ws-pop-cell">~14,264</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6490,7 +6555,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,988</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21629</dd></div>
@@ -6550,9 +6615,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~10,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21629</div>
             </td>
-            <td class="center ws-pop-cell">~9,988</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6577,7 +6642,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,613</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21750</dd></div>
@@ -6637,9 +6702,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~3,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21750</div>
             </td>
-            <td class="center ws-pop-cell">~3,613</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6664,7 +6729,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,629</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20640</dd></div>
@@ -6724,9 +6789,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~10,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20640</div>
             </td>
-            <td class="center ws-pop-cell">~10,629</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6751,7 +6816,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,346</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,350</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21651</dd></div>
@@ -6811,9 +6876,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,350 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21651</div>
             </td>
-            <td class="center ws-pop-cell">~2,346</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6838,7 +6903,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~65,759</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~65,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21901, 21914, 21921</dd></div>
@@ -6898,9 +6963,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~65,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21901, 21914, 21921</div>
             </td>
-            <td class="center ws-pop-cell">~65,759</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6925,7 +6990,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,951</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21842</dd></div>
@@ -6985,9 +7050,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~11,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21842</div>
             </td>
-            <td class="center ws-pop-cell">~10,951</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7012,7 +7077,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,332</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21903</dd></div>
@@ -7072,9 +7137,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21903</div>
             </td>
-            <td class="center ws-pop-cell">~5,332</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7099,7 +7164,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,659</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21853</dd></div>
@@ -7159,9 +7224,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~10,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21853</div>
             </td>
-            <td class="center ws-pop-cell">~10,659</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7186,7 +7251,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,882</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21793</dd></div>
@@ -7246,9 +7311,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~10,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21793</div>
             </td>
-            <td class="center ws-pop-cell">~10,882</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7273,7 +7338,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,248</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20646</dd></div>
@@ -7333,9 +7398,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~21,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20646</div>
             </td>
-            <td class="center ws-pop-cell">~21,248</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7360,7 +7425,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,727</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,750</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21402</dd></div>
@@ -7420,9 +7485,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,750 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21402</div>
             </td>
-            <td class="center ws-pop-cell">~2,727</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7447,7 +7512,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~100,266</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~100,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20601, 20602, 20603, 20695</dd></div>
@@ -7507,9 +7572,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>14 sites
                 </div>
+                <div class="ws-meta">~100,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20601, 20602, 20603, 20695</div>
             </td>
-            <td class="center ws-pop-cell">~100,266</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7534,7 +7599,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,154,639</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2.2 million</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20601, 20607, 20613, 20623, 20705, 20706, 20707, 20708, 20710, 20712, 20715, 20716, 20720, 20721, 20722, 20723, 20735, 20737, 20738, 20740, 20742, 20743, 20744, 20745, 20746, 20747, 20748, 20769, 20770, 20771, 20772, 20773, 20774, 20781, 20782, 20783, 20784, 20785, 20787, 20790, 20812, 20814, 20815, 20816, 20817, 20818, 20830, 20832, 20833, 20837, 20841, 20850, 20851, 20852, 20853, 20854, 20855, 20857, 20859, 20860, 20861, 20866, 20868, 20871, 20872, 20874, 20875, 20876, 20877, 20878, 20879, 20880, 20882, 20884, 20885, 20886, 20892, 20895, 20896, 20898, 20901, 20902, 20903, 20904, 20905, 20906, 20907, 20910, 20912, 20913, 20914, 20915, 20916, 21045, 21046, 21114</dd></div>
@@ -7594,9 +7659,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~2.2 million residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20601, 20607, 20613, 20623, 20705, 20706, 20707, 20708, 20710, 20712, 20715, 20716, 20720, 20721, 20722, 20723, 20735, 20737, 20738, 20740, 20742, 20743, 20744, 20745, 20746, 20747, 20748, 20769, 20770, 20771, 20772, 20773, 20774, 20781, 20782, 20783, 20784, 20785, 20787, 20790, 20812, 20814, 20815, 20816, 20817, 20818, 20830, 20832, 20833, 20837, 20841, 20850, 20851, 20852, 20853, 20854, 20855, 20857, 20859, 20860, 20861, 20866, 20868, 20871, 20872, 20874, 20875, 20876, 20877, 20878, 20879, 20880, 20882, 20884, 20885, 20886, 20892, 20895, 20896, 20898, 20901, 20902, 20903, 20904, 20905, 20906, 20907, 20910, 20912, 20913, 20914, 20915, 20916, 21045, 21046, 21114</div>
             </td>
-            <td class="center ws-pop-cell">~2,154,639</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7621,7 +7686,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,291</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>21502</dd></div>
@@ -7681,9 +7746,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~41,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 21502</div>
             </td>
-            <td class="center ws-pop-cell">~41,291</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7708,7 +7773,7 @@
                         <p class="ws-tip-state">MARYLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,455</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>20695</dd></div>
@@ -7768,9 +7833,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~11,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 20695</div>
             </td>
-            <td class="center ws-pop-cell">~11,455</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7883,7 +7948,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -7942,6 +8007,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

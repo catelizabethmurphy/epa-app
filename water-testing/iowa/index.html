@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~85,379</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~85,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51101, 51102, 51103, 51104, 51105, 51106, 51107, 51108, 51111</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~85,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51101, 51102, 51103, 51104, 51105, 51106, 51107, 51108, 51111</div>
             </td>
-            <td class="center ws-pop-cell">~85,379</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,357</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52761</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~30,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52761</div>
             </td>
-            <td class="center ws-pop-cell">~30,357</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,746</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50677</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~12,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50677</div>
             </td>
-            <td class="center ws-pop-cell">~12,746</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,174</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,150</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52655</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,150 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52655</div>
             </td>
-            <td class="center ws-pop-cell">~4,174</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -920,7 +985,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,840</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50701, 50702, 50703, 50704, 50706, 50707</dd></div>
@@ -980,9 +1045,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>9 sites
                 </div>
+                <div class="ws-meta">~76,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50701, 50702, 50703, 50704, 50706, 50707</div>
             </td>
-            <td class="center ws-pop-cell">~76,840</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1008,7 +1073,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~79,069</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~79,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52001, 52002, 52003, 52068</dd></div>
@@ -1068,9 +1133,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~79,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52001, 52002, 52003, 52068</div>
             </td>
-            <td class="center ws-pop-cell">~79,069</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1096,7 +1161,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,068</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50461</dd></div>
@@ -1156,9 +1221,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~5,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50461</div>
             </td>
-            <td class="center ws-pop-cell">~5,068</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1184,7 +1249,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~182,652</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~183,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51357, 52722, 52726, 52732, 52753, 52801, 52802, 52803, 52804, 52805, 52806, 52807</dd></div>
@@ -1244,9 +1309,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~183,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51357, 52722, 52726, 52732, 52753, 52801, 52802, 52803, 52804, 52805, 52806, 52807</div>
             </td>
-            <td class="center ws-pop-cell">~182,652</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1272,7 +1337,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,263</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50003</dd></div>
@@ -1332,9 +1397,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50003</div>
             </td>
-            <td class="center ws-pop-cell">~9,263</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1359,7 +1424,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,856</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52531</dd></div>
@@ -1419,9 +1484,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52531</div>
             </td>
-            <td class="center ws-pop-cell">~5,856</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1446,7 +1511,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,041</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50511</dd></div>
@@ -1506,9 +1571,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50511</div>
             </td>
-            <td class="center ws-pop-cell">~7,041</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1533,7 +1598,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,402</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50009</dd></div>
@@ -1593,9 +1658,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~21,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50009</div>
             </td>
-            <td class="center ws-pop-cell">~21,402</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1620,7 +1685,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~64,773</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~64,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50010, 50014</dd></div>
@@ -1680,9 +1745,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~64,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50010, 50014</div>
             </td>
-            <td class="center ws-pop-cell">~64,773</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1707,7 +1772,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,537</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52205</dd></div>
@@ -1767,9 +1832,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52205</div>
             </td>
-            <td class="center ws-pop-cell">~8,537</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1794,7 +1859,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,281</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50020</dd></div>
@@ -1854,9 +1919,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50020</div>
             </td>
-            <td class="center ws-pop-cell">~1,281</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1881,7 +1946,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~72,570</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~72,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50021, 50023</dd></div>
@@ -1941,9 +2006,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~72,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50021, 50023</div>
             </td>
-            <td class="center ws-pop-cell">~72,570</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1968,7 +2033,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,871</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52002</dd></div>
@@ -2028,9 +2093,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~17,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52002</div>
             </td>
-            <td class="center ws-pop-cell">~17,871</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2055,7 +2120,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,868</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50022, 51552</dd></div>
@@ -2115,9 +2180,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50022, 51552</div>
             </td>
-            <td class="center ws-pop-cell">~8,868</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2142,7 +2207,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~909</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~910</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50517</dd></div>
@@ -2202,9 +2267,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~910 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50517</div>
             </td>
-            <td class="center ws-pop-cell">~909</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2229,7 +2294,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,992</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52208</dd></div>
@@ -2289,9 +2354,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~3,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52208</div>
             </td>
-            <td class="center ws-pop-cell">~2,992</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2316,7 +2381,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,507</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50035</dd></div>
@@ -2376,9 +2441,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50035</div>
             </td>
-            <td class="center ws-pop-cell">~9,507</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2403,7 +2468,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,418</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50036</dd></div>
@@ -2463,9 +2528,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~16,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50036</div>
             </td>
-            <td class="center ws-pop-cell">~16,418</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2490,7 +2555,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,592</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52601</dd></div>
@@ -2550,9 +2615,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~27,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52601</div>
             </td>
-            <td class="center ws-pop-cell">~27,592</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2635,9 +2700,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 53720</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2662,7 +2727,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,652</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,650</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50046</dd></div>
@@ -2722,9 +2787,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,650 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50046</div>
             </td>
-            <td class="center ws-pop-cell">~1,652</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2749,7 +2814,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,635</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50047</dd></div>
@@ -2809,9 +2874,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~6,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50047</div>
             </td>
-            <td class="center ws-pop-cell">~6,635</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2836,7 +2901,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,174</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51401</dd></div>
@@ -2896,9 +2961,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~12,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51401</div>
             </td>
-            <td class="center ws-pop-cell">~12,174</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2923,7 +2988,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,780</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51510</dd></div>
@@ -2983,9 +3048,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~3,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51510</div>
             </td>
-            <td class="center ws-pop-cell">~3,780</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3010,7 +3075,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,732</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50613</dd></div>
@@ -3070,9 +3135,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~43,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50613</div>
             </td>
-            <td class="center ws-pop-cell">~43,732</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3097,7 +3162,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~202,699</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~203,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52227, 52233, 52302, 52324, 52328, 52401, 52402, 52403, 52404, 52405, 52411</dd></div>
@@ -3157,9 +3222,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~203,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52227, 52233, 52302, 52324, 52328, 52401, 52402, 52403, 52404, 52405, 52411</div>
             </td>
-            <td class="center ws-pop-cell">~202,699</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3184,7 +3249,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,873</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52544</dd></div>
@@ -3244,9 +3309,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52544</div>
             </td>
-            <td class="center ws-pop-cell">~7,873</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3271,7 +3336,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,449</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50049</dd></div>
@@ -3331,9 +3396,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50049</div>
             </td>
-            <td class="center ws-pop-cell">~6,449</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3358,7 +3423,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,544</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50616</dd></div>
@@ -3418,9 +3483,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50616</div>
             </td>
-            <td class="center ws-pop-cell">~9,544</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3445,7 +3510,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,518</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51012</dd></div>
@@ -3505,9 +3570,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~6,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51012</div>
             </td>
-            <td class="center ws-pop-cell">~6,518</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3532,7 +3597,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,115</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50864, 51631, 51632, 51637, 51646, 64445</dd></div>
@@ -3592,9 +3657,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50864, 51631, 51632, 51637, 51646, 64445</div>
             </td>
-            <td class="center ws-pop-cell">~10,115</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3619,7 +3684,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,099</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50619</dd></div>
@@ -3679,9 +3744,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50619</div>
             </td>
-            <td class="center ws-pop-cell">~2,099</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3706,7 +3771,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,119</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50428</dd></div>
@@ -3766,9 +3831,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50428</div>
             </td>
-            <td class="center ws-pop-cell">~9,119</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3793,7 +3858,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~651</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~650</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52135</dd></div>
@@ -3853,9 +3918,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~650 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52135</div>
             </td>
-            <td class="center ws-pop-cell">~651</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3880,7 +3945,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,576</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50325</dd></div>
@@ -3940,9 +4005,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~18,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50325</div>
             </td>
-            <td class="center ws-pop-cell">~18,576</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3967,7 +4032,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,494</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52241</dd></div>
@@ -4027,9 +4092,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~22,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52241</div>
             </td>
-            <td class="center ws-pop-cell">~22,494</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4054,7 +4119,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~72,481</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~72,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51501, 51502, 51503</dd></div>
@@ -4114,9 +4179,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~72,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51501, 51502, 51503</div>
             </td>
-            <td class="center ws-pop-cell">~72,481</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4141,7 +4206,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,917</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52136</dd></div>
@@ -4201,9 +4266,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~5,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52136</div>
             </td>
-            <td class="center ws-pop-cell">~5,917</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4228,7 +4293,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,957</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50801</dd></div>
@@ -4288,9 +4353,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50801</div>
             </td>
-            <td class="center ws-pop-cell">~8,957</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4315,7 +4380,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,581</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52742</dd></div>
@@ -4375,9 +4440,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~7,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52742</div>
             </td>
-            <td class="center ws-pop-cell">~7,581</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4402,7 +4467,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,962</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52101</dd></div>
@@ -4462,9 +4527,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~13,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52101</div>
             </td>
-            <td class="center ws-pop-cell">~12,962</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4489,7 +4554,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,648</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51442</dd></div>
@@ -4549,9 +4614,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51442</div>
             </td>
-            <td class="center ws-pop-cell">~9,648</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4576,7 +4641,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~501,724</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~502,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50007, 50009, 50021, 50023, 50032, 50035, 50046, 50047, 50061, 50073, 50124, 50131, 50169, 50211, 50226, 50244, 50263, 50265, 50302, 50306, 50309, 50310, 50311, 50312, 50313, 50314, 50315, 50316, 50317, 50318, 50319, 50320, 50321, 50322, 50324, 50327, 50392</dd></div>
@@ -4636,9 +4701,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~502,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50007, 50009, 50021, 50023, 50032, 50035, 50046, 50047, 50061, 50073, 50124, 50131, 50169, 50211, 50226, 50244, 50263, 50265, 50302, 50306, 50309, 50310, 50311, 50312, 50313, 50314, 50315, 50316, 50317, 50318, 50319, 50320, 50321, 50322, 50324, 50327, 50392</div>
             </td>
-            <td class="center ws-pop-cell">~501,724</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4663,7 +4728,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,644</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52040</dd></div>
@@ -4723,9 +4788,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52040</div>
             </td>
-            <td class="center ws-pop-cell">~5,644</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4750,7 +4815,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,931</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,950</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50533</dd></div>
@@ -4810,9 +4875,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~3,950 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50533</div>
             </td>
-            <td class="center ws-pop-cell">~3,931</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4837,7 +4902,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,737</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52748</dd></div>
@@ -4897,9 +4962,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52748</div>
             </td>
-            <td class="center ws-pop-cell">~9,737</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4924,7 +4989,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,304</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50536</dd></div>
@@ -4984,9 +5049,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50536</div>
             </td>
-            <td class="center ws-pop-cell">~4,304</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5011,7 +5076,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,415</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51334, 51365</dd></div>
@@ -5071,9 +5136,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51334, 51365</div>
             </td>
-            <td class="center ws-pop-cell">~7,415</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5098,7 +5163,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,307</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50707</dd></div>
@@ -5158,9 +5223,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~7,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50707</div>
             </td>
-            <td class="center ws-pop-cell">~7,307</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5185,7 +5250,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,647</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52556</dd></div>
@@ -5245,9 +5310,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~11,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52556</div>
             </td>
-            <td class="center ws-pop-cell">~11,647</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5272,7 +5337,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,879</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50436</dd></div>
@@ -5332,9 +5397,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50436</div>
             </td>
-            <td class="center ws-pop-cell">~5,879</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5359,7 +5424,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,530</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50501</dd></div>
@@ -5419,9 +5484,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~28,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50501</div>
             </td>
-            <td class="center ws-pop-cell">~28,530</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5446,7 +5511,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,719</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52627</dd></div>
@@ -5506,9 +5571,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~12,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52627</div>
             </td>
-            <td class="center ws-pop-cell">~12,719</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5593,9 +5658,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50103</div>
             </td>
-            <td class="center ws-pop-cell">~400</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5620,7 +5685,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,258</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51534, 51561</dd></div>
@@ -5680,9 +5745,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~10,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51534, 51561</div>
             </td>
-            <td class="center ws-pop-cell">~10,258</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5707,7 +5772,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,745</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50111</dd></div>
@@ -5767,9 +5832,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~15,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50111</div>
             </td>
-            <td class="center ws-pop-cell">~15,745</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5794,7 +5859,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,827</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50112</dd></div>
@@ -5854,9 +5919,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~11,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50112</div>
             </td>
-            <td class="center ws-pop-cell">~11,827</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5881,7 +5946,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,321</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50441</dd></div>
@@ -5941,9 +6006,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50441</div>
             </td>
-            <td class="center ws-pop-cell">~5,321</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5968,7 +6033,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,852</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51537</dd></div>
@@ -6028,9 +6093,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~6,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51537</div>
             </td>
-            <td class="center ws-pop-cell">~6,852</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6055,7 +6120,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,025</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52233</dd></div>
@@ -6115,9 +6180,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~7,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52233</div>
             </td>
-            <td class="center ws-pop-cell">~7,025</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6142,7 +6207,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,591</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50548</dd></div>
@@ -6202,9 +6267,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50548</div>
             </td>
-            <td class="center ws-pop-cell">~5,591</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6229,7 +6294,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,539</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,550</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50124</dd></div>
@@ -6289,9 +6354,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,550 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50124</div>
             </td>
-            <td class="center ws-pop-cell">~4,539</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6316,7 +6381,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~483,632</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~484,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50005, 50006, 50010, 50014, 50028, 50043, 50044, 50046, 50051, 50054, 50055, 50056, 50071, 50075, 50078, 50102, 50106, 50112, 50120, 50122, 50124, 50126, 50127, 50135, 50137, 50138, 50141, 50142, 50148, 50153, 50154, 50158, 50161, 50162, 50168, 50169, 50170, 50173, 50201, 50206, 50207, 50208, 50214, 50219, 50228, 50230, 50232, 50234, 50236, 50237, 50239, 50242, 50244, 50247, 50248, 50251, 50253, 50256, 50258, 50259, 50263, 50269, 50270, 50271, 50278, 50601, 50604, 50607, 50608, 50609, 50612, 50613, 50619, 50621, 50622, 50623, 50624, 50625, 50626, 50627, 50628, 50629, 50631, 50632, 50635, 50637, 50638, 50641, 50642, 50643, 50644, 50647, 50648, 50649, 50650, 50651, 50652, 50654, 50655, 50657, 50660, 50662, 50665, 50666, 50668, 50669, 50670, 50671, 50672, 50673, 50674, 50675, 50676, 50677, 50680, 50682, 50691, 50701, 50702, 50703, 50704, 52038, 52050, 52057, 52326, 52329, 52342, 52352</dd></div>
@@ -6376,9 +6441,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~484,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50005, 50006, 50010, 50014, 50028, 50043, 50044, 50046, 50051, 50054, 50055, 50056, 50071, 50075, 50078, 50102, 50106, 50112, 50120, 50122, 50124, 50126, 50127, 50135, 50137, 50138, 50141, 50142, 50148, 50153, 50154, 50158, 50161, 50162, 50168, 50169, 50170, 50173, 50201, 50206, 50207, 50208, 50214, 50219, 50228, 50230, 50232, 50234, 50236, 50237, 50239, 50242, 50244, 50247, 50248, 50251, 50253, 50256, 50258, 50259, 50263, 50269, 50270, 50271, 50278, 50601, 50604, 50607, 50608, 50609, 50612, 50613, 50619, 50621, 50622, 50623, 50624, 50625, 50626, 50627, 50628, 50629, 50631, 50632, 50635, 50637, 50638, 50641, 50642, 50643, 50644, 50647, 50648, 50649, 50650, 50651, 50652, 50654, 50655, 50657, 50660, 50662, 50665, 50666, 50668, 50669, 50670, 50671, 50672, 50673, 50674, 50675, 50676, 50677, 50680, 50682, 50691, 50701, 50702, 50703, 50704, 52038, 52050, 52057, 52326, 52329, 52342, 52352</div>
             </td>
-            <td class="center ws-pop-cell">~483,632</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6403,7 +6468,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,705</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50644</dd></div>
@@ -6463,9 +6528,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~8,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50644</div>
             </td>
-            <td class="center ws-pop-cell">~8,705</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6490,7 +6555,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,364</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50125</dd></div>
@@ -6550,9 +6615,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~20,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50125</div>
             </td>
-            <td class="center ws-pop-cell">~20,364</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6577,7 +6642,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,475</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52240</dd></div>
@@ -6637,9 +6702,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~36,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52240</div>
             </td>
-            <td class="center ws-pop-cell">~36,475</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6664,7 +6729,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~80,903</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~80,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52240, 52245, 52246</dd></div>
@@ -6724,9 +6789,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~80,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52240, 52245, 52246</div>
             </td>
-            <td class="center ws-pop-cell">~80,903</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6751,7 +6816,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,402</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50126</dd></div>
@@ -6811,9 +6876,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~6,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50126</div>
             </td>
-            <td class="center ws-pop-cell">~6,402</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6838,7 +6903,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~56,277</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~56,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50515, 50527, 50536, 50554, 50567, 50568, 50576, 50585, 50588, 50592, 51002, 51012, 51033, 51047, 51058, 51301, 51333, 51338, 51341, 51343, 51351, 51357, 51358, 51364, 51366</dd></div>
@@ -6898,9 +6963,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~56,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50515, 50527, 50536, 50554, 50567, 50568, 50576, 50585, 50588, 50592, 51002, 51012, 51033, 51047, 51058, 51301, 51333, 51338, 51341, 51343, 51351, 51357, 51358, 51364, 51366</div>
             </td>
-            <td class="center ws-pop-cell">~56,277</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6925,7 +6990,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,177</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50515, 50536, 51331, 51334, 51342, 51351, 51355, 51358, 51360, 51363, 51364, 51365, 56143</dd></div>
@@ -6985,9 +7050,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~35,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50515, 50536, 51331, 51334, 51342, 51351, 51355, 51358, 51360, 51363, 51364, 51365, 56143</div>
             </td>
-            <td class="center ws-pop-cell">~35,177</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7012,7 +7077,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,120</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52339</dd></div>
@@ -7072,9 +7137,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52339</div>
             </td>
-            <td class="center ws-pop-cell">~4,120</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7099,7 +7164,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,984</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52732, 52736</dd></div>
@@ -7159,9 +7224,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~26,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52732, 52736</div>
             </td>
-            <td class="center ws-pop-cell">~25,984</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7185,7 +7250,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,410</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50011, 50012, 50013</dd></div>
@@ -7245,9 +7310,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~6,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50011, 50012, 50013</div>
             </td>
-            <td class="center ws-pop-cell">~6,410</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7272,7 +7337,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,208</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50129</dd></div>
@@ -7332,9 +7397,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50129</div>
             </td>
-            <td class="center ws-pop-cell">~5,208</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7359,7 +7424,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,712</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50111, 50131</dd></div>
@@ -7419,9 +7484,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~39,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50111, 50131</div>
             </td>
-            <td class="center ws-pop-cell">~39,712</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7446,7 +7511,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,087</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52632</dd></div>
@@ -7506,9 +7571,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52632</div>
             </td>
-            <td class="center ws-pop-cell">~12,087</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7533,7 +7598,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,086</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50138</dd></div>
@@ -7593,9 +7658,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~12,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50138</div>
             </td>
-            <td class="center ws-pop-cell">~12,086</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7620,7 +7685,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,595</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51031</dd></div>
@@ -7680,9 +7745,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~12,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51031</div>
             </td>
-            <td class="center ws-pop-cell">~12,595</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7707,7 +7772,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,209</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51240, 51241, 51242</dd></div>
@@ -7767,9 +7832,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~4,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51240, 51241, 51242</div>
             </td>
-            <td class="center ws-pop-cell">~4,209</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7794,7 +7859,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,437</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52577</dd></div>
@@ -7854,9 +7919,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~14,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52577</div>
             </td>
-            <td class="center ws-pop-cell">~14,437</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7881,7 +7946,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,082</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52057</dd></div>
@@ -7941,9 +8006,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~8,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52057</div>
             </td>
-            <td class="center ws-pop-cell">~8,082</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7968,7 +8033,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,974</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52060</dd></div>
@@ -8028,9 +8093,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52060</div>
             </td>
-            <td class="center ws-pop-cell">~7,974</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8055,7 +8120,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,640</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50001, 50044, 50062, 50119, 50138, 50139, 50163, 50225</dd></div>
@@ -8115,9 +8180,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~19,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50001, 50044, 50062, 50119, 50138, 50139, 50163, 50225</div>
             </td>
-            <td class="center ws-pop-cell">~19,640</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8142,7 +8207,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,803</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52302</dd></div>
@@ -8202,9 +8267,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~42,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52302</div>
             </td>
-            <td class="center ws-pop-cell">~42,803</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8229,7 +8294,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,047</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50158</dd></div>
@@ -8289,9 +8354,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~31,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50158</div>
             </td>
-            <td class="center ws-pop-cell">~31,047</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8316,7 +8381,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,909</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50401</dd></div>
@@ -8376,9 +8441,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~28,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50401</div>
             </td>
-            <td class="center ws-pop-cell">~28,909</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8403,7 +8468,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,522</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50062, 50163</dd></div>
@@ -8463,9 +8528,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50062, 50163</div>
             </td>
-            <td class="center ws-pop-cell">~1,522</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8490,7 +8555,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,286</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52310</dd></div>
@@ -8550,9 +8615,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~6,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52310</div>
             </td>
-            <td class="center ws-pop-cell">~6,286</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8577,7 +8642,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,812</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52641</dd></div>
@@ -8637,9 +8702,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~12,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52641</div>
             </td>
-            <td class="center ws-pop-cell">~12,812</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8664,7 +8729,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,011</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52314</dd></div>
@@ -8724,9 +8789,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~6,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52314</div>
             </td>
-            <td class="center ws-pop-cell">~6,011</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8751,7 +8816,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,291</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50201</dd></div>
@@ -8811,9 +8876,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50201</div>
             </td>
-            <td class="center ws-pop-cell">~8,291</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8838,7 +8903,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,986</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50659</dd></div>
@@ -8898,9 +8963,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~6,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50659</div>
             </td>
-            <td class="center ws-pop-cell">~5,986</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8925,7 +8990,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,339</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50208</dd></div>
@@ -8985,9 +9050,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~20,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50208</div>
             </td>
-            <td class="center ws-pop-cell">~20,339</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9012,7 +9077,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,119</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52317</dd></div>
@@ -9072,9 +9137,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~22,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52317</div>
             </td>
-            <td class="center ws-pop-cell">~22,119</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9099,7 +9164,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,120</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50211</dd></div>
@@ -9159,9 +9224,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~15,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50211</div>
             </td>
-            <td class="center ws-pop-cell">~15,120</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9186,7 +9251,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,499</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50662</dd></div>
@@ -9246,9 +9311,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~6,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50662</div>
             </td>
-            <td class="center ws-pop-cell">~6,499</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9273,7 +9338,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~877</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~880</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51355</dd></div>
@@ -9333,9 +9398,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~880 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51355</div>
             </td>
-            <td class="center ws-pop-cell">~877</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9360,7 +9425,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,422</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51040</dd></div>
@@ -9420,9 +9485,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~3,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51040</div>
             </td>
-            <td class="center ws-pop-cell">~3,422</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9447,7 +9512,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,016</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51041</dd></div>
@@ -9507,9 +9572,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51041</div>
             </td>
-            <td class="center ws-pop-cell">~7,016</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9534,7 +9599,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,094</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51009, 51029, 51046, 51058, 51201, 51231, 51232, 51237, 51243, 51245, 51246, 51248, 51249, 51345, 51346, 51347, 51350, 51351, 51354, 51355, 51360</dd></div>
@@ -9594,9 +9659,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~43,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51009, 51029, 51046, 51058, 51201, 51231, 51232, 51237, 51243, 51245, 51246, 51248, 51249, 51345, 51346, 51347, 51350, 51351, 51354, 51355, 51360</div>
             </td>
-            <td class="center ws-pop-cell">~43,094</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9621,7 +9686,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,448</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50213</dd></div>
@@ -9681,9 +9746,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50213</div>
             </td>
-            <td class="center ws-pop-cell">~7,448</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9708,7 +9773,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,437</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52577</dd></div>
@@ -9768,9 +9833,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~14,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52577</div>
             </td>
-            <td class="center ws-pop-cell">~14,437</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9795,7 +9860,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,535</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52501</dd></div>
@@ -9855,9 +9920,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~30,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52501</div>
             </td>
-            <td class="center ws-pop-cell">~30,535</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9882,7 +9947,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,940</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50219</dd></div>
@@ -9942,9 +10007,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~13,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50219</div>
             </td>
-            <td class="center ws-pop-cell">~13,940</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9969,7 +10034,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,037</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50220</dd></div>
@@ -10029,9 +10094,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50220</div>
             </td>
-            <td class="center ws-pop-cell">~9,037</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10056,7 +10121,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,144</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50226</dd></div>
@@ -10116,9 +10181,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50226</div>
             </td>
-            <td class="center ws-pop-cell">~7,144</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10203,9 +10268,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~530 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51565</div>
             </td>
-            <td class="center ws-pop-cell">~530</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10230,7 +10295,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,836</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50027, 50104, 50112, 50157, 50171, 50242, 52208, 52209, 52211, 52215, 52222, 52236, 52249, 52257, 52301, 52316, 52339, 52346, 52347, 52354, 52355, 52356, 52361</dd></div>
@@ -10290,9 +10355,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~45,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50027, 50104, 50112, 50157, 50171, 50242, 52208, 52209, 52211, 52215, 52222, 52236, 52249, 52257, 52301, 52316, 52339, 52346, 52347, 52354, 52355, 52356, 52361</div>
             </td>
-            <td class="center ws-pop-cell">~45,836</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10317,7 +10382,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,708</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52601, 52619, 52620, 52623, 52624, 52625, 52626, 52627, 52630, 52631, 52632, 52639, 52645, 52649, 52656, 52657, 52658, 62341, 62354, 62358, 62379, 63430, 63465</dd></div>
@@ -10377,9 +10442,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~77,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52601, 52619, 52620, 52623, 52624, 52625, 52626, 52627, 52630, 52631, 52632, 52639, 52645, 52649, 52656, 52657, 52658, 62341, 62354, 62358, 62379, 63430, 63465</div>
             </td>
-            <td class="center ws-pop-cell">~77,708</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10404,7 +10469,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~68,922</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~68,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52601, 52623, 52630, 52637, 52638, 52640, 52641, 52644, 52645, 52646, 52649, 52650, 52651, 52653, 52655, 52656, 52658, 52659, 52660, 61425, 61454, 61469</dd></div>
@@ -10464,9 +10529,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~68,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52601, 52623, 52630, 52637, 52638, 52640, 52641, 52644, 52645, 52646, 52649, 52650, 52651, 52653, 52655, 52656, 52658, 52659, 52660, 61425, 61454, 61469</div>
             </td>
-            <td class="center ws-pop-cell">~68,922</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10491,7 +10556,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~126,976</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~127,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50008, 50044, 50049, 50052, 50057, 50060, 50068, 50103, 50116, 50123, 50138, 50139, 50144, 50147, 50150, 50151, 50165, 50238, 50264, 50272, 50275, 52501, 52531, 52533, 52535, 52536, 52537, 52542, 52544, 52549, 52551, 52552, 52553, 52554, 52555, 52556, 52560, 52565, 52567, 52569, 52570, 52571, 52572, 52573, 52574, 52581, 52583, 52584, 52588, 52590, 52593, 52594, 52620, 52626, 52630, 52651, 63465, 63535, 63548, 63555, 63565, 64661, 64672</dd></div>
@@ -10551,9 +10616,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~127,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50008, 50044, 50049, 50052, 50057, 50060, 50068, 50103, 50116, 50123, 50138, 50139, 50144, 50147, 50150, 50151, 50165, 50238, 50264, 50272, 50275, 52501, 52531, 52533, 52535, 52536, 52537, 52542, 52544, 52549, 52551, 52552, 52553, 52554, 52555, 52556, 52560, 52565, 52567, 52569, 52570, 52571, 52572, 52573, 52574, 52581, 52583, 52584, 52588, 52590, 52593, 52594, 52620, 52626, 52630, 52651, 63465, 63535, 63548, 63555, 63565, 64661, 64672</div>
             </td>
-            <td class="center ws-pop-cell">~126,976</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10578,7 +10643,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,451</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50864, 51533, 51566, 51573, 51601, 51630, 51632, 51636, 51638, 51639, 51640, 51645, 51647, 51650, 51652, 64498</dd></div>
@@ -10638,9 +10703,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~29,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50864, 51533, 51566, 51573, 51601, 51630, 51632, 51636, 51638, 51639, 51640, 51645, 51647, 51650, 51652, 64498</div>
             </td>
-            <td class="center ws-pop-cell">~29,451</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10665,7 +10730,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,501</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50022, 50025, 50042, 50076, 50117, 51447, 51521, 51527, 51530, 51531, 51536, 51537, 51543, 51552, 51553, 51559, 51562, 51563, 51565, 51570, 51577, 51578, 51579</dd></div>
@@ -10725,9 +10790,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~34,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50022, 50025, 50042, 50076, 50117, 51447, 51521, 51527, 51530, 51531, 51536, 51537, 51543, 51552, 51553, 51559, 51562, 51563, 51565, 51570, 51577, 51578, 51579</div>
             </td>
-            <td class="center ws-pop-cell">~34,501</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10752,7 +10817,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,357</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52761</dd></div>
@@ -10812,9 +10877,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~30,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52761</div>
             </td>
-            <td class="center ws-pop-cell">~30,357</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10839,7 +10904,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,887</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51247</dd></div>
@@ -10899,9 +10964,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51247</div>
             </td>
-            <td class="center ws-pop-cell">~4,887</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10926,7 +10991,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,295</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51003, 51022, 51023, 51027, 51036, 51041, 51046, 51201, 51234, 51238, 51239, 51247, 51250</dd></div>
@@ -10986,9 +11051,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~43,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51003, 51022, 51023, 51027, 51036, 51041, 51046, 51201, 51234, 51238, 51239, 51247, 51250</div>
             </td>
-            <td class="center ws-pop-cell">~43,295</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11013,7 +11078,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,416</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51054</dd></div>
@@ -11073,9 +11138,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51054</div>
             </td>
-            <td class="center ws-pop-cell">~5,416</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11100,7 +11165,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,278</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51201</dd></div>
@@ -11160,9 +11225,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~6,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51201</div>
             </td>
-            <td class="center ws-pop-cell">~6,278</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11187,7 +11252,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,560</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51601</dd></div>
@@ -11247,9 +11312,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51601</div>
             </td>
-            <td class="center ws-pop-cell">~5,560</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11274,7 +11339,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,667</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51250</dd></div>
@@ -11334,9 +11399,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51250</div>
             </td>
-            <td class="center ws-pop-cell">~9,667</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11361,7 +11426,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~59,594</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~59,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50065, 50067, 50068, 50074, 50108, 50133, 50140, 50144, 50149, 50151, 50155, 50174, 50210, 50213, 50254, 50257, 50262, 50264, 50273, 50275, 50801, 50830, 50831, 50833, 50835, 50836, 50837, 50840, 50841, 50842, 50845, 50848, 50849, 50851, 50854, 50857, 50858, 50859, 50860, 50861, 50862, 50863, 51646</dd></div>
@@ -11421,9 +11486,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~59,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50065, 50067, 50068, 50074, 50108, 50133, 50140, 50144, 50149, 50151, 50155, 50174, 50210, 50213, 50254, 50257, 50262, 50264, 50273, 50275, 50801, 50830, 50831, 50833, 50835, 50836, 50837, 50840, 50841, 50842, 50845, 50848, 50849, 50851, 50854, 50857, 50858, 50859, 50860, 50861, 50862, 50863, 51646</div>
             </td>
-            <td class="center ws-pop-cell">~59,594</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11448,7 +11513,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,590</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50068, 50120, 50144, 50151, 50213, 50262, 50264, 50275</dd></div>
@@ -11508,9 +11573,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50068, 50120, 50144, 50151, 50213, 50262, 50264, 50275</div>
             </td>
-            <td class="center ws-pop-cell">~12,590</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11535,7 +11600,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,884</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50009, 50169, 50228, 50237, 50327</dd></div>
@@ -11595,9 +11660,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~42,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50009, 50169, 50228, 50237, 50327</div>
             </td>
-            <td class="center ws-pop-cell">~42,884</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11682,9 +11747,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~47,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51001, 51003, 51008, 51011, 51022, 51023, 51024, 51027, 51031, 51036, 51038, 51041, 51050, 51062, 51250</div>
             </td>
-            <td class="center ws-pop-cell">~47,500</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11709,7 +11774,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,326</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51301</dd></div>
@@ -11769,9 +11834,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~12,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51301</div>
             </td>
-            <td class="center ws-pop-cell">~12,326</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11796,7 +11861,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,533</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51360</dd></div>
@@ -11856,9 +11921,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51360</div>
             </td>
-            <td class="center ws-pop-cell">~8,533</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11883,7 +11948,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,263</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50588</dd></div>
@@ -11943,9 +12008,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~13,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50588</div>
             </td>
-            <td class="center ws-pop-cell">~13,263</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11970,7 +12035,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,048</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,050</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50248</dd></div>
@@ -12030,9 +12095,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,050 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50248</div>
             </td>
-            <td class="center ws-pop-cell">~4,048</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12057,7 +12122,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,140</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,150</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52242</dd></div>
@@ -12117,9 +12182,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,150 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52242</div>
             </td>
-            <td class="center ws-pop-cell">~4,140</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12144,7 +12209,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,550</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51503, 51548, 51559, 51576</dd></div>
@@ -12204,9 +12269,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~41,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51503, 51548, 51559, 51576</div>
             </td>
-            <td class="center ws-pop-cell">~41,550</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12231,7 +12296,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,428</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50322, 50323</dd></div>
@@ -12291,9 +12356,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~48,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50322, 50323</div>
             </td>
-            <td class="center ws-pop-cell">~48,428</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12318,7 +12383,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,665</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52349</dd></div>
@@ -12378,9 +12443,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52349</div>
             </td>
-            <td class="center ws-pop-cell">~7,665</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12405,7 +12470,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~106,095</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~106,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50136, 50268, 52231, 52247, 52248, 52316, 52335, 52353, 52355, 52356, 52359, 52501, 52533, 52536, 52537, 52540, 52543, 52548, 52550, 52552, 52553, 52554, 52556, 52557, 52560, 52561, 52563, 52566, 52576, 52580, 52585, 52586, 52588, 52591, 52621, 52635, 52641, 52649, 52654</dd></div>
@@ -12465,9 +12530,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~106,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50136, 50268, 52231, 52247, 52248, 52316, 52335, 52353, 52355, 52356, 52359, 52501, 52533, 52536, 52537, 52540, 52543, 52548, 52550, 52552, 52553, 52554, 52556, 52557, 52560, 52561, 52563, 52566, 52576, 52580, 52585, 52586, 52588, 52591, 52621, 52635, 52641, 52649, 52654</div>
             </td>
-            <td class="center ws-pop-cell">~106,095</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12492,7 +12557,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~288,786</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~289,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>39525, 50001, 50009, 50021, 50033, 50038, 50047, 50061, 50063, 50069, 50070, 50072, 50118, 50125, 50139, 50145, 50151, 50160, 50166, 50174, 50210, 50211, 50222, 50229, 50245, 50257, 50261, 50263, 50265, 50266, 50273, 50305, 50312, 50321, 50322, 50324</dd></div>
@@ -12552,9 +12617,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~289,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 39525, 50001, 50009, 50021, 50033, 50038, 50047, 50061, 50063, 50069, 50070, 50072, 50118, 50125, 50139, 50145, 50151, 50160, 50166, 50174, 50210, 50211, 50222, 50229, 50245, 50257, 50261, 50263, 50265, 50266, 50273, 50305, 50312, 50321, 50322, 50324</div>
             </td>
-            <td class="center ws-pop-cell">~288,786</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12579,7 +12644,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,930</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52353</dd></div>
@@ -12639,9 +12704,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52353</div>
             </td>
-            <td class="center ws-pop-cell">~8,930</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12666,7 +12731,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,635</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50263</dd></div>
@@ -12726,9 +12791,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~25,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50263</div>
             </td>
-            <td class="center ws-pop-cell">~25,635</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12753,7 +12818,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,982</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52172</dd></div>
@@ -12813,9 +12878,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~6,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52172</div>
             </td>
-            <td class="center ws-pop-cell">~5,982</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12840,7 +12905,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,823</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50595</dd></div>
@@ -12900,9 +12965,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~8,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50595</div>
             </td>
-            <td class="center ws-pop-cell">~8,823</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12927,7 +12992,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,683</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50025, 50058, 50110, 51401, 51430, 51432, 51440, 51444, 51446, 51454, 51455, 51463, 51465, 51527</dd></div>
@@ -12987,9 +13052,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~24,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50025, 50058, 50110, 51401, 51430, 51432, 51440, 51444, 51446, 51454, 51455, 51463, 51465, 51527</div>
             </td>
-            <td class="center ws-pop-cell">~24,683</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13014,7 +13079,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,084</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>51401, 51430, 51433, 51436, 51441, 51442, 51448, 51450, 51452, 51458, 51465, 51466, 51467</dd></div>
@@ -13074,9 +13139,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~31,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 51401, 51430, 51433, 51436, 51441, 51442, 51448, 51450, 51452, 51458, 51465, 51466, 51467</div>
             </td>
-            <td class="center ws-pop-cell">~31,084</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13101,7 +13166,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~68,730</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~68,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50265, 50266</dd></div>
@@ -13161,9 +13226,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~68,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50265, 50266</div>
             </td>
-            <td class="center ws-pop-cell">~68,730</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13188,7 +13253,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,979</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>52776</dd></div>
@@ -13248,9 +13313,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 52776</div>
             </td>
-            <td class="center ws-pop-cell">~4,979</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13275,7 +13340,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,866</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50273</dd></div>
@@ -13335,9 +13400,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50273</div>
             </td>
-            <td class="center ws-pop-cell">~8,866</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13362,7 +13427,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,046</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,050</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50459</dd></div>
@@ -13422,9 +13487,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~3,050 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50459</div>
             </td>
-            <td class="center ws-pop-cell">~3,046</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13449,7 +13514,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~109,770</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~110,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50010, 50014, 50036, 50046, 50105, 50124, 50134, 50156, 50226, 50243, 50244, 50246, 50248, 50249</dd></div>
@@ -13509,9 +13574,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~110,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50010, 50014, 50036, 50046, 50105, 50124, 50134, 50156, 50226, 50243, 50244, 50246, 50248, 50249</div>
             </td>
-            <td class="center ws-pop-cell">~109,770</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13536,7 +13601,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~215,586</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~216,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50003, 50026, 50038, 50048, 50061, 50063, 50066, 50069, 50070, 50072, 50109, 50111, 50115, 50128, 50129, 50131, 50146, 50156, 50164, 50167, 50216, 50220, 50226, 50233, 50235, 50250, 50261, 50263, 50266, 50273, 50276, 50277, 50323, 50325, 50849</dd></div>
@@ -13596,9 +13661,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~216,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50003, 50026, 50038, 50048, 50061, 50063, 50066, 50069, 50070, 50072, 50109, 50111, 50115, 50128, 50129, 50131, 50146, 50156, 50164, 50167, 50216, 50220, 50226, 50233, 50235, 50250, 50261, 50263, 50266, 50273, 50276, 50277, 50323, 50325, 50849</div>
             </td>
-            <td class="center ws-pop-cell">~215,586</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13623,7 +13688,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~92,066</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~92,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50031, 50036, 50040, 50050, 50064, 50066, 50075, 50107, 50128, 50129, 50130, 50132, 50212, 50217, 50220, 50223, 50231, 50235, 50246, 50248, 50249, 50501, 50521, 50523, 50530, 50532, 50538, 50543, 50544, 50557, 50566, 50569, 50586, 50595, 50599, 51453</dd></div>
@@ -13683,9 +13748,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~92,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50031, 50036, 50040, 50050, 50064, 50066, 50075, 50107, 50128, 50129, 50130, 50132, 50212, 50217, 50220, 50223, 50231, 50235, 50246, 50248, 50249, 50501, 50521, 50523, 50530, 50532, 50538, 50543, 50544, 50557, 50566, 50569, 50586, 50595, 50599, 51453</div>
             </td>
-            <td class="center ws-pop-cell">~92,066</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13710,7 +13775,7 @@
                         <p class="ws-tip-state">IOWA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~67,752</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~67,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50003, 50036, 50039, 50063, 50109, 50111, 50156, 50167, 50212, 50220, 50276</dd></div>
@@ -13770,9 +13835,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~67,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50003, 50036, 50039, 50063, 50109, 50111, 50156, 50167, 50212, 50220, 50276</div>
             </td>
-            <td class="center ws-pop-cell">~67,752</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13885,7 +13950,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -13944,6 +14009,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

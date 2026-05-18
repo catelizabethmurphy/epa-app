@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~137,119</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~137,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74011, 74012, 74013, 74014</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~137,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74011, 74012, 74013, 74014</div>
             </td>
-            <td class="center ws-pop-cell">~137,119</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~93,134</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~93,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74011, 74014, 74429, 74454, 74458</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~93,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74011, 74014, 74429, 74454, 74458</div>
             </td>
-            <td class="center ws-pop-cell">~93,134</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~71,103</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~71,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74014, 74015, 74429, 74436</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~71,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74014, 74015, 74429, 74436</div>
             </td>
-            <td class="center ws-pop-cell">~71,103</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -890,9 +955,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -918,7 +983,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,012</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74036, 74337, 74352, 74361, 74362, 74467</dd></div>
@@ -978,9 +1043,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~49,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74036, 74337, 74352, 74361, 74362, 74467</div>
             </td>
-            <td class="center ws-pop-cell">~49,012</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1006,7 +1071,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,524</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74048</dd></div>
@@ -1066,9 +1131,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74048</div>
             </td>
-            <td class="center ws-pop-cell">~5,524</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1152,9 +1217,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1180,7 +1245,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,069</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74074</dd></div>
@@ -1240,9 +1305,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~32,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74074</div>
             </td>
-            <td class="center ws-pop-cell">~32,069</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1268,7 +1333,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,341</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74604</dd></div>
@@ -1328,9 +1393,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74604</div>
             </td>
-            <td class="center ws-pop-cell">~12,341</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1414,9 +1479,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>18 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 73083</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1442,7 +1507,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~54,477</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~54,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74019, 74036, 74337, 74361, 74362, 74365</dd></div>
@@ -1502,9 +1567,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~54,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74019, 74036, 74337, 74361, 74362, 74365</div>
             </td>
-            <td class="center ws-pop-cell">~54,477</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1529,7 +1594,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,268</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73008</dd></div>
@@ -1589,9 +1654,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~21,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73008</div>
             </td>
-            <td class="center ws-pop-cell">~21,268</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1617,7 +1682,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~87,414</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~87,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73025, 73034, 73044</dd></div>
@@ -1677,9 +1742,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>11 sites
                 </div>
+                <div class="ws-meta">~87,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73025, 73034, 73044</div>
             </td>
-            <td class="center ws-pop-cell">~87,414</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1704,7 +1769,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,368</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74820</dd></div>
@@ -1764,9 +1829,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~31,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74820</div>
             </td>
-            <td class="center ws-pop-cell">~31,368</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1791,7 +1856,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,618</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74501, 74502, 74522, 74528, 74546, 74547, 74554, 74560, 74578</dd></div>
@@ -1851,9 +1916,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~40,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74501, 74502, 74522, 74528, 74546, 74547, 74554, 74560, 74578</div>
             </td>
-            <td class="center ws-pop-cell">~40,618</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1878,7 +1943,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~519</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~520</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73719, 73722</dd></div>
@@ -1938,9 +2003,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~520 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73719, 73722</div>
             </td>
-            <td class="center ws-pop-cell">~519</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1964,7 +2029,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,479</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73521</dd></div>
@@ -2024,9 +2089,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~20,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73521</div>
             </td>
-            <td class="center ws-pop-cell">~20,479</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2111,9 +2176,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~170 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73523</div>
             </td>
-            <td class="center ws-pop-cell">~170</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2137,7 +2202,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,972</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73717</dd></div>
@@ -2197,9 +2262,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73717</div>
             </td>
-            <td class="center ws-pop-cell">~6,972</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2224,7 +2289,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,033</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73005</dd></div>
@@ -2284,9 +2349,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73005</div>
             </td>
-            <td class="center ws-pop-cell">~8,033</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2310,7 +2375,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,324</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73401, 73402</dd></div>
@@ -2370,9 +2435,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~36,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73401, 73402</div>
             </td>
-            <td class="center ws-pop-cell">~36,324</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2396,7 +2461,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,649</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74003, 74006</dd></div>
@@ -2456,9 +2521,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~41,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74003, 74006</div>
             </td>
-            <td class="center ws-pop-cell">~41,649</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2483,7 +2548,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,190</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74008</dd></div>
@@ -2543,9 +2608,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~31,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74008</div>
             </td>
-            <td class="center ws-pop-cell">~31,190</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2570,7 +2635,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,013</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74631</dd></div>
@@ -2630,9 +2695,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74631</div>
             </td>
-            <td class="center ws-pop-cell">~7,013</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2657,7 +2722,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,544</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74010</dd></div>
@@ -2717,9 +2782,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~10,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74010</div>
             </td>
-            <td class="center ws-pop-cell">~10,544</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2744,7 +2809,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,352</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74728</dd></div>
@@ -2804,9 +2869,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~11,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74728</div>
             </td>
-            <td class="center ws-pop-cell">~11,352</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2831,7 +2896,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,870</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74701, 74720, 74721, 74723, 74726, 74729, 74730, 74731, 74733, 74741, 74747</dd></div>
@@ -2891,9 +2956,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~43,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74701, 74720, 74721, 74723, 74726, 74729, 74730, 74731, 74733, 74741, 74747</div>
             </td>
-            <td class="center ws-pop-cell">~43,870</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2918,7 +2983,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,467,908</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5.5 million</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>01801, 02535, 03581, 07302, 07446, 28539, 29707, 34769, 37211, 39057, 43218, 49267, 50548, 56520, 58506, 67401, 71866, 72648, 72901, 73003, 73004, 73008, 73010, 73012, 73013, 73020, 73025, 73026, 73030, 73034, 73036, 73044, 73049, 73051, 73052, 73064, 73065, 73068, 73069, 73071, 73072, 73075, 73078, 73080, 73085, 73089, 73099, 73101, 73107, 73110, 73112, 73114, 73120, 73126, 73130, 73135, 73139, 73141, 73142, 73150, 73159, 73160, 73162, 73165, 73169, 73170, 73173, 73179, 73401, 73432, 73433, 73438, 73439, 73443, 73446, 73449, 73450, 73460, 73463, 73527, 73529, 73533, 73534, 73542, 73543, 73573, 73651, 73702, 73703, 73717, 73843, 74012, 74030, 74063, 74447, 74501, 74525, 74533, 74538, 74571, 74701, 74702, 74723, 74726, 74729, 74730, 74731, 74733, 74745, 74748, 74802, 74804, 74820, 74825, 74849, 74851, 74873, 74878, 75002, 75007, 75009, 75010, 75013, 75019, 75020, 75021, 75022, 75023, 75028, 75033, 75034, 75040, 75042, 75043, 75044, 75048, 75056, 75058, 75062, 75069, 75070, 75071, 75072, 75074, 75075, 75076, 75077, 75078, 75081, 75090, 75091, 75092, 75093, 75094, 75098, 75205, 75217, 75222, 75225, 75229, 75240, 75243, 75244, 75248, 75254, 75401, 75409, 75423, 75424, 75439, 75452, 75454, 75459, 75474, 75487, 75495, 76039, 76051, 76179, 76182, 76209, 76210, 76227, 76244, 76302, 76385, 76712, 77025, 77346, 77399, 77546, 78209, 78373, 78704, 79007, 79012, 79015, 79118, 79124, 79512, 79705, 79707, 79768, 80205, 80528, 81007, 81132, 84062, 86040, 87144, 90266, 91762, 91780, 91916, 92284, 93015, 93455, 94086, 94539, 95060, 95207, 95482, 95688, 98029, 98109, 98117, 99210</dd></div>
@@ -2978,9 +3043,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~5.5 million residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 01801, 02535, 03581, 07302, 07446, 28539, 29707, 34769, 37211, 39057, 43218, 49267, 50548, 56520, 58506, 67401, 71866, 72648, 72901, 73003, 73004, 73008, 73010, 73012, 73013, 73020, 73025, 73026, 73030, 73034, 73036, 73044, 73049, 73051, 73052, 73064, 73065, 73068, 73069, 73071, 73072, 73075, 73078, 73080, 73085, 73089, 73099, 73101, 73107, 73110, 73112, 73114, 73120, 73126, 73130, 73135, 73139, 73141, 73142, 73150, 73159, 73160, 73162, 73165, 73169, 73170, 73173, 73179, 73401, 73432, 73433, 73438, 73439, 73443, 73446, 73449, 73450, 73460, 73463, 73527, 73529, 73533, 73534, 73542, 73543, 73573, 73651, 73702, 73703, 73717, 73843, 74012, 74030, 74063, 74447, 74501, 74525, 74533, 74538, 74571, 74701, 74702, 74723, 74726, 74729, 74730, 74731, 74733, 74745, 74748, 74802, 74804, 74820, 74825, 74849, 74851, 74873, 74878, 75002, 75007, 75009, 75010, 75013, 75019, 75020, 75021, 75022, 75023, 75028, 75033, 75034, 75040, 75042, 75043, 75044, 75048, 75056, 75058, 75062, 75069, 75070, 75071, 75072, 75074, 75075, 75076, 75077, 75078, 75081, 75090, 75091, 75092, 75093, 75094, 75098, 75205, 75217, 75222, 75225, 75229, 75240, 75243, 75244, 75248, 75254, 75401, 75409, 75423, 75424, 75439, 75452, 75454, 75459, 75474, 75487, 75495, 76039, 76051, 76179, 76182, 76209, 76210, 76227, 76244, 76302, 76385, 76712, 77025, 77346, 77399, 77546, 78209, 78373, 78704, 79007, 79012, 79015, 79118, 79124, 79512, 79705, 79707, 79768, 80205, 80528, 81007, 81132, 84062, 86040, 87144, 90266, 91762, 91780, 91916, 92284, 93015, 93455, 94086, 94539, 95060, 95207, 95482, 95688, 98029, 98109, 98117, 99210</div>
             </td>
-            <td class="center ws-pop-cell">~5,467,908</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3005,7 +3070,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,043</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73005, 73006, 73009, 73015, 73017, 73029, 73038, 73041, 73042, 73062, 73538, 73541, 73564, 73651</dd></div>
@@ -3065,9 +3130,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>10 sites
                 </div>
+                <div class="ws-meta">~35,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73005, 73006, 73009, 73015, 73017, 73029, 73038, 73041, 73042, 73062, 73538, 73541, 73564, 73651</div>
             </td>
-            <td class="center ws-pop-cell">~35,043</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3092,7 +3157,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~266</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~270</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73835</dd></div>
@@ -3152,9 +3217,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~270 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73835</div>
             </td>
-            <td class="center ws-pop-cell">~266</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3179,7 +3244,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,131</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74426</dd></div>
@@ -3239,9 +3304,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74426</div>
             </td>
-            <td class="center ws-pop-cell">~9,131</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3324,9 +3389,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3351,7 +3416,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,373</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73018</dd></div>
@@ -3411,9 +3476,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~20,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73018</div>
             </td>
-            <td class="center ws-pop-cell">~20,373</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3437,7 +3502,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,295</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73020</dd></div>
@@ -3497,9 +3562,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~25,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73020</div>
             </td>
-            <td class="center ws-pop-cell">~25,295</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3523,7 +3588,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,841</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74017</dd></div>
@@ -3583,9 +3648,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~28,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74017</div>
             </td>
-            <td class="center ws-pop-cell">~28,841</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3609,7 +3674,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,996</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73024, 73601</dd></div>
@@ -3669,9 +3734,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~10,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73024, 73601</div>
             </td>
-            <td class="center ws-pop-cell">~9,996</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3695,7 +3760,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,698</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74021</dd></div>
@@ -3755,9 +3820,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~22,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74021</div>
             </td>
-            <td class="center ws-pop-cell">~22,698</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3782,7 +3847,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,578</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74066, 74067</dd></div>
@@ -3842,9 +3907,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~31,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74066, 74067</div>
             </td>
-            <td class="center ws-pop-cell">~31,578</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3868,7 +3933,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,955</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74429</dd></div>
@@ -3928,9 +3993,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~16,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74429</div>
             </td>
-            <td class="center ws-pop-cell">~15,955</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3955,7 +4020,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,093</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74301</dd></div>
@@ -4015,9 +4080,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~11,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74301</div>
             </td>
-            <td class="center ws-pop-cell">~11,093</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4042,7 +4107,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,206</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74010, 74039, 74066</dd></div>
@@ -4102,9 +4167,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~46,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74010, 74039, 74066</div>
             </td>
-            <td class="center ws-pop-cell">~46,206</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4129,7 +4194,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~125,025</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~125,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74008, 74033, 74037, 74039, 74041, 74047, 74066, 74067, 74132</dd></div>
@@ -4189,9 +4254,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~125,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74008, 74033, 74037, 74039, 74041, 74047, 74066, 74067, 74132</div>
             </td>
-            <td class="center ws-pop-cell">~125,025</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4215,7 +4280,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,214</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74023</dd></div>
@@ -4275,9 +4340,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~12,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74023</div>
             </td>
-            <td class="center ws-pop-cell">~12,214</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4302,7 +4367,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~173,853</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~174,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73012, 73013, 73016, 73025, 73044, 73078, 73142</dd></div>
@@ -4362,9 +4427,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>18 sites
                 </div>
+                <div class="ws-meta">~174,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73012, 73013, 73016, 73025, 73044, 73078, 73142</div>
             </td>
-            <td class="center ws-pop-cell">~173,853</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4389,7 +4454,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,390</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73115, 73117</dd></div>
@@ -4449,9 +4514,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>9 sites
                 </div>
+                <div class="ws-meta">~26,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73115, 73117</div>
             </td>
-            <td class="center ws-pop-cell">~26,390</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4476,7 +4541,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,950</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74331</dd></div>
@@ -4536,9 +4601,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74331</div>
             </td>
-            <td class="center ws-pop-cell">~6,950</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4563,7 +4628,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,940</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,950</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74029</dd></div>
@@ -4623,9 +4688,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~4,950 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74029</div>
             </td>
-            <td class="center ws-pop-cell">~4,940</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4650,7 +4715,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,866</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73533, 73534</dd></div>
@@ -4710,9 +4775,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~27,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73533, 73534</div>
             </td>
-            <td class="center ws-pop-cell">~27,866</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4737,7 +4802,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,158</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74701</dd></div>
@@ -4797,9 +4862,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~26,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74701</div>
             </td>
-            <td class="center ws-pop-cell">~26,158</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4824,7 +4889,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,263</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73036</dd></div>
@@ -4884,9 +4949,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~20,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73036</div>
             </td>
-            <td class="center ws-pop-cell">~20,263</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4911,7 +4976,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,419</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73644</dd></div>
@@ -4971,9 +5036,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~13,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73644</div>
             </td>
-            <td class="center ws-pop-cell">~13,419</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4997,7 +5062,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~55,049</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~55,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73701, 73702, 73703</dd></div>
@@ -5057,9 +5122,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~55,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73701, 73702, 73703</div>
             </td>
-            <td class="center ws-pop-cell">~55,049</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5084,7 +5149,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,977</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74432</dd></div>
@@ -5144,9 +5209,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74432</div>
             </td>
-            <td class="center ws-pop-cell">~9,977</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5171,7 +5236,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,329</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,350</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73030</dd></div>
@@ -5231,9 +5296,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,350 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73030</div>
             </td>
-            <td class="center ws-pop-cell">~4,329</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5258,7 +5323,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,419</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74434</dd></div>
@@ -5318,9 +5383,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74434</div>
             </td>
-            <td class="center ws-pop-cell">~9,419</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5345,7 +5410,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,528</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73503</dd></div>
@@ -5405,9 +5470,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~11,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73503</div>
             </td>
-            <td class="center ws-pop-cell">~11,528</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5431,7 +5496,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,098</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73542</dd></div>
@@ -5491,9 +5556,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73542</div>
             </td>
-            <td class="center ws-pop-cell">~4,098</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5518,7 +5583,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,097</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73057, 73075, 73433</dd></div>
@@ -5578,9 +5643,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~14,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73057, 73075, 73433</div>
             </td>
-            <td class="center ws-pop-cell">~14,097</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5605,7 +5670,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,522</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74033, 74037, 74047</dd></div>
@@ -5665,9 +5730,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~44,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74033, 74037, 74047</div>
             </td>
-            <td class="center ws-pop-cell">~44,522</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5692,7 +5757,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,595</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73004, 73018, 73059, 73089, 73092</dd></div>
@@ -5752,9 +5817,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~38,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73004, 73018, 73059, 73089, 73092</div>
             </td>
-            <td class="center ws-pop-cell">~38,595</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5779,7 +5844,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,436</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74344</dd></div>
@@ -5839,9 +5904,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74344</div>
             </td>
-            <td class="center ws-pop-cell">~14,436</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5865,7 +5930,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,043</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73044</dd></div>
@@ -5925,9 +5990,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~24,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73044</div>
             </td>
-            <td class="center ws-pop-cell">~24,043</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5951,7 +6016,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,791</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73942</dd></div>
@@ -6011,9 +6076,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~13,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73942</div>
             </td>
-            <td class="center ws-pop-cell">~13,791</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6096,9 +6161,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6122,7 +6187,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,317</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73045</dd></div>
@@ -6182,9 +6247,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~11,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73045</div>
             </td>
-            <td class="center ws-pop-cell">~11,317</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6209,7 +6274,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,318</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74937</dd></div>
@@ -6269,9 +6334,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~5,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74937</div>
             </td>
-            <td class="center ws-pop-cell">~5,318</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6295,7 +6360,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,148</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74437</dd></div>
@@ -6355,9 +6420,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74437</div>
             </td>
-            <td class="center ws-pop-cell">~9,148</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6381,7 +6446,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,015</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73651</dd></div>
@@ -6441,9 +6506,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73651</div>
             </td>
-            <td class="center ws-pop-cell">~4,015</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6467,7 +6532,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,729</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74848</dd></div>
@@ -6527,9 +6592,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74848</div>
             </td>
-            <td class="center ws-pop-cell">~7,729</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6554,7 +6619,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,073</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74738, 74743, 74756</dd></div>
@@ -6614,9 +6679,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74738, 74743, 74756</div>
             </td>
-            <td class="center ws-pop-cell">~9,073</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6641,7 +6706,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,381</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73048</dd></div>
@@ -6701,9 +6766,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73048</div>
             </td>
-            <td class="center ws-pop-cell">~2,381</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6728,7 +6793,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,835</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74745</dd></div>
@@ -6788,9 +6853,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74745</div>
             </td>
-            <td class="center ws-pop-cell">~9,835</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6815,7 +6880,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,667</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73430, 73438, 73442, 73456, 73463, 73520, 73529, 73533, 73548, 73565, 73569, 73573</dd></div>
@@ -6875,9 +6940,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~46,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73430, 73438, 73442, 73456, 73463, 73520, 73529, 73533, 73548, 73565, 73569, 73573</div>
             </td>
-            <td class="center ws-pop-cell">~46,667</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6902,7 +6967,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,879</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74037</dd></div>
@@ -6962,9 +7027,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~23,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74037</div>
             </td>
-            <td class="center ws-pop-cell">~23,879</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6989,7 +7054,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,470</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74301, 74331, 74349, 74367</dd></div>
@@ -7049,9 +7114,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~19,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74301, 74331, 74349, 74367</div>
             </td>
-            <td class="center ws-pop-cell">~19,470</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7133,9 +7198,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7160,7 +7225,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,887</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74849</dd></div>
@@ -7220,9 +7285,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74849</div>
             </td>
-            <td class="center ws-pop-cell">~2,887</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7246,7 +7311,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~101,243</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~101,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73501, 73502, 73503, 73505, 73506, 73507</dd></div>
@@ -7306,9 +7371,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~101,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73501, 73502, 73503, 73505, 73506, 73507</div>
             </td>
-            <td class="center ws-pop-cell">~101,243</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7333,7 +7398,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,298</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74930, 74932, 74941, 74944, 74951, 74953, 74956, 74959, 74966</dd></div>
@@ -7393,9 +7458,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~33,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74930, 74932, 74941, 74944, 74951, 74953, 74956, 74959, 74966</div>
             </td>
-            <td class="center ws-pop-cell">~33,298</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7420,7 +7485,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,226</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74901, 74902</dd></div>
@@ -7480,9 +7545,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74901, 74902</div>
             </td>
-            <td class="center ws-pop-cell">~6,226</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7507,7 +7572,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,618</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73401, 73443</dd></div>
@@ -7567,9 +7632,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~39,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73401, 73443</div>
             </td>
-            <td class="center ws-pop-cell">~39,618</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7594,7 +7659,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,977</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74432</dd></div>
@@ -7654,9 +7719,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74432</div>
             </td>
-            <td class="center ws-pop-cell">~9,977</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7680,7 +7745,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,731</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73446</dd></div>
@@ -7740,9 +7805,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73446</div>
             </td>
-            <td class="center ws-pop-cell">~8,731</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7766,7 +7831,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,793</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74044</dd></div>
@@ -7826,9 +7891,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74044</div>
             </td>
-            <td class="center ws-pop-cell">~7,793</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7853,7 +7918,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,833</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73055</dd></div>
@@ -7913,9 +7978,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73055</div>
             </td>
-            <td class="center ws-pop-cell">~9,833</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7940,7 +8005,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,693</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73439, 73440, 73446, 73447</dd></div>
@@ -8000,9 +8065,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~16,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73439, 73440, 73446, 73447</div>
             </td>
-            <td class="center ws-pop-cell">~16,693</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8027,7 +8092,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,913</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74016, 74361</dd></div>
@@ -8087,9 +8152,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~22,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74016, 74361</div>
             </td>
-            <td class="center ws-pop-cell">~22,913</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8114,7 +8179,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,988</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74301, 74330, 74332, 74350, 74361, 74365, 74366, 74367</dd></div>
@@ -8174,9 +8239,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~40,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74301, 74330, 74332, 74350, 74361, 74365, 74366, 74367</div>
             </td>
-            <td class="center ws-pop-cell">~39,988</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8259,9 +8324,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8286,7 +8351,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,740</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74501</dd></div>
@@ -8346,9 +8411,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~28,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74501</div>
             </td>
-            <td class="center ws-pop-cell">~28,740</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8373,7 +8438,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,927</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,950</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74740</dd></div>
@@ -8433,9 +8498,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~1,950 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74740</div>
             </td>
-            <td class="center ws-pop-cell">~1,927</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8460,7 +8525,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,086</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74736, 74745, 74764</dd></div>
@@ -8520,9 +8585,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~14,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74736, 74745, 74764</div>
             </td>
-            <td class="center ws-pop-cell">~14,086</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8547,7 +8612,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,213</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74728, 74734, 74737</dd></div>
@@ -8607,9 +8672,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~12,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74728, 74734, 74737</div>
             </td>
-            <td class="center ws-pop-cell">~12,213</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8634,7 +8699,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,599</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74755, 74764, 74766</dd></div>
@@ -8694,9 +8759,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74755, 74764, 74766</div>
             </td>
-            <td class="center ws-pop-cell">~4,599</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8721,7 +8786,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,108</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74426, 74432</dd></div>
@@ -8781,9 +8846,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~19,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74426, 74432</div>
             </td>
-            <td class="center ws-pop-cell">~19,108</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8807,7 +8872,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,071</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74354, 74355</dd></div>
@@ -8867,9 +8932,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~17,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74354, 74355</div>
             </td>
-            <td class="center ws-pop-cell">~17,071</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8894,7 +8959,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~79,170</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~79,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73020, 73110, 73130</dd></div>
@@ -8954,9 +9019,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>12 sites
                 </div>
+                <div class="ws-meta">~79,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73020, 73110, 73130</div>
             </td>
-            <td class="center ws-pop-cell">~79,170</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8980,7 +9045,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,987</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~62,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73160</dd></div>
@@ -9040,9 +9105,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>24 sites
                 </div>
+                <div class="ws-meta">~62,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73160</div>
             </td>
-            <td class="center ws-pop-cell">~61,987</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9067,7 +9132,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,626</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73030, 73086, 73098, 74865, 74872</dd></div>
@@ -9127,9 +9192,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~21,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73030, 73086, 73098, 74865, 74872</div>
             </td>
-            <td class="center ws-pop-cell">~21,626</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9153,7 +9218,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,215</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74401, 74403</dd></div>
@@ -9213,9 +9278,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~45,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74401, 74403</div>
             </td>
-            <td class="center ws-pop-cell">~45,215</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9240,7 +9305,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,735</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74401, 74403, 74450</dd></div>
@@ -9300,9 +9365,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~46,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74401, 74403, 74450</div>
             </td>
-            <td class="center ws-pop-cell">~46,735</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9327,7 +9392,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,320</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74401, 74403, 74450, 74469, 74470</dd></div>
@@ -9387,9 +9452,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~50,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74401, 74403, 74450, 74469, 74470</div>
             </td>
-            <td class="center ws-pop-cell">~50,320</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9413,7 +9478,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,536</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73064</dd></div>
@@ -9473,9 +9538,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~26,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73064</div>
             </td>
-            <td class="center ws-pop-cell">~26,536</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9499,7 +9564,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,877</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73065</dd></div>
@@ -9559,9 +9624,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73065</div>
             </td>
-            <td class="center ws-pop-cell">~9,877</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9586,7 +9651,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,932</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73116</dd></div>
@@ -9646,9 +9711,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73116</div>
             </td>
-            <td class="center ws-pop-cell">~9,932</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9672,7 +9737,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,297</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73068</dd></div>
@@ -9732,9 +9797,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~12,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73068</div>
             </td>
-            <td class="center ws-pop-cell">~12,297</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9758,7 +9823,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~121,017</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~121,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73019, 73069, 73070, 73071, 73072</dd></div>
@@ -9818,9 +9883,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>14 sites
                 </div>
+                <div class="ws-meta">~121,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73019, 73069, 73070, 73071, 73072</div>
             </td>
-            <td class="center ws-pop-cell">~121,017</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9845,7 +9910,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,504</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74859, 74880, 74883</dd></div>
@@ -9905,9 +9970,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74859, 74880, 74883</div>
             </td>
-            <td class="center ws-pop-cell">~10,504</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9932,7 +9997,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,211</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73013</dd></div>
@@ -9992,9 +10057,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~58,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73013</div>
             </td>
-            <td class="center ws-pop-cell">~58,211</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10019,7 +10084,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,160,053</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1.2 million</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73003, 73008, 73009, 73012, 73013, 73014, 73032, 73034, 73036, 73049, 73054, 73062, 73064, 73065, 73068, 73069, 73070, 73071, 73078, 73079, 73083, 73084, 73089, 73093, 73097, 73099, 73101, 73102, 73103, 73104, 73105, 73106, 73107, 73108, 73109, 73110, 73111, 73112, 73114, 73115, 73116, 73117, 73118, 73119, 73120, 73121, 73122, 73126, 73127, 73128, 73129, 73130, 73131, 73132, 73134, 73135, 73136, 73137, 73139, 73141, 73142, 73143, 73144, 73145, 73148, 73149, 73150, 73151, 73154, 73157, 73159, 73160, 73162, 73164, 73165, 73167, 73169, 73170, 73172, 73173, 73179, 73189</dd></div>
@@ -10079,9 +10144,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~1.2 million residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73003, 73008, 73009, 73012, 73013, 73014, 73032, 73034, 73036, 73049, 73054, 73062, 73064, 73065, 73068, 73069, 73070, 73071, 73078, 73079, 73083, 73084, 73089, 73093, 73097, 73099, 73101, 73102, 73103, 73104, 73105, 73106, 73107, 73108, 73109, 73110, 73111, 73112, 73114, 73115, 73116, 73117, 73118, 73119, 73120, 73121, 73122, 73126, 73127, 73128, 73129, 73130, 73131, 73132, 73134, 73135, 73136, 73137, 73139, 73141, 73142, 73143, 73144, 73145, 73148, 73149, 73150, 73151, 73154, 73157, 73159, 73160, 73162, 73164, 73165, 73167, 73169, 73170, 73172, 73173, 73179, 73189</div>
             </td>
-            <td class="center ws-pop-cell">~1,160,053</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10106,7 +10171,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,926</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73019, 73069</dd></div>
@@ -10166,9 +10231,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~27,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73019, 73069</div>
             </td>
-            <td class="center ws-pop-cell">~27,926</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10192,7 +10257,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,212</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74447</dd></div>
@@ -10252,9 +10317,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~15,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74447</div>
             </td>
-            <td class="center ws-pop-cell">~15,212</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10279,7 +10344,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,835</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74008, 74033, 74047, 74421, 74436, 74447</dd></div>
@@ -10339,9 +10404,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~76,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74008, 74033, 74047, 74421, 74436, 74447</div>
             </td>
-            <td class="center ws-pop-cell">~76,835</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10366,7 +10431,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,946</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74002, 74070, 74073, 74126</dd></div>
@@ -10426,9 +10491,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~32,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74002, 74070, 74073, 74126</div>
             </td>
-            <td class="center ws-pop-cell">~32,946</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10453,7 +10518,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~455</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~460</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74078</dd></div>
@@ -10513,9 +10578,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~460 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74078</div>
             </td>
-            <td class="center ws-pop-cell">~455</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10540,7 +10605,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,125</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74343</dd></div>
@@ -10600,9 +10665,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~3,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74343</div>
             </td>
-            <td class="center ws-pop-cell">~3,125</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10626,7 +10691,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,185</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74055</dd></div>
@@ -10686,9 +10751,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~48,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74055</div>
             </td>
-            <td class="center ws-pop-cell">~48,185</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10713,7 +10778,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,374</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73075</dd></div>
@@ -10773,9 +10838,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73075</div>
             </td>
-            <td class="center ws-pop-cell">~9,374</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10799,7 +10864,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,783</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74056</dd></div>
@@ -10859,9 +10924,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74056</div>
             </td>
-            <td class="center ws-pop-cell">~4,783</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10886,7 +10951,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,211</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73077</dd></div>
@@ -10946,9 +11011,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73077</div>
             </td>
-            <td class="center ws-pop-cell">~6,211</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10973,7 +11038,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~97,191</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~97,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73062, 73078, 73099</dd></div>
@@ -11033,9 +11098,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~97,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73062, 73078, 73099</div>
             </td>
-            <td class="center ws-pop-cell">~97,191</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11060,7 +11125,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,606</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74501, 74533, 74560, 74565</dd></div>
@@ -11120,9 +11185,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~30,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74501, 74533, 74560, 74565</div>
             </td>
-            <td class="center ws-pop-cell">~30,606</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11147,7 +11212,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,740</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74501</dd></div>
@@ -11207,9 +11272,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~28,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74501</div>
             </td>
-            <td class="center ws-pop-cell">~28,740</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11234,7 +11299,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,712</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74534, 74572, 74820, 74825, 74844, 74871</dd></div>
@@ -11294,9 +11359,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~36,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74534, 74572, 74820, 74825, 74844, 74871</div>
             </td>
-            <td class="center ws-pop-cell">~36,712</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11321,7 +11386,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,516</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74820, 74831, 74843, 74865, 74872</dd></div>
@@ -11381,9 +11446,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~37,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74820, 74831, 74843, 74865, 74872</div>
             </td>
-            <td class="center ws-pop-cell">~37,516</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11408,7 +11473,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,384</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74455, 74469, 74470</dd></div>
@@ -11468,9 +11533,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74455, 74469, 74470</div>
             </td>
-            <td class="center ws-pop-cell">~6,384</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11495,7 +11560,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,413</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74953</dd></div>
@@ -11555,9 +11620,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74953</div>
             </td>
-            <td class="center ws-pop-cell">~12,413</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11581,7 +11646,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,213</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74361, 74362</dd></div>
@@ -11641,9 +11706,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~17,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74361, 74362</div>
             </td>
-            <td class="center ws-pop-cell">~17,213</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11667,7 +11732,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,037</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73080</dd></div>
@@ -11727,9 +11792,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~10,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73080</div>
             </td>
-            <td class="center ws-pop-cell">~10,037</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11754,7 +11819,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,601</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74523</dd></div>
@@ -11814,9 +11879,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74523</div>
             </td>
-            <td class="center ws-pop-cell">~5,601</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11899,9 +11964,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11984,9 +12049,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12011,7 +12076,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~91,318</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~91,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74019, 74021, 74055</dd></div>
@@ -12071,9 +12136,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~91,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74019, 74021, 74055</div>
             </td>
-            <td class="center ws-pop-cell">~91,318</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12098,7 +12163,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~125,859</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~126,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74016, 74017, 74019, 74021, 74031, 74055</dd></div>
@@ -12158,9 +12223,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~126,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74016, 74017, 74019, 74021, 74031, 74055</div>
             </td>
-            <td class="center ws-pop-cell">~125,859</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12185,7 +12250,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,315</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74053, 74080</dd></div>
@@ -12245,9 +12310,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74053, 74080</div>
             </td>
-            <td class="center ws-pop-cell">~8,315</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12272,7 +12337,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,827</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74015, 74017, 74018, 74019</dd></div>
@@ -12332,9 +12397,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~57,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74015, 74017, 74018, 74019</div>
             </td>
-            <td class="center ws-pop-cell">~57,827</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12359,7 +12424,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,435</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74019</dd></div>
@@ -12419,9 +12484,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~20,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74019</div>
             </td>
-            <td class="center ws-pop-cell">~20,435</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12445,7 +12510,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,471</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74955</dd></div>
@@ -12505,9 +12570,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74955</div>
             </td>
-            <td class="center ws-pop-cell">~14,471</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12532,7 +12597,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~106,265</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~106,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74044, 74060, 74063, 74066, 74107, 74127</dd></div>
@@ -12592,9 +12657,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~106,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74044, 74060, 74063, 74066, 74107, 74127</div>
             </td>
-            <td class="center ws-pop-cell">~106,265</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12618,7 +12683,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,578</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74066</dd></div>
@@ -12678,9 +12743,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~31,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74066</div>
             </td>
-            <td class="center ws-pop-cell">~31,578</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12705,7 +12770,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,578</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74066</dd></div>
@@ -12765,9 +12830,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~31,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74066</div>
             </td>
-            <td class="center ws-pop-cell">~31,578</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12791,7 +12856,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,589</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73662</dd></div>
@@ -12851,9 +12916,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73662</div>
             </td>
-            <td class="center ws-pop-cell">~7,589</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12877,7 +12942,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,329</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74818, 74868</dd></div>
@@ -12937,9 +13002,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>17 sites
                 </div>
+                <div class="ws-meta">~12,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74818, 74868</div>
             </td>
-            <td class="center ws-pop-cell">~12,329</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12964,7 +13029,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,968</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74435, 74936, 74945, 74946, 74948, 74954, 74955, 74962</dd></div>
@@ -13024,9 +13089,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~40,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74435, 74936, 74945, 74946, 74948, 74954, 74955, 74962</div>
             </td>
-            <td class="center ws-pop-cell">~39,968</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13051,7 +13116,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,602</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74801, 74804</dd></div>
@@ -13111,9 +13176,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~43,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74801, 74804</div>
             </td>
-            <td class="center ws-pop-cell">~43,602</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13138,7 +13203,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,990</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74070</dd></div>
@@ -13198,9 +13263,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~15,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74070</div>
             </td>
-            <td class="center ws-pop-cell">~14,990</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13225,7 +13290,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,023</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73401, 73402, 73436, 73443, 73448, 73453, 73458, 73463</dd></div>
@@ -13285,9 +13350,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>11 sites
                 </div>
+                <div class="ws-meta">~51,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73401, 73402, 73436, 73443, 73448, 73453, 73458, 73463</div>
             </td>
-            <td class="center ws-pop-cell">~51,023</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13311,7 +13376,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,989</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73084</dd></div>
@@ -13371,9 +13436,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~6,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73084</div>
             </td>
-            <td class="center ws-pop-cell">~5,989</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13398,7 +13463,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~80,394</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~80,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73011, 73029, 73052, 73055, 73082, 73433, 73434, 73491, 73507, 73533, 73538</dd></div>
@@ -13458,9 +13523,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~80,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73011, 73029, 73052, 73055, 73082, 73433, 73434, 73491, 73507, 73533, 73538</div>
             </td>
-            <td class="center ws-pop-cell">~80,394</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13484,7 +13549,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,480</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73086</dd></div>
@@ -13544,9 +13609,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73086</div>
             </td>
-            <td class="center ws-pop-cell">~8,480</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13571,7 +13636,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,642</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74451, 74464</dd></div>
@@ -13631,9 +13696,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~34,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74451, 74464</div>
             </td>
-            <td class="center ws-pop-cell">~34,642</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13658,7 +13723,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,256</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74873</dd></div>
@@ -13718,9 +13783,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~11,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74873</div>
             </td>
-            <td class="center ws-pop-cell">~11,256</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13745,7 +13810,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,505</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73145</dd></div>
@@ -13805,9 +13870,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>14 sites
                 </div>
+                <div class="ws-meta">~3,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73145</div>
             </td>
-            <td class="center ws-pop-cell">~3,505</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13831,7 +13896,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~596,933</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~597,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74008, 74012, 74015, 74017, 74037, 74050, 74073, 74103, 74104, 74105, 74106, 74107, 74108, 74110, 74112, 74114, 74115, 74116, 74117, 74119, 74120, 74126, 74127, 74128, 74129, 74130, 74131, 74132, 74133, 74134, 74135, 74136, 74137, 74145, 74146, 74147, 74171</dd></div>
@@ -13891,9 +13956,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~597,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74008, 74012, 74015, 74017, 74037, 74050, 74073, 74103, 74104, 74105, 74106, 74107, 74108, 74110, 74112, 74114, 74115, 74116, 74117, 74119, 74120, 74126, 74127, 74128, 74129, 74130, 74131, 74132, 74133, 74134, 74135, 74136, 74137, 74145, 74146, 74147, 74171</div>
             </td>
-            <td class="center ws-pop-cell">~596,933</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13917,7 +13982,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,815</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73089</dd></div>
@@ -13977,9 +14042,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~13,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73089</div>
             </td>
-            <td class="center ws-pop-cell">~13,815</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14062,9 +14127,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14088,7 +14153,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,147</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74467</dd></div>
@@ -14148,9 +14213,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74467</div>
             </td>
-            <td class="center ws-pop-cell">~14,147</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14233,9 +14298,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14260,7 +14325,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,147</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74467</dd></div>
@@ -14320,9 +14385,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74467</div>
             </td>
-            <td class="center ws-pop-cell">~14,147</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14347,7 +14412,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~96,825</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~96,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74021, 74055, 74061, 74070, 74073, 74080</dd></div>
@@ -14407,9 +14472,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~96,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74021, 74055, 74061, 74070, 74073, 74080</div>
             </td>
-            <td class="center ws-pop-cell">~96,825</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14434,7 +14499,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,122</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74563, 74935, 74937, 74939, 74966</dd></div>
@@ -14494,9 +14559,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~12,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74563, 74935, 74937, 74939, 74966</div>
             </td>
-            <td class="center ws-pop-cell">~12,122</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14520,7 +14585,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,652</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,650</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73772</dd></div>
@@ -14580,9 +14645,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~3,650 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73772</div>
             </td>
-            <td class="center ws-pop-cell">~3,652</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14606,7 +14671,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,107</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73096</dd></div>
@@ -14666,9 +14731,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~14,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73096</div>
             </td>
-            <td class="center ws-pop-cell">~14,107</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14693,7 +14758,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,578</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>74884</dd></div>
@@ -14753,9 +14818,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 74884</div>
             </td>
-            <td class="center ws-pop-cell">~5,578</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14779,7 +14844,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,407</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73801</dd></div>
@@ -14839,9 +14904,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~15,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73801</div>
             </td>
-            <td class="center ws-pop-cell">~15,407</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14865,7 +14930,7 @@
                         <p class="ws-tip-state">OKLAHOMA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~83,451</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~83,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>73099</dd></div>
@@ -14925,9 +14990,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~83,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 73099</div>
             </td>
-            <td class="center ws-pop-cell">~83,451</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -15040,7 +15105,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -15099,6 +15164,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

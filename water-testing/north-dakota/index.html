@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,991</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58201, 58214, 58233, 58235, 58244, 58251, 58256, 58258, 58261</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~48,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58201, 58214, 58233, 58235, 58244, 58251, 58256, 58258, 58261</div>
             </td>
-            <td class="center ws-pop-cell">~47,991</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -655,7 +720,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,928</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58072</dd></div>
@@ -715,9 +780,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58072</div>
             </td>
-            <td class="center ws-pop-cell">~7,928</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -742,7 +807,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,271</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,250</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58621</dd></div>
@@ -802,9 +867,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~1,250 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58621</div>
             </td>
-            <td class="center ws-pop-cell">~1,271</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -829,7 +894,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,272</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,250</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58523</dd></div>
@@ -889,9 +954,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~3,250 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58523</div>
             </td>
-            <td class="center ws-pop-cell">~3,272</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -916,7 +981,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~95,068</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~95,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58501, 58503, 58504</dd></div>
@@ -976,9 +1041,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~95,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58501, 58503, 58504</div>
             </td>
-            <td class="center ws-pop-cell">~95,068</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1003,7 +1068,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~166,241</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~166,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58078, 58102, 58103, 58104</dd></div>
@@ -1063,9 +1128,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~166,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58078, 58102, 58103, 58104</div>
             </td>
-            <td class="center ws-pop-cell">~166,241</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1090,7 +1155,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,003</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58005, 58012, 58015, 58017, 58021, 58042, 58047, 58051, 58059, 58062</dd></div>
@@ -1150,9 +1215,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~14,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58005, 58012, 58015, 58017, 58021, 58042, 58047, 58051, 58059, 58062</div>
             </td>
-            <td class="center ws-pop-cell">~14,003</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1177,7 +1242,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,033</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58011, 58012, 58027, 58031, 58052, 58054, 58059, 58063, 58064, 58068, 58071, 58077, 58079</dd></div>
@@ -1237,9 +1302,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~13,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58011, 58012, 58027, 58031, 58052, 58054, 58059, 58063, 58064, 58068, 58071, 58077, 58079</div>
             </td>
-            <td class="center ws-pop-cell">~13,033</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1324,9 +1389,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~730 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58438</div>
             </td>
-            <td class="center ws-pop-cell">~730</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1351,7 +1416,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,190</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58301</dd></div>
@@ -1411,9 +1476,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~10,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58301</div>
             </td>
-            <td class="center ws-pop-cell">~10,190</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1438,7 +1503,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,691</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>50602, 58601</dd></div>
@@ -1498,9 +1563,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~30,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 50602, 58601</div>
             </td>
-            <td class="center ws-pop-cell">~30,691</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1525,7 +1590,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,940</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58201, 58214, 58218, 58223, 58228, 58240, 58257, 58267, 58274, 58275, 58278</dd></div>
@@ -1585,9 +1650,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~52,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58201, 58214, 58218, 58223, 58228, 58240, 58257, 58267, 58274, 58275, 58278</div>
             </td>
-            <td class="center ws-pop-cell">~52,940</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1612,7 +1677,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~129,531</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~130,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58102, 58103, 58104, 58105, 58106, 58107, 58108, 58109, 58121, 58122, 58124, 58125, 58126</dd></div>
@@ -1672,9 +1737,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~130,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58102, 58103, 58104, 58105, 58106, 58107, 58108, 58109, 58121, 58122, 58124, 58125, 58126</div>
             </td>
-            <td class="center ws-pop-cell">~129,531</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1699,7 +1764,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,156</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58237</dd></div>
@@ -1759,9 +1824,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58237</div>
             </td>
-            <td class="center ws-pop-cell">~5,156</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1786,7 +1851,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~63,722</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~63,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58201, 58202, 58203, 58204, 58205, 58206, 58207, 58208</dd></div>
@@ -1846,9 +1911,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~63,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58201, 58202, 58203, 58204, 58205, 58206, 58207, 58208</div>
             </td>
-            <td class="center ws-pop-cell">~63,722</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1873,7 +1938,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,949</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58301, 58325, 58327, 58362, 58377, 58380, 58382, 58421, 58443, 58445, 58464</dd></div>
@@ -1933,9 +1998,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~14,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58301, 58325, 58327, 58362, 58377, 58380, 58382, 58421, 58443, 58445, 58464</div>
             </td>
-            <td class="center ws-pop-cell">~14,949</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1960,7 +2025,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~582</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~580</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58845</dd></div>
@@ -2020,9 +2085,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~580 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58845</div>
             </td>
-            <td class="center ws-pop-cell">~582</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2047,7 +2112,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,410</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58401</dd></div>
@@ -2107,9 +2172,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~17,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58401</div>
             </td>
-            <td class="center ws-pop-cell">~17,410</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2134,7 +2199,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,941</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,950</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58251</dd></div>
@@ -2194,9 +2259,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,950 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58251</div>
             </td>
-            <td class="center ws-pop-cell">~1,941</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2221,7 +2286,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,545</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58504</dd></div>
@@ -2281,9 +2346,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~29,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58504</div>
             </td>
-            <td class="center ws-pop-cell">~29,545</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2308,7 +2373,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,814</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58554</dd></div>
@@ -2368,9 +2433,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~28,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58554</div>
             </td>
-            <td class="center ws-pop-cell">~28,814</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2395,7 +2460,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~55,635</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~55,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58701, 58702, 58703</dd></div>
@@ -2455,9 +2520,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~55,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58701, 58702, 58703</div>
             </td>
-            <td class="center ws-pop-cell">~55,635</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2482,7 +2547,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,209</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58535, 58554, 58563</dd></div>
@@ -2542,9 +2607,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~31,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58535, 58554, 58563</div>
             </td>
-            <td class="center ws-pop-cell">~31,209</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2569,7 +2634,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~74,383</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~74,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58540, 58701, 58703, 58710, 58712, 58716, 58718, 58722, 58723, 58725, 58731, 58733, 58734, 58735, 58736, 58740, 58741, 58756, 58758, 58759, 58768, 58770, 58771, 58775, 58779, 58781, 58785, 58790, 58792</dd></div>
@@ -2629,9 +2694,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~74,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58540, 58701, 58703, 58710, 58712, 58716, 58718, 58722, 58723, 58725, 58731, 58733, 58734, 58735, 58736, 58740, 58741, 58756, 58758, 58759, 58768, 58770, 58771, 58775, 58779, 58781, 58785, 58790, 58792</div>
             </td>
-            <td class="center ws-pop-cell">~74,383</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2656,7 +2721,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,469</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58210, 58216, 58220, 58222, 58225, 58227, 58229, 58236, 58238, 58239, 58241, 58243, 58249, 58260, 58262, 58265, 58269, 58270, 58271, 58276, 58281, 58282, 58311, 58323, 58324, 58325, 58330, 58331, 58338, 58352, 58355, 58365, 58372, 58377</dd></div>
@@ -2716,9 +2781,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~16,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58210, 58216, 58220, 58222, 58225, 58227, 58229, 58236, 58238, 58239, 58241, 58243, 58249, 58260, 58262, 58265, 58269, 58270, 58271, 58276, 58281, 58282, 58311, 58323, 58324, 58325, 58330, 58331, 58338, 58352, 58355, 58365, 58372, 58377</div>
             </td>
-            <td class="center ws-pop-cell">~16,469</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2743,7 +2808,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,310</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58727, 58730, 58765, 58795, 58801, 58802, 58830, 58833, 58843, 58844, 58845, 58849, 58853, 58856</dd></div>
@@ -2803,9 +2868,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~39,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58727, 58730, 58765, 58795, 58801, 58802, 58830, 58833, 58843, 58844, 58845, 58849, 58853, 58856</div>
             </td>
-            <td class="center ws-pop-cell">~39,310</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2830,7 +2895,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~523</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~520</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58580</dd></div>
@@ -2890,9 +2955,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~520 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58580</div>
             </td>
-            <td class="center ws-pop-cell">~523</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2917,7 +2982,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,124</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58501, 58504</dd></div>
@@ -2977,9 +3042,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~58,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58501, 58504</div>
             </td>
-            <td class="center ws-pop-cell">~58,124</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3064,9 +3129,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~32,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58477, 58494, 58501, 58521, 58532, 58558, 58572, 58579</div>
             </td>
-            <td class="center ws-pop-cell">~32,400</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3091,7 +3156,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,353</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58413, 58428, 58482, 58487, 58495, 58524, 58542, 58544, 58552, 58561, 58573, 58581</dd></div>
@@ -3151,9 +3216,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58413, 58428, 58482, 58487, 58495, 58524, 58542, 58544, 58552, 58561, 58573, 58581</div>
             </td>
-            <td class="center ws-pop-cell">~8,353</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3178,7 +3243,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,337</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58001, 58008, 58013, 58015, 58017, 58018, 58030, 58032, 58040, 58041, 58043, 58051, 58053, 58058, 58060, 58061, 58067, 58075, 58077, 58081</dd></div>
@@ -3238,9 +3303,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~21,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58001, 58008, 58013, 58015, 58017, 58018, 58030, 58032, 58040, 58041, 58043, 58051, 58053, 58058, 58060, 58061, 58067, 58075, 58077, 58081</div>
             </td>
-            <td class="center ws-pop-cell">~21,337</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3265,7 +3330,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,216</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>57620, 57638, 57640, 57644, 58520, 58529, 58533, 58535, 58562, 58564, 58601, 58620, 58621, 58622, 58623, 58626, 58627, 58630, 58631, 58632, 58634, 58638, 58639, 58641, 58642, 58643, 58645, 58646, 58647, 58649, 58650, 58651, 58652, 58653, 58654, 58655, 58656</dd></div>
@@ -3325,9 +3390,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~53,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 57620, 57638, 57640, 57644, 58520, 58529, 58533, 58535, 58562, 58564, 58601, 58620, 58621, 58622, 58623, 58626, 58627, 58630, 58631, 58632, 58634, 58638, 58639, 58641, 58642, 58643, 58645, 58646, 58647, 58649, 58650, 58651, 58652, 58653, 58654, 58655, 58656</div>
             </td>
-            <td class="center ws-pop-cell">~53,216</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3352,7 +3417,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,160</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58401, 58420, 58421, 58424, 58426, 58431, 58442, 58454, 58455, 58466, 58467, 58472, 58475, 58476, 58478, 58481, 58483, 58484, 58492, 58496, 58497</dd></div>
@@ -3412,9 +3477,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~26,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58401, 58420, 58421, 58424, 58426, 58431, 58442, 58454, 58455, 58466, 58467, 58472, 58475, 58476, 58478, 58481, 58483, 58484, 58492, 58496, 58497</div>
             </td>
-            <td class="center ws-pop-cell">~26,160</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3439,7 +3504,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,928</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58072</dd></div>
@@ -3499,9 +3564,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58072</div>
             </td>
-            <td class="center ws-pop-cell">~7,928</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3526,7 +3591,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,955</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58075</dd></div>
@@ -3586,9 +3651,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58075</div>
             </td>
-            <td class="center ws-pop-cell">~8,955</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3613,7 +3678,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,173</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58854</dd></div>
@@ -3673,9 +3738,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58854</div>
             </td>
-            <td class="center ws-pop-cell">~9,173</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3700,7 +3765,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,243</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58078</dd></div>
@@ -3760,9 +3825,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~39,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58078</div>
             </td>
-            <td class="center ws-pop-cell">~39,243</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3787,7 +3852,7 @@
                         <p class="ws-tip-state">NORTH DAKOTA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,579</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>58801, 58802</dd></div>
@@ -3847,9 +3912,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~33,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 58801, 58802</div>
             </td>
-            <td class="center ws-pop-cell">~33,579</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3962,7 +4027,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -4021,6 +4086,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

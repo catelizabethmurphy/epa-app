@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,194</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84784, 86021</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~5,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84784, 86021</div>
             </td>
-            <td class="center ws-pop-cell">~5,194</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~706,035</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~706,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84010, 84044, 84047, 84054, 84092, 84093, 84101, 84102, 84103, 84104, 84105, 84106, 84107, 84108, 84109, 84111, 84112, 84113, 84115, 84116, 84117, 84119, 84120, 84121, 84124, 84128, 84138, 84143, 84150</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>22 sites
                 </div>
+                <div class="ws-meta">~706,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84010, 84044, 84047, 84054, 84092, 84093, 84101, 84102, 84103, 84104, 84105, 84106, 84107, 84108, 84109, 84111, 84112, 84113, 84115, 84116, 84117, 84119, 84120, 84121, 84124, 84128, 84138, 84143, 84150</div>
             </td>
-            <td class="center ws-pop-cell">~706,035</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,615</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84060, 84068</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~8,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84060, 84068</div>
             </td>
-            <td class="center ws-pop-cell">~8,615</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~85,739</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~85,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84010, 84054, 84087</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~85,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84010, 84054, 84087</div>
             </td>
-            <td class="center ws-pop-cell">~85,739</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -920,7 +985,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~99,497</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~99,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84107, 84117, 84123</dd></div>
@@ -980,9 +1045,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>19 sites
                 </div>
+                <div class="ws-meta">~99,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84107, 84117, 84123</div>
             </td>
-            <td class="center ws-pop-cell">~99,497</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1008,7 +1073,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,260</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84004</dd></div>
@@ -1068,9 +1133,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~10,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84004</div>
             </td>
-            <td class="center ws-pop-cell">~10,260</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1095,7 +1160,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,439</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84092</dd></div>
@@ -1155,9 +1220,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~28,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84092</div>
             </td>
-            <td class="center ws-pop-cell">~28,439</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1182,7 +1247,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,551</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84043</dd></div>
@@ -1242,9 +1307,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~77,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84043</div>
             </td>
-            <td class="center ws-pop-cell">~77,551</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1269,7 +1334,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,547</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84035, 84078</dd></div>
@@ -1329,9 +1394,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~30,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84035, 84078</div>
             </td>
-            <td class="center ws-pop-cell">~30,547</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1356,7 +1421,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,488</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84511</dd></div>
@@ -1416,9 +1481,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84511</div>
             </td>
-            <td class="center ws-pop-cell">~4,488</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1443,7 +1508,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,759</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84065</dd></div>
@@ -1503,9 +1568,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~48,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84065</div>
             </td>
-            <td class="center ws-pop-cell">~48,759</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1530,7 +1595,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~65,940</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~65,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84404</dd></div>
@@ -1590,9 +1655,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~65,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84404</div>
             </td>
-            <td class="center ws-pop-cell">~65,940</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1617,7 +1682,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,030</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84010</dd></div>
@@ -1677,9 +1742,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>10 sites
                 </div>
+                <div class="ws-meta">~47,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84010</div>
             </td>
-            <td class="center ws-pop-cell">~47,030</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1704,7 +1769,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,482</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84056</dd></div>
@@ -1764,9 +1829,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~3,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84056</div>
             </td>
-            <td class="center ws-pop-cell">~3,482</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1791,7 +1856,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,601</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84302</dd></div>
@@ -1851,9 +1916,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~26,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84302</div>
             </td>
-            <td class="center ws-pop-cell">~26,601</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1878,7 +1943,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,049</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84720, 84721</dd></div>
@@ -1938,9 +2003,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~52,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84720, 84721</div>
             </td>
-            <td class="center ws-pop-cell">~52,049</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1965,7 +2030,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,430</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84062</dd></div>
@@ -2025,9 +2090,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~47,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84062</div>
             </td>
-            <td class="center ws-pop-cell">~47,430</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2052,7 +2117,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,740</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84014</dd></div>
@@ -2112,9 +2177,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~16,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84014</div>
             </td>
-            <td class="center ws-pop-cell">~16,740</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2139,7 +2204,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,772</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84015</dd></div>
@@ -2199,9 +2264,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~69,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84015</div>
             </td>
-            <td class="center ws-pop-cell">~69,772</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2226,7 +2291,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,772</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84015</dd></div>
@@ -2286,9 +2351,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~69,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84015</div>
             </td>
-            <td class="center ws-pop-cell">~69,772</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2313,7 +2378,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,235</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,250</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84307</dd></div>
@@ -2373,9 +2438,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,250 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84307</div>
             </td>
-            <td class="center ws-pop-cell">~1,235</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2400,7 +2465,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,717</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84624</dd></div>
@@ -2460,9 +2525,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~5,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84624</div>
             </td>
-            <td class="center ws-pop-cell">~5,717</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2487,7 +2552,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,635</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84020</dd></div>
@@ -2547,9 +2612,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~50,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84020</div>
             </td>
-            <td class="center ws-pop-cell">~50,635</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2632,9 +2697,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2659,7 +2724,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,638</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84005</dd></div>
@@ -2719,9 +2784,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~45,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84005</div>
             </td>
-            <td class="center ws-pop-cell">~45,638</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2746,7 +2811,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,441</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,450</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84520, 84539</dd></div>
@@ -2806,9 +2871,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~1,450 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84520, 84539</div>
             </td>
-            <td class="center ws-pop-cell">~1,441</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2833,7 +2898,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,593</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84651</dd></div>
@@ -2893,9 +2958,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~28,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84651</div>
             </td>
-            <td class="center ws-pop-cell">~28,593</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2920,7 +2985,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,812</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84721</dd></div>
@@ -2980,9 +3045,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~28,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84721</div>
             </td>
-            <td class="center ws-pop-cell">~28,812</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3007,7 +3072,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,134</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84627</dd></div>
@@ -3067,9 +3132,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~6,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84627</div>
             </td>
-            <td class="center ws-pop-cell">~6,134</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3094,7 +3159,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,463</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84025</dd></div>
@@ -3154,9 +3219,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~24,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84025</div>
             </td>
-            <td class="center ws-pop-cell">~24,463</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3181,7 +3246,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,342</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84037</dd></div>
@@ -3241,9 +3306,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~39,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84037</div>
             </td>
-            <td class="center ws-pop-cell">~39,342</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3268,7 +3333,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,044</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84098</dd></div>
@@ -3328,9 +3393,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~20,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84098</div>
             </td>
-            <td class="center ws-pop-cell">~20,044</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3355,7 +3420,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,250</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84532</dd></div>
@@ -3415,9 +3480,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~10,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84532</div>
             </td>
-            <td class="center ws-pop-cell">~10,250</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3442,7 +3507,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~134,831</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~135,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84119, 84120, 84128</dd></div>
@@ -3502,9 +3567,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~135,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84119, 84120, 84128</div>
             </td>
-            <td class="center ws-pop-cell">~134,831</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3529,7 +3594,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,357</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84029</dd></div>
@@ -3589,9 +3654,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~13,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84029</div>
             </td>
-            <td class="center ws-pop-cell">~13,357</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3616,7 +3681,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~251</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~250</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84733</dd></div>
@@ -3676,9 +3741,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~250 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84733</div>
             </td>
-            <td class="center ws-pop-cell">~251</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3703,7 +3768,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,658</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,650</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84634</dd></div>
@@ -3763,9 +3828,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~3,650 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84634</div>
             </td>
-            <td class="center ws-pop-cell">~3,658</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3790,7 +3855,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,748</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84032</dd></div>
@@ -3850,9 +3915,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~24,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84032</div>
             </td>
-            <td class="center ws-pop-cell">~24,748</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3877,7 +3942,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,619</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84096</dd></div>
@@ -3937,9 +4002,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~69,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84096</div>
             </td>
-            <td class="center ws-pop-cell">~69,619</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3964,7 +4029,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,731</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84003</dd></div>
@@ -4024,9 +4089,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~53,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84003</div>
             </td>
-            <td class="center ws-pop-cell">~53,731</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4051,7 +4116,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,482</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84056</dd></div>
@@ -4111,9 +4176,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~3,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84056</div>
             </td>
-            <td class="center ws-pop-cell">~3,482</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4138,7 +4203,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~122,129</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~122,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84106, 84117, 84121, 84124</dd></div>
@@ -4198,9 +4263,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~122,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84106, 84117, 84121, 84124</div>
             </td>
-            <td class="center ws-pop-cell">~122,129</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4225,7 +4290,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~163,605</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~164,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84015, 84067, 84315, 84401</dd></div>
@@ -4285,9 +4350,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~164,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84015, 84067, 84315, 84401</div>
             </td>
-            <td class="center ws-pop-cell">~163,605</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4312,7 +4377,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,153</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84737</dd></div>
@@ -4372,9 +4437,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~22,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84737</div>
             </td>
-            <td class="center ws-pop-cell">~22,153</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4399,7 +4464,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,298</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84318</dd></div>
@@ -4459,9 +4524,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~5,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84318</div>
             </td>
-            <td class="center ws-pop-cell">~5,298</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4486,7 +4551,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,994</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84319</dd></div>
@@ -4546,9 +4611,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~10,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84319</div>
             </td>
-            <td class="center ws-pop-cell">~9,994</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4572,7 +4637,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,282</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84738</dd></div>
@@ -4632,9 +4697,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~9,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84738</div>
             </td>
-            <td class="center ws-pop-cell">~9,282</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4659,7 +4724,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~740,393</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~740,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84047, 84065, 84070, 84084, 84087, 84088, 84090, 84092, 84093, 84094, 84096, 84101, 84102, 84103, 84104, 84105, 84106, 84107, 84115, 84116, 84117, 84119, 84121, 84123</dd></div>
@@ -4719,9 +4784,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>13 sites
                 </div>
+                <div class="ws-meta">~740,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84047, 84065, 84070, 84084, 84087, 84088, 84090, 84092, 84093, 84094, 84096, 84101, 84102, 84103, 84104, 84105, 84106, 84107, 84115, 84116, 84117, 84119, 84121, 84123</div>
             </td>
-            <td class="center ws-pop-cell">~740,393</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4746,7 +4811,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,748</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84032</dd></div>
@@ -4806,9 +4871,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~24,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84032</div>
             </td>
-            <td class="center ws-pop-cell">~24,748</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4833,7 +4898,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,296</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84741</dd></div>
@@ -4893,9 +4958,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~6,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84741</div>
             </td>
-            <td class="center ws-pop-cell">~6,296</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4920,7 +4985,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,342</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84037</dd></div>
@@ -4980,9 +5045,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~39,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84037</div>
             </td>
-            <td class="center ws-pop-cell">~39,342</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5007,7 +5072,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~131,519</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~132,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84081, 84118, 84129</dd></div>
@@ -5067,9 +5132,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~132,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84081, 84118, 84129</div>
             </td>
-            <td class="center ws-pop-cell">~131,519</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5094,7 +5159,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,360</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,350</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84745</dd></div>
@@ -5154,9 +5219,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~4,350 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84745</div>
             </td>
-            <td class="center ws-pop-cell">~4,360</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5181,7 +5246,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,463</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84025</dd></div>
@@ -5241,9 +5306,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~24,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84025</div>
             </td>
-            <td class="center ws-pop-cell">~24,463</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5268,7 +5333,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~82,232</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~82,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84040, 84041</dd></div>
@@ -5328,9 +5393,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~82,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84040, 84041</div>
             </td>
-            <td class="center ws-pop-cell">~82,232</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5355,7 +5420,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,551</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84043</dd></div>
@@ -5415,9 +5480,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~77,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84043</div>
             </td>
-            <td class="center ws-pop-cell">~77,551</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5442,7 +5507,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,478</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84042</dd></div>
@@ -5502,9 +5567,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~11,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84042</div>
             </td>
-            <td class="center ws-pop-cell">~11,478</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5529,7 +5594,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,434</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84321</dd></div>
@@ -5589,9 +5654,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~49,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84321</div>
             </td>
-            <td class="center ws-pop-cell">~49,434</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5674,9 +5739,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5701,7 +5766,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,535</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84044, 84128</dd></div>
@@ -5761,9 +5826,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~61,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84044, 84128</div>
             </td>
-            <td class="center ws-pop-cell">~61,535</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5788,7 +5853,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,365</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,350</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84642</dd></div>
@@ -5848,9 +5913,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~3,350 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84642</div>
             </td>
-            <td class="center ws-pop-cell">~3,365</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5875,7 +5940,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,756</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84664</dd></div>
@@ -5935,9 +6000,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~11,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84664</div>
             </td>
-            <td class="center ws-pop-cell">~11,756</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5962,7 +6027,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,731</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84663</dd></div>
@@ -6022,9 +6087,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~35,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84663</div>
             </td>
-            <td class="center ws-pop-cell">~35,731</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6049,7 +6114,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,891</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84049</dd></div>
@@ -6109,9 +6174,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~6,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84049</div>
             </td>
-            <td class="center ws-pop-cell">~6,891</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6136,7 +6201,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,250</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84532</dd></div>
@@ -6196,9 +6261,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~10,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84532</div>
             </td>
-            <td class="center ws-pop-cell">~10,250</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6223,7 +6288,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,076</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84050</dd></div>
@@ -6283,9 +6348,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~12,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84050</div>
             </td>
-            <td class="center ws-pop-cell">~12,076</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6310,7 +6375,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,562</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,550</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84647</dd></div>
@@ -6370,9 +6435,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~4,550 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84647</div>
             </td>
-            <td class="center ws-pop-cell">~4,562</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6397,7 +6462,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,044</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84098</dd></div>
@@ -6457,9 +6522,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~20,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84098</div>
             </td>
-            <td class="center ws-pop-cell">~20,044</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6484,7 +6549,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,158</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84648</dd></div>
@@ -6544,9 +6609,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~7,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84648</div>
             </td>
-            <td class="center ws-pop-cell">~7,158</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6571,7 +6636,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,434</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84321</dd></div>
@@ -6631,9 +6696,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~49,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84321</div>
             </td>
-            <td class="center ws-pop-cell">~49,434</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6658,7 +6723,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,062</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84341</dd></div>
@@ -6718,9 +6783,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~25,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84341</div>
             </td>
-            <td class="center ws-pop-cell">~25,062</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6745,7 +6810,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,588</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84414</dd></div>
@@ -6805,9 +6870,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~32,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84414</div>
             </td>
-            <td class="center ws-pop-cell">~32,588</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6832,7 +6897,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,937</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84054</dd></div>
@@ -6892,9 +6957,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~21,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84054</div>
             </td>
-            <td class="center ws-pop-cell">~21,937</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6919,7 +6984,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,346</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84401</dd></div>
@@ -6979,9 +7044,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~45,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84401</div>
             </td>
-            <td class="center ws-pop-cell">~45,346</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7006,7 +7071,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~109,914</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~110,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84057, 84058, 84059, 84097</dd></div>
@@ -7066,9 +7131,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~110,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84057, 84058, 84059, 84097</div>
             </td>
-            <td class="center ws-pop-cell">~109,914</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7093,7 +7158,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,593</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84651</dd></div>
@@ -7153,9 +7218,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~28,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84651</div>
             </td>
-            <td class="center ws-pop-cell">~28,593</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7180,7 +7245,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,601</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84302</dd></div>
@@ -7240,9 +7305,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~26,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84302</div>
             </td>
-            <td class="center ws-pop-cell">~26,601</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7267,7 +7332,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,430</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84062</dd></div>
@@ -7327,9 +7392,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~47,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84062</div>
             </td>
-            <td class="center ws-pop-cell">~47,430</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7354,7 +7419,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,588</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84414</dd></div>
@@ -7414,9 +7479,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~32,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84414</div>
             </td>
-            <td class="center ws-pop-cell">~32,588</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7441,7 +7506,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,296</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84501, 84526</dd></div>
@@ -7501,9 +7566,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~17,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84501, 84526</div>
             </td>
-            <td class="center ws-pop-cell">~17,296</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7528,7 +7593,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,897</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84501, 84526, 84529, 84542</dd></div>
@@ -7588,9 +7653,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~18,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84501, 84526, 84529, 84542</div>
             </td>
-            <td class="center ws-pop-cell">~18,897</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7615,7 +7680,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,418</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84332</dd></div>
@@ -7675,9 +7740,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~8,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84332</div>
             </td>
-            <td class="center ws-pop-cell">~8,418</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7702,7 +7767,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~113,133</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~113,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84601, 84604, 84606</dd></div>
@@ -7762,9 +7827,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~113,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84601, 84604, 84606</div>
             </td>
-            <td class="center ws-pop-cell">~113,133</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7789,7 +7854,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,721</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84701</dd></div>
@@ -7849,9 +7914,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~8,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84701</div>
             </td>
-            <td class="center ws-pop-cell">~8,721</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7876,7 +7941,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,652</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84405</dd></div>
@@ -7936,9 +8001,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~34,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84405</div>
             </td>
-            <td class="center ws-pop-cell">~34,652</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7963,7 +8028,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,759</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84065</dd></div>
@@ -8023,9 +8088,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~48,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84065</div>
             </td>
-            <td class="center ws-pop-cell">~48,759</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8050,7 +8115,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,181</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84066</dd></div>
@@ -8110,9 +8175,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~14,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84066</div>
             </td>
-            <td class="center ws-pop-cell">~14,181</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8137,7 +8202,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,952</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84067</dd></div>
@@ -8197,9 +8262,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~39,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84067</div>
             </td>
-            <td class="center ws-pop-cell">~38,952</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8224,7 +8289,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,950</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84653</dd></div>
@@ -8284,9 +8349,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~11,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84653</div>
             </td>
-            <td class="center ws-pop-cell">~10,950</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8311,7 +8376,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~83,183</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~83,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84070, 84092, 84093</dd></div>
@@ -8371,9 +8436,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~83,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84070, 84092, 84093</div>
             </td>
-            <td class="center ws-pop-cell">~83,183</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8398,7 +8463,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,625</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84765</dd></div>
@@ -8458,9 +8523,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~7,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84765</div>
             </td>
-            <td class="center ws-pop-cell">~7,625</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8485,7 +8550,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,111</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84655</dd></div>
@@ -8545,9 +8610,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~16,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84655</div>
             </td>
-            <td class="center ws-pop-cell">~16,111</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8572,7 +8637,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~117,604</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~118,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84043, 84045</dd></div>
@@ -8632,9 +8697,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~118,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84043, 84045</div>
             </td>
-            <td class="center ws-pop-cell">~117,604</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8659,7 +8724,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,439</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84092</dd></div>
@@ -8719,9 +8784,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~28,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84092</div>
             </td>
-            <td class="center ws-pop-cell">~28,439</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8746,7 +8811,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,787</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84335</dd></div>
@@ -8806,9 +8871,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~15,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84335</div>
             </td>
-            <td class="center ws-pop-cell">~15,787</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8833,7 +8898,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,239</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84095</dd></div>
@@ -8893,9 +8958,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~38,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84095</div>
             </td>
-            <td class="center ws-pop-cell">~38,239</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8920,7 +8985,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,652</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84405</dd></div>
@@ -8980,9 +9045,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~34,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84405</div>
             </td>
-            <td class="center ws-pop-cell">~34,652</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9007,7 +9072,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,623</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84115</dd></div>
@@ -9067,9 +9132,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~28,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84115</div>
             </td>
-            <td class="center ws-pop-cell">~28,623</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9094,7 +9159,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,652</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84405</dd></div>
@@ -9154,9 +9219,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~34,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84405</div>
             </td>
-            <td class="center ws-pop-cell">~34,652</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9181,7 +9246,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,229</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84660</dd></div>
@@ -9241,9 +9306,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~46,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84660</div>
             </td>
-            <td class="center ws-pop-cell">~46,229</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9268,7 +9333,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,487</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84663, 84664</dd></div>
@@ -9328,9 +9393,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>10 sites
                 </div>
+                <div class="ws-meta">~47,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84663, 84664</div>
             </td>
-            <td class="center ws-pop-cell">~47,487</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9355,7 +9420,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~108,262</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~108,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84738, 84770, 84790</dd></div>
@@ -9415,9 +9480,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~108,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84738, 84770, 84790</div>
             </td>
-            <td class="center ws-pop-cell">~108,262</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9442,7 +9507,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~55,917</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~55,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84074</dd></div>
@@ -9502,9 +9567,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~55,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84074</div>
             </td>
-            <td class="center ws-pop-cell">~55,917</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9529,7 +9594,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,044</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84098</dd></div>
@@ -9589,9 +9654,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>10 sites
                 </div>
+                <div class="ws-meta">~20,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84098</div>
             </td>
-            <td class="center ws-pop-cell">~20,044</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9616,7 +9681,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,772</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84015</dd></div>
@@ -9676,9 +9741,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~69,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84015</div>
             </td>
-            <td class="center ws-pop-cell">~69,772</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9703,7 +9768,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,861</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84075</dd></div>
@@ -9763,9 +9828,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~32,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84075</div>
             </td>
-            <td class="center ws-pop-cell">~32,861</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9790,7 +9855,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~120,821</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~121,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84315, 84401, 84404</dd></div>
@@ -9850,9 +9915,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~121,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84315, 84401, 84404</div>
             </td>
-            <td class="center ws-pop-cell">~120,821</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9877,7 +9942,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,387</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84118</dd></div>
@@ -9937,9 +10002,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~41,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84118</div>
             </td>
-            <td class="center ws-pop-cell">~41,387</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9964,7 +10029,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~55,917</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~55,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84074</dd></div>
@@ -10024,9 +10089,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>13 sites
                 </div>
+                <div class="ws-meta">~55,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84074</div>
             </td>
-            <td class="center ws-pop-cell">~55,917</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10051,7 +10116,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,940</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84337</dd></div>
@@ -10111,9 +10176,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~14,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84337</div>
             </td>
-            <td class="center ws-pop-cell">~14,940</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10138,7 +10203,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,671</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,650</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84112</dd></div>
@@ -10198,9 +10263,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,650 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84112</div>
             </td>
-            <td class="center ws-pop-cell">~2,671</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10283,9 +10348,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 84322</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10368,9 +10433,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 84148</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10395,7 +10460,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,075</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84078</dd></div>
@@ -10455,9 +10520,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~30,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84078</div>
             </td>
-            <td class="center ws-pop-cell">~30,075</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10482,7 +10547,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,667</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84059</dd></div>
@@ -10542,9 +10607,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~15,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84059</div>
             </td>
-            <td class="center ws-pop-cell">~15,667</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10568,7 +10633,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~787</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~790</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84779</dd></div>
@@ -10628,9 +10693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~790 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84779</div>
             </td>
-            <td class="center ws-pop-cell">~787</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10655,7 +10720,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,212</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84780</dd></div>
@@ -10715,9 +10780,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~29,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84780</div>
             </td>
-            <td class="center ws-pop-cell">~29,212</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10742,7 +10807,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,606</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84737, 84745, 84746, 84774, 84779</dd></div>
@@ -10802,9 +10867,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~30,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84737, 84745, 84746, 84774, 84779</div>
             </td>
-            <td class="center ws-pop-cell">~30,606</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10829,7 +10894,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,652</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84405</dd></div>
@@ -10889,9 +10954,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~34,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84405</div>
             </td>
-            <td class="center ws-pop-cell">~34,652</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10916,7 +10981,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,635</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84020</dd></div>
@@ -10976,9 +11041,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~50,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84020</div>
             </td>
-            <td class="center ws-pop-cell">~50,635</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11003,7 +11068,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~75</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~80</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84408</dd></div>
@@ -11063,9 +11128,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~80 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84408</div>
             </td>
-            <td class="center ws-pop-cell">~75</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11090,7 +11155,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,915</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84339</dd></div>
@@ -11150,9 +11215,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~5,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84339</div>
             </td>
-            <td class="center ws-pop-cell">~5,915</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11177,7 +11242,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,772</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84087</dd></div>
@@ -11237,9 +11302,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~16,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84087</div>
             </td>
-            <td class="center ws-pop-cell">~16,772</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11264,7 +11329,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,346</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84401</dd></div>
@@ -11324,9 +11389,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~45,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84401</div>
             </td>
-            <td class="center ws-pop-cell">~45,346</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11351,7 +11416,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~122,898</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~123,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84081, 84084, 84088</dd></div>
@@ -11411,9 +11476,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~123,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84081, 84084, 84088</div>
             </td>
-            <td class="center ws-pop-cell">~122,898</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11438,7 +11503,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,772</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84015</dd></div>
@@ -11498,9 +11563,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~69,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84015</div>
             </td>
-            <td class="center ws-pop-cell">~69,772</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11525,7 +11590,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~56,410</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~56,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84092, 84094</dd></div>
@@ -11585,9 +11650,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~56,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84092, 84094</div>
             </td>
-            <td class="center ws-pop-cell">~56,410</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11612,7 +11677,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,772</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84087</dd></div>
@@ -11672,9 +11737,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~16,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84087</div>
             </td>
-            <td class="center ws-pop-cell">~16,772</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11699,7 +11764,7 @@
                         <p class="ws-tip-state">UTAH</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~666</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~670</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>84767</dd></div>
@@ -11759,9 +11824,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~670 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 84767</div>
             </td>
-            <td class="center ws-pop-cell">~666</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11874,7 +11939,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -11933,6 +11998,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

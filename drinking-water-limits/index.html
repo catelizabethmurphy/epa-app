@@ -82,7 +82,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../water-testing/index.html">PFAS in My Community</a>
             <a href="../federal-regulations/index.html">Federal Regulations</a>
             <a href="../state-legislation/index.html">State Legislation</a>
@@ -1779,6 +1782,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 
@@ -1992,6 +2012,9 @@ function parseDate(s) {
     // Interactions
     var activeTick    = null;
     var clusterCycles = {};
+    var isTouch       = window.matchMedia && window.matchMedia('(hover: none)').matches;
+    var userScrolling = false;
+    var clearTimer    = null;
     container.querySelectorAll('.bcode-tick').forEach(function (tick) {
         tick.addEventListener('mouseenter', function () {
             var color = tick.dataset.color || '#888';
@@ -2042,10 +2065,11 @@ function parseDate(s) {
             activeTick = tick;
             tick.classList.add('bcode-tick--active');
             var bcode = document.querySelector('.bcode-section');
-            var navH  = parseFloat(getComputedStyle(document.documentElement).fontSize) * 2.75;
+            var navEl = document.getElementById('site-nav');
+            var navH  = navEl ? navEl.offsetHeight : parseFloat(getComputedStyle(document.documentElement).fontSize) * 2.75;
             var bcodeH = bcode ? bcode.getBoundingClientRect().height : 0;
-            entry.style.scrollMarginTop = (navH + bcodeH + 4) + 'px';
-            entry.scrollIntoView({ behavior: 'instant', block: 'start' });
+            entry.style.scrollMarginTop = (navH + bcodeH + 8) + 'px';
+            entry.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
 
@@ -2189,6 +2213,22 @@ function parseDate(s) {
     }
     window.addEventListener('scroll', updateScrollPos, { passive: true });
     updateScrollPos();
+
+    // On touch devices, clear the click-pinned tooltip + active tick once the
+    // user actually scrolls away (mouseleave never fires).
+    if (isTouch) {
+        window.addEventListener('scroll', function () {
+            if (!activeTick && tooltip.hidden) return;
+            clearTimeout(clearTimer);
+            clearTimer = setTimeout(function () {
+                tooltip.hidden = true;
+                if (activeTick) {
+                    activeTick.classList.remove('bcode-tick--active');
+                    activeTick = null;
+                }
+            }, 120);
+        }, { passive: true });
+    }
 
     // When the mouse leaves the chart entirely, dismiss the tooltip and snap
     // the tracker back to wherever the page is scrolled to.

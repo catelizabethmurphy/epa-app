@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,098</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26101, 26133, 26150, 26164, 26181</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~50,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26101, 26133, 26150, 26164, 26181</div>
             </td>
-            <td class="center ws-pop-cell">~50,098</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,833</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26155</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~7,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26155</div>
             </td>
-            <td class="center ws-pop-cell">~7,833</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,094</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26101, 26102, 26103, 26104, 26105, 26106</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~57,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26101, 26102, 26103, 26104, 26105, 26106</div>
             </td>
-            <td class="center ws-pop-cell">~57,094</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,894</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26187</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26187</div>
             </td>
-            <td class="center ws-pop-cell">~5,894</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -920,7 +985,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,382</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25414, 25425, 25430, 25432, 25438, 25442</dd></div>
@@ -980,9 +1045,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~51,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25414, 25425, 25430, 25432, 25438, 25442</div>
             </td>
-            <td class="center ws-pop-cell">~51,382</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1008,7 +1073,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,592</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25275, 26143, 26150</dd></div>
@@ -1068,9 +1133,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~11,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25275, 26143, 26150</div>
             </td>
-            <td class="center ws-pop-cell">~11,592</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1096,7 +1161,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,316</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26034</dd></div>
@@ -1156,9 +1221,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26034</div>
             </td>
-            <td class="center ws-pop-cell">~4,316</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1183,7 +1248,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,602</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26415</dd></div>
@@ -1243,9 +1308,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~3,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26415</div>
             </td>
-            <td class="center ws-pop-cell">~3,602</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1271,7 +1336,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,592</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26104, 26142, 26143, 26180, 26184</dd></div>
@@ -1331,9 +1396,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~26,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26104, 26142, 26143, 26180, 26184</div>
             </td>
-            <td class="center ws-pop-cell">~26,592</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1359,7 +1424,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,610</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26170</dd></div>
@@ -1419,9 +1484,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~6,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26170</div>
             </td>
-            <td class="center ws-pop-cell">~6,610</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1447,7 +1512,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,142</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26062</dd></div>
@@ -1507,9 +1572,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~21,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26062</div>
             </td>
-            <td class="center ws-pop-cell">~21,142</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1535,7 +1600,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,318</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26104, 26105, 26170, 26184, 26187</dd></div>
@@ -1595,9 +1660,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~43,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26104, 26105, 26170, 26184, 26187</div>
             </td>
-            <td class="center ws-pop-cell">~43,318</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1623,7 +1688,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,969</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25271</dd></div>
@@ -1683,9 +1748,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25271</div>
             </td>
-            <td class="center ws-pop-cell">~7,969</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1711,7 +1776,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,969</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25271</dd></div>
@@ -1771,9 +1836,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25271</div>
             </td>
-            <td class="center ws-pop-cell">~7,969</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1799,7 +1864,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,988</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26301, 26330</dd></div>
@@ -1859,9 +1924,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~44,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26301, 26330</div>
             </td>
-            <td class="center ws-pop-cell">~43,988</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1887,7 +1952,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,883</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26385</dd></div>
@@ -1947,9 +2012,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~2,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26385</div>
             </td>
-            <td class="center ws-pop-cell">~2,883</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1975,7 +2040,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,481</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26164</dd></div>
@@ -2035,9 +2100,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26164</div>
             </td>
-            <td class="center ws-pop-cell">~7,481</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -2063,7 +2128,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,218</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26070</dd></div>
@@ -2123,9 +2188,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26070</div>
             </td>
-            <td class="center ws-pop-cell">~8,218</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -2151,7 +2216,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,461</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26301, 26348, 26386, 26426, 26437, 26448</dd></div>
@@ -2211,9 +2276,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~41,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26301, 26348, 26386, 26426, 26437, 26448</div>
             </td>
-            <td class="center ws-pop-cell">~41,461</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -2239,7 +2304,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,305</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25535, 25562, 25701, 25704</dd></div>
@@ -2299,9 +2364,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~39,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25535, 25562, 25701, 25704</div>
             </td>
-            <td class="center ws-pop-cell">~39,305</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -2327,7 +2392,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,218</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26070</dd></div>
@@ -2387,9 +2452,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26070</div>
             </td>
-            <td class="center ws-pop-cell">~8,218</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -2415,7 +2480,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,807</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26201, 26210, 26215, 26218, 26222, 26224, 26228, 26230, 26234, 26236, 26237, 26343</dd></div>
@@ -2475,9 +2540,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~24,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26201, 26210, 26215, 26218, 26222, 26224, 26228, 26230, 26234, 26236, 26237, 26343</div>
             </td>
-            <td class="center ws-pop-cell">~24,807</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2502,7 +2567,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,570</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,550</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>24910</dd></div>
@@ -2562,9 +2627,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,550 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 24910</div>
             </td>
-            <td class="center ws-pop-cell">~4,570</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2589,7 +2654,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~492</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~490</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26520</dd></div>
@@ -2649,9 +2714,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~490 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26520</div>
             </td>
-            <td class="center ws-pop-cell">~492</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2676,7 +2741,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,311</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>24712, 24739, 24740</dd></div>
@@ -2736,9 +2801,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~32,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 24712, 24739, 24740</div>
             </td>
-            <td class="center ws-pop-cell">~32,311</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2763,7 +2828,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,565</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25801, 25802, 25813, 25818, 25827, 25832, 25836, 25851, 25871, 25873, 25878, 25906, 25909, 25911, 25918, 25919, 25921, 25927, 25989</dd></div>
@@ -2823,9 +2888,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~58,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25801, 25802, 25813, 25818, 25827, 25832, 25836, 25851, 25871, 25873, 25878, 25906, 25909, 25911, 25918, 25919, 25921, 25927, 25989</div>
             </td>
-            <td class="center ws-pop-cell">~58,565</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2850,7 +2915,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~81,936</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~81,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25404, 25405, 25413, 25420, 25427, 25428, 25440</dd></div>
@@ -2910,9 +2975,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~81,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25404, 25405, 25413, 25420, 25427, 25428, 25440</div>
             </td>
-            <td class="center ws-pop-cell">~81,936</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2937,7 +3002,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~65,870</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~65,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25402, 25403, 25404, 25419, 25427</dd></div>
@@ -2997,9 +3062,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~65,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25402, 25403, 25404, 25419, 25427</div>
             </td>
-            <td class="center ws-pop-cell">~65,870</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3024,7 +3089,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,887</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25411</dd></div>
@@ -3084,9 +3149,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~11,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25411</div>
             </td>
-            <td class="center ws-pop-cell">~11,887</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3111,7 +3176,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,993</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>24701, 24715, 24724, 24737, 24747</dd></div>
@@ -3171,9 +3236,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~23,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 24701, 24715, 24724, 24737, 24747</div>
             </td>
-            <td class="center ws-pop-cell">~22,993</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3198,7 +3263,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,662</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26201</dd></div>
@@ -3258,9 +3323,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~19,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26201</div>
             </td>
-            <td class="center ws-pop-cell">~19,662</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3285,7 +3350,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,741</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,750</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25606, 25607, 25628, 25630, 25635</dd></div>
@@ -3345,9 +3410,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~3,750 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25606, 25607, 25628, 25630, 25635</div>
             </td>
-            <td class="center ws-pop-cell">~3,741</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3372,7 +3437,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,359</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25414, 25438</dd></div>
@@ -3432,9 +3497,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~27,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25414, 25438</div>
             </td>
-            <td class="center ws-pop-cell">~27,359</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3459,7 +3524,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,219</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26501</dd></div>
@@ -3519,9 +3584,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~19,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26501</div>
             </td>
-            <td class="center ws-pop-cell">~19,219</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3546,7 +3611,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,736</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26301</dd></div>
@@ -3606,9 +3671,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~28,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26301</div>
             </td>
-            <td class="center ws-pop-cell">~28,736</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3633,7 +3698,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,246</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26521, 26541, 26544, 26562, 26570, 26590</dd></div>
@@ -3693,9 +3758,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26521, 26541, 26544, 26562, 26570, 26590</div>
             </td>
-            <td class="center ws-pop-cell">~8,246</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3720,7 +3785,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,427</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26508</dd></div>
@@ -3780,9 +3845,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~38,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26508</div>
             </td>
-            <td class="center ws-pop-cell">~38,427</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3807,7 +3872,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,527</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25825, 25841, 25843, 25918, 25951, 25989</dd></div>
@@ -3867,9 +3932,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25825, 25841, 25843, 25918, 25951, 25989</div>
             </td>
-            <td class="center ws-pop-cell">~14,527</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3894,7 +3959,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,516</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25443</dd></div>
@@ -3954,9 +4019,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25443</div>
             </td>
-            <td class="center ws-pop-cell">~7,516</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3981,7 +4046,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,583</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26203, 26206, 26208, 26266, 26288</dd></div>
@@ -4041,9 +4106,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26203, 26206, 26208, 26266, 26288</div>
             </td>
-            <td class="center ws-pop-cell">~7,583</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4068,7 +4133,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,874</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26205, 26208, 26651, 26660, 26691</dd></div>
@@ -4128,9 +4193,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26205, 26208, 26651, 26660, 26691</div>
             </td>
-            <td class="center ws-pop-cell">~14,874</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4155,7 +4220,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,932</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,950</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>24719, 24726, 24736, 24847, 24873, 25811, 25826, 25870, 25882, 25928, 25943</dd></div>
@@ -4215,9 +4280,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,950 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 24719, 24726, 24736, 24847, 24873, 25811, 25826, 25870, 25882, 25928, 25943</div>
             </td>
-            <td class="center ws-pop-cell">~4,932</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4242,7 +4307,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,012</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26241</dd></div>
@@ -4302,9 +4367,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26241</div>
             </td>
-            <td class="center ws-pop-cell">~14,012</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4329,7 +4394,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,378</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26201, 26267</dd></div>
@@ -4389,9 +4454,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~20,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26201, 26267</div>
             </td>
-            <td class="center ws-pop-cell">~20,378</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4416,7 +4481,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,577</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26554, 26555, 26559, 26578, 26586</dd></div>
@@ -4476,9 +4541,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~43,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26554, 26555, 26559, 26578, 26586</div>
             </td>
-            <td class="center ws-pop-cell">~43,577</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4503,7 +4568,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,447</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26452</dd></div>
@@ -4563,9 +4628,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26452</div>
             </td>
-            <td class="center ws-pop-cell">~9,447</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4590,7 +4655,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,155</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26335, 26601, 26610, 26619, 26621, 26624, 26627, 26629</dd></div>
@@ -4650,9 +4715,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26335, 26601, 26610, 26619, 26621, 26624, 26627, 26629</div>
             </td>
-            <td class="center ws-pop-cell">~10,155</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4677,7 +4742,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,820</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26035, 26037, 26070</dd></div>
@@ -4737,9 +4802,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~15,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26035, 26037, 26070</div>
             </td>
-            <td class="center ws-pop-cell">~15,820</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4764,7 +4829,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,856</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26719, 26726, 26753, 26767</dd></div>
@@ -4824,9 +4889,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~20,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26719, 26726, 26753, 26767</div>
             </td>
-            <td class="center ws-pop-cell">~20,856</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4909,9 +4974,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4936,7 +5001,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,972</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25036, 25059, 25085, 25125, 26651, 26656, 26667, 26671, 26690</dd></div>
@@ -4996,9 +5061,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~14,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25036, 25059, 25085, 25125, 26651, 26656, 26667, 26671, 26690</div>
             </td>
-            <td class="center ws-pop-cell">~13,972</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5023,7 +5088,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,965</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,950</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25267, 26351, 26638</dd></div>
@@ -5083,9 +5148,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~3,950 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25267, 26351, 26638</div>
             </td>
-            <td class="center ws-pop-cell">~3,965</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5110,7 +5175,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,130</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26354</dd></div>
@@ -5170,9 +5235,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26354</div>
             </td>
-            <td class="center ws-pop-cell">~10,130</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5197,7 +5262,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,938</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26833, 26847</dd></div>
@@ -5257,9 +5322,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26833, 26847</div>
             </td>
-            <td class="center ws-pop-cell">~7,938</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5284,7 +5349,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,676</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>24701, 24739, 24740</dd></div>
@@ -5344,9 +5409,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~47,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 24701, 24739, 24740</div>
             </td>
-            <td class="center ws-pop-cell">~47,676</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5371,7 +5436,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,903</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25526</dd></div>
@@ -5431,9 +5496,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~22,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25526</div>
             </td>
-            <td class="center ws-pop-cell">~22,903</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5458,7 +5523,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,093</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26241, 26253, 26259, 26273, 26280, 26293, 26294</dd></div>
@@ -5518,9 +5583,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~22,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26241, 26253, 26259, 26273, 26280, 26293, 26294</div>
             </td>
-            <td class="center ws-pop-cell">~22,093</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5545,7 +5610,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~571</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~570</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26275</dd></div>
@@ -5605,9 +5670,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~570 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26275</div>
             </td>
-            <td class="center ws-pop-cell">~571</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5632,7 +5697,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,486</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25530, 25555, 25704</dd></div>
@@ -5692,9 +5757,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~23,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25530, 25555, 25704</div>
             </td>
-            <td class="center ws-pop-cell">~23,486</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5719,7 +5784,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,541</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26726</dd></div>
@@ -5779,9 +5844,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26726</div>
             </td>
-            <td class="center ws-pop-cell">~12,541</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5806,7 +5871,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,509</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26537</dd></div>
@@ -5866,9 +5931,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26537</div>
             </td>
-            <td class="center ws-pop-cell">~5,509</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5892,7 +5957,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,730</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>24901, 24925, 24938, 24957, 24966</dd></div>
@@ -5952,9 +6017,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 24901, 24925, 24938, 24957, 24966</div>
             </td>
-            <td class="center ws-pop-cell">~12,730</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5979,7 +6044,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,416</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25003</dd></div>
@@ -6039,9 +6104,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~1,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25003</div>
             </td>
-            <td class="center ws-pop-cell">~1,416</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6066,7 +6131,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,721</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25611, 25617, 25632, 25634, 25635, 25650, 25827</dd></div>
@@ -6126,9 +6191,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25611, 25617, 25632, 25634, 25635, 25650, 25827</div>
             </td>
-            <td class="center ws-pop-cell">~6,721</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6153,7 +6218,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,685</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25053, 25108, 25121, 25505, 25508, 25511, 25524, 25534, 25547, 25557, 25601, 25624, 25625, 25637, 25638, 25639, 25644, 25647, 25652, 25653, 25666</dd></div>
@@ -6213,9 +6278,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~31,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25053, 25108, 25121, 25505, 25508, 25511, 25524, 25534, 25547, 25557, 25601, 25624, 25625, 25637, 25638, 25639, 25644, 25647, 25652, 25653, 25666</div>
             </td>
-            <td class="center ws-pop-cell">~31,685</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6240,7 +6305,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,582</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25601</dd></div>
@@ -6300,9 +6365,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25601</div>
             </td>
-            <td class="center ws-pop-cell">~5,582</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6327,7 +6392,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,740</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26431, 26572, 26582, 26591</dd></div>
@@ -6387,9 +6452,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~11,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26431, 26572, 26582, 26591</div>
             </td>
-            <td class="center ws-pop-cell">~11,740</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6414,7 +6479,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,704</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26003, 26031, 26038</dd></div>
@@ -6474,9 +6539,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~45,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26003, 26031, 26038</div>
             </td>
-            <td class="center ws-pop-cell">~45,704</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6501,7 +6566,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,932</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26033, 26038, 26039, 26041</dd></div>
@@ -6561,9 +6626,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~20,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26033, 26038, 26039, 26041</div>
             </td>
-            <td class="center ws-pop-cell">~20,932</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6646,9 +6711,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 25402</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6673,7 +6738,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,972</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,950</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25515</dd></div>
@@ -6733,9 +6798,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,950 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25515</div>
             </td>
-            <td class="center ws-pop-cell">~1,972</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6760,7 +6825,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,983</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25106, 25187, 25287, 25502, 25515</dd></div>
@@ -6820,9 +6885,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25106, 25187, 25287, 25502, 25515</div>
             </td>
-            <td class="center ws-pop-cell">~4,983</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6847,7 +6912,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,012</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26241</dd></div>
@@ -6907,9 +6972,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26241</div>
             </td>
-            <td class="center ws-pop-cell">~14,012</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6934,7 +6999,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,565</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25541</dd></div>
@@ -6994,9 +7059,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25541</div>
             </td>
-            <td class="center ws-pop-cell">~10,565</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7021,7 +7086,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,964</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25661, 25666, 25670, 25671, 25674, 25685</dd></div>
@@ -7081,9 +7146,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~13,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25661, 25666, 25670, 25671, 25674, 25685</div>
             </td>
-            <td class="center ws-pop-cell">~12,964</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7108,7 +7173,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~59,391</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~59,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25505, 26501, 26502, 26504, 26506, 26507, 26508</dd></div>
@@ -7168,9 +7233,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~59,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25505, 26501, 26502, 26504, 26506, 26507, 26508</div>
             </td>
-            <td class="center ws-pop-cell">~59,391</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7194,7 +7259,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,659</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26041</dd></div>
@@ -7254,9 +7319,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~15,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26041</div>
             </td>
-            <td class="center ws-pop-cell">~15,659</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7281,7 +7346,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,843</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>15376, 15377, 26003, 26032, 26036, 26059, 26060, 26074</dd></div>
@@ -7341,9 +7406,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~50,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 15376, 15377, 26003, 26032, 26036, 26059, 26060, 26074</div>
             </td>
-            <td class="center ws-pop-cell">~50,843</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7426,9 +7491,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7453,7 +7518,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,380</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26520, 26542, 26547</dd></div>
@@ -7513,9 +7578,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26520, 26542, 26547</div>
             </td>
-            <td class="center ws-pop-cell">~5,380</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7540,7 +7605,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,933</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,950</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26519</dd></div>
@@ -7600,9 +7665,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,950 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26519</div>
             </td>
-            <td class="center ws-pop-cell">~1,933</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7627,7 +7692,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,219</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25213, 25526, 25560</dd></div>
@@ -7687,9 +7752,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~37,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25213, 25526, 25560</div>
             </td>
-            <td class="center ws-pop-cell">~37,219</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7714,7 +7779,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,712</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25813</dd></div>
@@ -7774,9 +7839,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25813</div>
             </td>
-            <td class="center ws-pop-cell">~7,712</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7801,7 +7866,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,061</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25007, 25044, 25062, 25140, 25174, 25209, 25817, 25839, 25844, 25849, 25865</dd></div>
@@ -7861,9 +7926,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25007, 25044, 25062, 25140, 25174, 25209, 25817, 25839, 25844, 25849, 25865</div>
             </td>
-            <td class="center ws-pop-cell">~6,061</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7888,7 +7953,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,826</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>24918, 24945, 24951, 24963</dd></div>
@@ -7948,9 +8013,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 24918, 24945, 24951, 24963</div>
             </td>
-            <td class="center ws-pop-cell">~6,826</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7975,7 +8040,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,501</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26431</dd></div>
@@ -8035,9 +8100,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26431</div>
             </td>
-            <td class="center ws-pop-cell">~5,501</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8062,7 +8127,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,132</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26330, 26347, 26349, 26354, 26424, 26435</dd></div>
@@ -8122,9 +8187,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~28,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26330, 26347, 26349, 26354, 26424, 26435</div>
             </td>
-            <td class="center ws-pop-cell">~28,132</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8149,7 +8214,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,623</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25276</dd></div>
@@ -8209,9 +8274,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25276</div>
             </td>
-            <td class="center ws-pop-cell">~7,623</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8236,7 +8301,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,208</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25177</dd></div>
@@ -8296,9 +8361,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~23,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25177</div>
             </td>
-            <td class="center ws-pop-cell">~23,208</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8323,7 +8388,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,428</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,450</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26623</dd></div>
@@ -8383,9 +8448,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~1,450 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26623</div>
             </td>
-            <td class="center ws-pop-cell">~1,428</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8410,7 +8475,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,870</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26651</dd></div>
@@ -8470,9 +8535,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26651</div>
             </td>
-            <td class="center ws-pop-cell">~9,870</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8497,7 +8562,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,113</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26354, 26554</dd></div>
@@ -8557,9 +8622,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~52,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26354, 26554</div>
             </td>
-            <td class="center ws-pop-cell">~52,113</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8584,7 +8649,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,332</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26105</dd></div>
@@ -8644,9 +8709,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~12,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26105</div>
             </td>
-            <td class="center ws-pop-cell">~12,332</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8671,7 +8736,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,485</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25570</dd></div>
@@ -8731,9 +8796,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25570</div>
             </td>
-            <td class="center ws-pop-cell">~5,485</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8758,7 +8823,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,588</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>15376, 26003, 26032, 26059, 26060, 26074</dd></div>
@@ -8818,9 +8883,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~49,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 15376, 26003, 26032, 26059, 26060, 26074</div>
             </td>
-            <td class="center ws-pop-cell">~49,588</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8845,7 +8910,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,987</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>24986</dd></div>
@@ -8905,9 +8970,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 24986</div>
             </td>
-            <td class="center ws-pop-cell">~4,987</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8932,7 +8997,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,601</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26651, 26675, 26678, 26679</dd></div>
@@ -8992,9 +9057,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26651, 26675, 26678, 26679</div>
             </td>
-            <td class="center ws-pop-cell">~12,601</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9019,7 +9084,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,447</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>26452</dd></div>
@@ -9079,9 +9144,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 26452</div>
             </td>
-            <td class="center ws-pop-cell">~9,447</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9106,7 +9171,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~118,128</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~118,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25504, 25506, 25507, 25512, 25520, 25535, 25537, 25540, 25541, 25545, 25555, 25559, 25571, 25700, 25701, 25702, 25703, 25704, 25705, 25707, 25710, 25714, 25718, 25720, 25755</dd></div>
@@ -9166,9 +9231,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~118,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25504, 25506, 25507, 25512, 25520, 25535, 25537, 25540, 25541, 25545, 25555, 25559, 25571, 25700, 25701, 25702, 25703, 25704, 25705, 25707, 25710, 25714, 25718, 25720, 25755</div>
             </td>
-            <td class="center ws-pop-cell">~118,128</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9193,7 +9258,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,086</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>24701</dd></div>
@@ -9253,9 +9318,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~18,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 24701</div>
             </td>
-            <td class="center ws-pop-cell">~18,086</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9280,7 +9345,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,411</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>24712, 24714, 24731, 24733, 24736, 24739, 24740, 24747, 25922, 25951, 25969, 25971, 25978, 25979</dd></div>
@@ -9340,9 +9405,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~46,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 24712, 24714, 24731, 24733, 24736, 24739, 24740, 24747, 25922, 25951, 25969, 25971, 25978, 25979</div>
             </td>
-            <td class="center ws-pop-cell">~46,411</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9367,7 +9432,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,028</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25119, 25173, 25812, 25840, 25846, 25854, 25868, 25879, 25880, 25901, 25917, 25938, 25942</dd></div>
@@ -9427,9 +9492,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~30,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25119, 25173, 25812, 25840, 25846, 25854, 25868, 25879, 25880, 25901, 25917, 25938, 25942</div>
             </td>
-            <td class="center ws-pop-cell">~30,028</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9454,7 +9519,7 @@
                         <p class="ws-tip-state">WEST VIRGINIA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~234,323</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~234,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>25003, 25015, 25021, 25025, 25028, 25030, 25033, 25039, 25045, 25047, 25051, 25053, 25054, 25064, 25067, 25070, 25071, 25075, 25081, 25082, 25083, 25086, 25093, 25102, 25103, 25108, 25110, 25112, 25126, 25132, 25136, 25142, 25148, 25149, 25154, 25156, 25159, 25160, 25162, 25168, 25169, 25177, 25181, 25183, 25186, 25193, 25201, 25202, 25203, 25204, 25206, 25208, 25209, 25213, 25301, 25302, 25303, 25304, 25305, 25306, 25311, 25312, 25313, 25314, 25315, 25320, 25510, 25521, 25523, 25526, 25529, 25560, 25564, 25565, 25567, 25573</dd></div>
@@ -9514,9 +9579,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~234,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 25003, 25015, 25021, 25025, 25028, 25030, 25033, 25039, 25045, 25047, 25051, 25053, 25054, 25064, 25067, 25070, 25071, 25075, 25081, 25082, 25083, 25086, 25093, 25102, 25103, 25108, 25110, 25112, 25126, 25132, 25136, 25142, 25148, 25149, 25154, 25156, 25159, 25160, 25162, 25168, 25169, 25177, 25181, 25183, 25186, 25193, 25201, 25202, 25203, 25204, 25206, 25208, 25209, 25213, 25301, 25302, 25303, 25304, 25305, 25306, 25311, 25312, 25313, 25314, 25315, 25320, 25510, 25521, 25523, 25526, 25529, 25560, 25564, 25565, 25567, 25573</div>
             </td>
-            <td class="center ws-pop-cell">~234,323</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9629,7 +9694,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -9688,6 +9753,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

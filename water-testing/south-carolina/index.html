@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,456</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,450</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29628</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~2,450 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29628</div>
             </td>
-            <td class="center ws-pop-cell">~2,456</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~211,621</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~212,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29325, 29332, 29335, 29351, 29355, 29360, 29370, 29384, 29644, 29645, 29654, 29669, 29680, 29681, 29692</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~212,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29325, 29332, 29335, 29351, 29355, 29360, 29370, 29384, 29644, 29645, 29654, 29669, 29680, 29681, 29692</div>
             </td>
-            <td class="center ws-pop-cell">~211,621</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,697</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29646, 29648, 29649, 29653, 29666, 29692, 29695</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~69,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29646, 29648, 29649, 29653, 29666, 29692, 29695</div>
             </td>
-            <td class="center ws-pop-cell">~69,697</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,623</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29627</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~16,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29627</div>
             </td>
-            <td class="center ws-pop-cell">~16,623</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -920,7 +985,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,444</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29016, 29130, 29180</dd></div>
@@ -980,9 +1045,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~47,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29016, 29130, 29180</div>
             </td>
-            <td class="center ws-pop-cell">~47,444</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1008,7 +1073,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,014</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29180</dd></div>
@@ -1068,9 +1133,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29180</div>
             </td>
-            <td class="center ws-pop-cell">~12,014</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1096,7 +1161,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,745</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29340, 29342</dd></div>
@@ -1156,9 +1221,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~20,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29340, 29342</div>
             </td>
-            <td class="center ws-pop-cell">~20,745</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1184,7 +1249,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,823</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>28114, 29341</dd></div>
@@ -1244,9 +1309,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~27,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 28114, 29341</div>
             </td>
-            <td class="center ws-pop-cell">~27,823</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1272,7 +1337,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,772</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29340, 29341, 29342</dd></div>
@@ -1332,9 +1397,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~40,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29340, 29341, 29342</div>
             </td>
-            <td class="center ws-pop-cell">~40,772</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1360,7 +1425,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,926</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29330, 29340</dd></div>
@@ -1420,9 +1485,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~28,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29330, 29340</div>
             </td>
-            <td class="center ws-pop-cell">~28,926</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1448,7 +1513,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,505</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29654</dd></div>
@@ -1508,9 +1573,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29654</div>
             </td>
-            <td class="center ws-pop-cell">~9,505</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1536,7 +1601,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,083</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29620, 29638</dd></div>
@@ -1596,9 +1661,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~16,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29620, 29638</div>
             </td>
-            <td class="center ws-pop-cell">~16,083</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1682,9 +1747,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -1710,7 +1775,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,612</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29006, 29070</dd></div>
@@ -1770,9 +1835,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~25,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29006, 29070</div>
             </td>
-            <td class="center ws-pop-cell">~25,612</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1798,7 +1863,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,535</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29702</dd></div>
@@ -1858,9 +1923,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29702</div>
             </td>
-            <td class="center ws-pop-cell">~9,535</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1886,7 +1951,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~318,211</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~318,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29511, 29526, 29527, 29544, 29545, 29568, 29569, 29575, 29576, 29577, 29579, 29581, 29588</dd></div>
@@ -1946,9 +2011,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~318,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29511, 29526, 29527, 29544, 29545, 29568, 29569, 29575, 29576, 29577, 29579, 29581, 29588</div>
             </td>
-            <td class="center ws-pop-cell">~318,211</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1974,7 +2039,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,643</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29108, 29138, 29145</dd></div>
@@ -2034,9 +2099,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~30,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29108, 29138, 29145</div>
             </td>
-            <td class="center ws-pop-cell">~30,643</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -2062,7 +2127,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,550</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29526, 29527</dd></div>
@@ -2122,9 +2187,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~77,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29526, 29527</div>
             </td>
-            <td class="center ws-pop-cell">~77,550</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -2150,7 +2215,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,701</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29582</dd></div>
@@ -2210,9 +2275,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~19,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29582</div>
             </td>
-            <td class="center ws-pop-cell">~19,701</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -2238,7 +2303,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,302</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29440, 29442</dd></div>
@@ -2298,9 +2363,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~26,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29440, 29442</div>
             </td>
-            <td class="center ws-pop-cell">~26,302</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -2326,7 +2391,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,559</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29006, 29070, 29127, 29129, 29138, 29166</dd></div>
@@ -2386,9 +2451,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~49,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29006, 29070, 29127, 29129, 29138, 29166</div>
             </td>
-            <td class="center ws-pop-cell">~49,559</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -2414,7 +2479,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,085</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29576, 29585</dd></div>
@@ -2474,9 +2539,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~49,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29576, 29585</div>
             </td>
-            <td class="center ws-pop-cell">~49,085</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -2502,7 +2567,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,801</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29045, 29078, 29130</dd></div>
@@ -2562,9 +2627,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~51,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29045, 29078, 29130</div>
             </td>
-            <td class="center ws-pop-cell">~51,801</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -2590,7 +2655,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,004</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29821, 29824, 29835, 29838, 29840, 29844, 29845, 29848</dd></div>
@@ -2650,9 +2715,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~18,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29821, 29824, 29835, 29838, 29840, 29844, 29845, 29848</div>
             </td>
-            <td class="center ws-pop-cell">~18,004</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -2678,7 +2743,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,792</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29692</dd></div>
@@ -2738,9 +2803,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29692</div>
             </td>
-            <td class="center ws-pop-cell">~4,792</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -2766,7 +2831,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~469,430</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~469,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29016, 29036, 29044, 29045, 29061, 29063, 29201, 29203, 29204, 29205, 29206, 29209, 29210, 29212, 29223, 29229</dd></div>
@@ -2826,9 +2891,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~469,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29016, 29036, 29044, 29045, 29061, 29063, 29201, 29203, 29204, 29205, 29206, 29209, 29210, 29212, 29223, 29229</div>
             </td>
-            <td class="center ws-pop-cell">~469,430</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -2854,7 +2919,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,550</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29526, 29527</dd></div>
@@ -2914,9 +2979,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~77,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29526, 29527</div>
             </td>
-            <td class="center ws-pop-cell">~77,550</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -2942,7 +3007,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,449</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29455, 29457</dd></div>
@@ -3002,9 +3067,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~25,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29455, 29457</div>
             </td>
-            <td class="center ws-pop-cell">~25,449</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3030,7 +3095,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~99,019</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~99,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29429, 29464, 29465, 29466</dd></div>
@@ -3090,9 +3155,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~99,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29429, 29464, 29465, 29466</div>
             </td>
-            <td class="center ws-pop-cell">~99,019</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3118,7 +3183,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,808</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29325</dd></div>
@@ -3178,9 +3243,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~13,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29325</div>
             </td>
-            <td class="center ws-pop-cell">~13,808</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -3206,7 +3271,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~115,704</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~116,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29483, 29485</dd></div>
@@ -3266,9 +3331,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~116,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29483, 29485</div>
             </td>
-            <td class="center ws-pop-cell">~115,704</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3294,7 +3359,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~855</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~860</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29439</dd></div>
@@ -3354,9 +3419,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~860 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29439</div>
             </td>
-            <td class="center ws-pop-cell">~855</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3382,7 +3447,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,772</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29036, 29075, 29108, 29126, 29127, 29145, 29355</dd></div>
@@ -3442,9 +3507,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~61,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29036, 29075, 29108, 29126, 29127, 29145, 29355</div>
             </td>
-            <td class="center ws-pop-cell">~61,772</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3470,7 +3535,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~115,704</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~116,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29483, 29484, 29485</dd></div>
@@ -3530,9 +3595,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~116,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29483, 29484, 29485</div>
             </td>
-            <td class="center ws-pop-cell">~115,704</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3558,7 +3623,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,378</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29451</dd></div>
@@ -3618,9 +3683,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~4,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29451</div>
             </td>
-            <td class="center ws-pop-cell">~4,378</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3646,7 +3711,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,217</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29461</dd></div>
@@ -3706,9 +3771,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~42,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29461</div>
             </td>
-            <td class="center ws-pop-cell">~42,217</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3734,7 +3799,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,449</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29455</dd></div>
@@ -3794,9 +3859,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~25,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29455</div>
             </td>
-            <td class="center ws-pop-cell">~25,449</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3822,7 +3887,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~160,836</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~161,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29072, 29073, 29169, 29170</dd></div>
@@ -3882,9 +3947,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~161,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29072, 29073, 29169, 29170</div>
             </td>
-            <td class="center ws-pop-cell">~160,836</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3910,7 +3975,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,544</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29036</dd></div>
@@ -3970,9 +4035,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~25,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29036</div>
             </td>
-            <td class="center ws-pop-cell">~25,544</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -3998,7 +4063,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,186</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29152</dd></div>
@@ -4058,9 +4123,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~2,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29152</div>
             </td>
-            <td class="center ws-pop-cell">~2,186</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -4086,7 +4151,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,449</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29455</dd></div>
@@ -4146,9 +4211,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~25,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29455</div>
             </td>
-            <td class="center ws-pop-cell">~25,449</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -4174,7 +4239,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,963</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29207</dd></div>
@@ -4234,9 +4299,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29207</div>
             </td>
-            <td class="center ws-pop-cell">~9,963</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -4262,7 +4327,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,845</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29431, 29434, 29450, 29453, 29468, 29479</dd></div>
@@ -4322,9 +4387,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~20,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29431, 29434, 29450, 29453, 29468, 29479</div>
             </td>
-            <td class="center ws-pop-cell">~20,845</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -4350,7 +4415,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,723</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29434, 29436, 29450, 29461, 29468, 29469</dd></div>
@@ -4410,9 +4475,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~52,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29434, 29436, 29450, 29461, 29468, 29469</div>
             </td>
-            <td class="center ws-pop-cell">~52,723</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -4438,7 +4503,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~151,575</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~152,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29456, 29483, 29485</dd></div>
@@ -4498,9 +4563,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~152,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29456, 29483, 29485</div>
             </td>
-            <td class="center ws-pop-cell">~151,575</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -4526,7 +4591,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~113,284</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~113,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29161, 29501, 29505, 29506, 29541</dd></div>
@@ -4586,9 +4651,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>13 sites
                 </div>
+                <div class="ws-meta">~113,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29161, 29501, 29505, 29506, 29541</div>
             </td>
-            <td class="center ws-pop-cell">~113,284</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -4614,7 +4679,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~754,659</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~755,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29401, 29403, 29404, 29405, 29406, 29407, 29409, 29410, 29412, 29414, 29418, 29420, 29424, 29425, 29426, 29429, 29439, 29445, 29449, 29450, 29451, 29455, 29456, 29461, 29464, 29466, 29470, 29482, 29483, 29485, 29486, 29487, 29492</dd></div>
@@ -4674,9 +4739,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~755,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29401, 29403, 29404, 29405, 29406, 29407, 29409, 29410, 29412, 29414, 29418, 29420, 29424, 29425, 29426, 29429, 29439, 29445, 29449, 29450, 29451, 29455, 29456, 29461, 29464, 29466, 29470, 29482, 29483, 29485, 29486, 29487, 29492</div>
             </td>
-            <td class="center ws-pop-cell">~754,659</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -4702,7 +4767,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,528</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29033, 29170, 29171, 29172</dd></div>
@@ -4762,9 +4827,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~43,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29033, 29170, 29171, 29172</div>
             </td>
-            <td class="center ws-pop-cell">~43,528</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -4790,7 +4855,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~166,928</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~167,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29053, 29072, 29073, 29123, 29170</dd></div>
@@ -4850,9 +4915,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~167,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29053, 29072, 29073, 29123, 29170</div>
             </td>
-            <td class="center ws-pop-cell">~166,928</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -4878,7 +4943,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,380</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29379</dd></div>
@@ -4938,9 +5003,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~17,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29379</div>
             </td>
-            <td class="center ws-pop-cell">~17,380</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -4966,7 +5031,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~67,669</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~67,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29072</dd></div>
@@ -5026,9 +5091,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~67,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29072</div>
             </td>
-            <td class="center ws-pop-cell">~67,669</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -5054,7 +5119,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,490</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29909</dd></div>
@@ -5114,9 +5179,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>9 sites
                 </div>
+                <div class="ws-meta">~23,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29909</div>
             </td>
-            <td class="center ws-pop-cell">~23,490</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -5142,7 +5207,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~71,888</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~71,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29073, 29169</dd></div>
@@ -5202,9 +5267,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~71,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29073, 29169</div>
             </td>
-            <td class="center ws-pop-cell">~71,888</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -5230,7 +5295,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~81,754</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~81,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29420, 29485</dd></div>
@@ -5290,9 +5355,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~81,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29420, 29485</div>
             </td>
-            <td class="center ws-pop-cell">~81,754</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -5318,7 +5383,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,482</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29920</dd></div>
@@ -5378,9 +5443,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29920</div>
             </td>
-            <td class="center ws-pop-cell">~10,482</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -5406,7 +5471,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,575</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29520</dd></div>
@@ -5466,9 +5531,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29520</div>
             </td>
-            <td class="center ws-pop-cell">~12,575</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -5494,7 +5559,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,825</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~45,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29572, 29577</dd></div>
@@ -5554,9 +5619,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~45,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29572, 29577</div>
             </td>
-            <td class="center ws-pop-cell">~45,825</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -5582,7 +5647,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,021</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29020</dd></div>
@@ -5642,9 +5707,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~22,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29020</div>
             </td>
-            <td class="center ws-pop-cell">~22,021</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -5670,7 +5735,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,064</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29926, 29928</dd></div>
@@ -5730,9 +5795,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~40,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29926, 29928</div>
             </td>
-            <td class="center ws-pop-cell">~40,064</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -5758,7 +5823,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,380</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29379</dd></div>
@@ -5818,9 +5883,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~17,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29379</div>
             </td>
-            <td class="center ws-pop-cell">~17,380</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -5846,7 +5911,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,028</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>28114, 29323, 29330, 29341</dd></div>
@@ -5906,9 +5971,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~51,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 28114, 29323, 29330, 29341</div>
             </td>
-            <td class="center ws-pop-cell">~51,028</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -5934,7 +5999,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,511</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29575</dd></div>
@@ -5994,9 +6059,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~19,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29575</div>
             </td>
-            <td class="center ws-pop-cell">~19,511</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -6022,7 +6087,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~103,932</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~104,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29445, 29486</dd></div>
@@ -6082,9 +6147,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~104,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29445, 29486</div>
             </td>
-            <td class="center ws-pop-cell">~103,932</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -6110,7 +6175,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,608</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29624, 29626, 29655, 29659, 29684</dd></div>
@@ -6170,9 +6235,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~42,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29624, 29626, 29655, 29659, 29684</div>
             </td>
-            <td class="center ws-pop-cell">~42,608</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -6198,7 +6263,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~74,979</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~75,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29816, 29822, 29829, 29841, 29842, 29847, 29860, 29861</dd></div>
@@ -6258,9 +6323,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~75,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29816, 29822, 29829, 29841, 29842, 29847, 29860, 29861</div>
             </td>
-            <td class="center ws-pop-cell">~74,979</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -6286,7 +6351,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,390</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29055, 29130, 29180, 29706, 29714, 29729</dd></div>
@@ -6346,9 +6411,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~47,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29055, 29130, 29180, 29706, 29714, 29729</div>
             </td>
-            <td class="center ws-pop-cell">~47,390</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -6374,7 +6439,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,560</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29335, 29369, 29374, 29376, 29388</dd></div>
@@ -6434,9 +6499,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~48,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29335, 29369, 29374, 29376, 29388</div>
             </td>
-            <td class="center ws-pop-cell">~48,560</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -6462,7 +6527,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,075</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29018, 29030, 29038, 29039, 29107, 29113, 29115, 29116, 29118, 29133</dd></div>
@@ -6522,9 +6587,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~60,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29018, 29030, 29038, 29039, 29107, 29113, 29115, 29116, 29118, 29133</div>
             </td>
-            <td class="center ws-pop-cell">~60,075</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -6550,7 +6615,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,308</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29720</dd></div>
@@ -6610,9 +6675,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~52,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29720</div>
             </td>
-            <td class="center ws-pop-cell">~52,308</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -6638,7 +6703,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~74,110</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~74,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29801, 29802, 29803, 29804, 29805</dd></div>
@@ -6698,9 +6763,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~74,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29801, 29802, 29803, 29804, 29805</div>
             </td>
-            <td class="center ws-pop-cell">~74,110</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6783,9 +6848,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6810,7 +6875,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,955</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29009, 29101, 29550, 29584</dd></div>
@@ -6870,9 +6935,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~37,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29009, 29101, 29550, 29584</div>
             </td>
-            <td class="center ws-pop-cell">~36,955</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6897,7 +6962,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,558</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29510</dd></div>
@@ -6957,9 +7022,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~10,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29510</div>
             </td>
-            <td class="center ws-pop-cell">~10,558</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6984,7 +7049,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,564</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29003</dd></div>
@@ -7044,9 +7109,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29003</div>
             </td>
-            <td class="center ws-pop-cell">~5,564</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7071,7 +7136,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,773</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29812</dd></div>
@@ -7131,9 +7196,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~10,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29812</div>
             </td>
-            <td class="center ws-pop-cell">~10,773</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7158,7 +7223,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~59,953</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29803, 29831, 29842, 29851</dd></div>
@@ -7218,9 +7283,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~60,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29803, 29831, 29842, 29851</div>
             </td>
-            <td class="center ws-pop-cell">~59,953</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7303,9 +7368,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7330,7 +7395,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~68,059</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~68,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29640, 29657, 29671</dd></div>
@@ -7390,9 +7455,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~68,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29640, 29657, 29671</div>
             </td>
-            <td class="center ws-pop-cell">~68,059</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7417,7 +7482,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,665</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29627, 29669, 29697</dd></div>
@@ -7477,9 +7542,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~44,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29627, 29669, 29697</div>
             </td>
-            <td class="center ws-pop-cell">~44,665</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7504,7 +7569,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,955</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29010</dd></div>
@@ -7564,9 +7629,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~12,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29010</div>
             </td>
-            <td class="center ws-pop-cell">~11,955</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7591,7 +7656,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,804</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29651</dd></div>
@@ -7651,9 +7716,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~53,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29651</div>
             </td>
-            <td class="center ws-pop-cell">~53,804</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7736,9 +7801,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7763,7 +7828,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,680</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29928</dd></div>
@@ -7823,9 +7888,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~14,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29928</div>
             </td>
-            <td class="center ws-pop-cell">~14,680</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7850,7 +7915,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~70,388</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~70,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29621, 29627, 29654</dd></div>
@@ -7910,9 +7975,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~70,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29621, 29627, 29654</div>
             </td>
-            <td class="center ws-pop-cell">~70,388</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7937,7 +8002,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,154</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29527, 29544</dd></div>
@@ -7997,9 +8062,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~35,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29527, 29544</div>
             </td>
-            <td class="center ws-pop-cell">~35,154</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8024,7 +8089,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~91,344</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~91,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29009, 29010, 29020, 29032, 29040, 29046, 29058, 29067, 29074, 29080, 29104, 29128, 29153, 29175</dd></div>
@@ -8084,9 +8149,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>13 sites
                 </div>
+                <div class="ws-meta">~91,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29009, 29010, 29020, 29032, 29040, 29046, 29058, 29067, 29074, 29080, 29104, 29128, 29153, 29175</div>
             </td>
-            <td class="center ws-pop-cell">~91,344</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8169,9 +8234,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8196,7 +8261,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,676</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29101, 29520, 29584, 29709, 29718, 29727, 29728, 29741</dd></div>
@@ -8256,9 +8321,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~40,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29101, 29520, 29584, 29709, 29718, 29727, 29728, 29741</div>
             </td>
-            <td class="center ws-pop-cell">~40,676</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8283,7 +8348,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,313</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29631</dd></div>
@@ -8343,9 +8408,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~16,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29631</div>
             </td>
-            <td class="center ws-pop-cell">~16,313</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8370,7 +8435,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,958</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29634</dd></div>
@@ -8430,9 +8495,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29634</div>
             </td>
-            <td class="center ws-pop-cell">~5,958</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8457,7 +8522,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,528</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29710</dd></div>
@@ -8517,9 +8582,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~38,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29710</div>
             </td>
-            <td class="center ws-pop-cell">~38,528</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8544,7 +8609,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,958</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29640, 29661, 29671</dd></div>
@@ -8604,9 +8669,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~58,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29640, 29661, 29671</div>
             </td>
-            <td class="center ws-pop-cell">~57,958</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8631,7 +8696,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,402</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29040</dd></div>
@@ -8691,9 +8756,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29040</div>
             </td>
-            <td class="center ws-pop-cell">~9,402</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8778,9 +8843,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~20,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29532</div>
             </td>
-            <td class="center ws-pop-cell">~20,000</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8805,7 +8870,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~122,612</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~123,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29010, 29069, 29079, 29101, 29501, 29532, 29540, 29550, 29593</dd></div>
@@ -8865,9 +8930,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~123,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29010, 29069, 29079, 29101, 29501, 29532, 29540, 29550, 29593</div>
             </td>
-            <td class="center ws-pop-cell">~122,612</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8892,7 +8957,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,762</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,750</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29042</dd></div>
@@ -8952,9 +9017,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~4,750 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29042</div>
             </td>
-            <td class="center ws-pop-cell">~4,762</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8979,7 +9044,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,690</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29536</dd></div>
@@ -9039,9 +9104,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~15,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29536</div>
             </td>
-            <td class="center ws-pop-cell">~15,690</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9066,7 +9131,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~65,763</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~65,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29640, 29642</dd></div>
@@ -9126,9 +9191,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~65,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29640, 29642</div>
             </td>
-            <td class="center ws-pop-cell">~65,763</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9153,7 +9218,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,291</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29824, 29841, 29860</dd></div>
@@ -9213,9 +9278,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~57,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29824, 29841, 29860</div>
             </td>
-            <td class="center ws-pop-cell">~57,291</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9298,9 +9363,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9325,7 +9390,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~100,788</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~101,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29621, 29624, 29625, 29626</dd></div>
@@ -9385,9 +9450,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~101,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29621, 29624, 29625, 29626</div>
             </td>
-            <td class="center ws-pop-cell">~100,788</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9412,7 +9477,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,581</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29715</dd></div>
@@ -9472,9 +9537,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~41,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29715</div>
             </td>
-            <td class="center ws-pop-cell">~41,581</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9499,7 +9564,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,620</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29053</dd></div>
@@ -9559,9 +9624,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~20,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29053</div>
             </td>
-            <td class="center ws-pop-cell">~20,620</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9586,7 +9651,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,860</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29440, 29442, 29510</dd></div>
@@ -9646,9 +9711,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~36,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29440, 29442, 29510</div>
             </td>
-            <td class="center ws-pop-cell">~36,860</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9673,7 +9738,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,302</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29440, 29442</dd></div>
@@ -9733,9 +9798,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~26,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29440, 29442</div>
             </td>
-            <td class="center ws-pop-cell">~26,302</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9760,7 +9825,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~93,409</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~93,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29054, 29070, 29072</dd></div>
@@ -9820,9 +9885,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~93,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29054, 29070, 29072</div>
             </td>
-            <td class="center ws-pop-cell">~93,409</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9847,7 +9912,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~666,766</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~667,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29601, 29602, 29603, 29604, 29605, 29606, 29607, 29608, 29609, 29610, 29611, 29613, 29614, 29615, 29616, 29617, 29627, 29635, 29636, 29640, 29644, 29650, 29651, 29652, 29654, 29661, 29662, 29664, 29669, 29670, 29673, 29680, 29681, 29683, 29685, 29687, 29688, 29690, 29697</dd></div>
@@ -9907,9 +9972,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~667,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29601, 29602, 29603, 29604, 29605, 29606, 29607, 29608, 29609, 29610, 29611, 29613, 29614, 29615, 29616, 29617, 29627, 29635, 29636, 29640, 29644, 29650, 29651, 29652, 29654, 29661, 29662, 29664, 29669, 29670, 29673, 29680, 29681, 29683, 29685, 29687, 29688, 29690, 29697</div>
             </td>
-            <td class="center ws-pop-cell">~666,766</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9934,7 +9999,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~150,830</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~151,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29365, 29650, 29651, 29652, 29687</dd></div>
@@ -9994,9 +10059,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~151,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29365, 29650, 29651, 29652, 29687</div>
             </td>
-            <td class="center ws-pop-cell">~150,830</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10021,7 +10086,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,147</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29571</dd></div>
@@ -10081,9 +10146,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~14,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29571</div>
             </td>
-            <td class="center ws-pop-cell">~14,147</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10108,7 +10173,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~75,136</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~75,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29621, 29627, 29697</dd></div>
@@ -10168,9 +10233,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~75,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29621, 29627, 29697</div>
             </td>
-            <td class="center ws-pop-cell">~75,136</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10195,7 +10260,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,776</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29550</dd></div>
@@ -10255,9 +10320,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~29,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29550</div>
             </td>
-            <td class="center ws-pop-cell">~29,776</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10282,7 +10347,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,930</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29554</dd></div>
@@ -10342,9 +10407,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~8,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29554</div>
             </td>
-            <td class="center ws-pop-cell">~8,930</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10369,7 +10434,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~80,686</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~80,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29040, 29128, 29150, 29154</dd></div>
@@ -10429,9 +10494,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~80,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29040, 29128, 29150, 29154</div>
             </td>
-            <td class="center ws-pop-cell">~80,686</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10456,7 +10521,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,746</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29624</dd></div>
@@ -10516,9 +10581,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29624</div>
             </td>
-            <td class="center ws-pop-cell">~14,746</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10543,7 +10608,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~112,173</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~112,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29303, 29316, 29322, 29348, 29349, 29356</dd></div>
@@ -10603,9 +10668,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~112,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29303, 29316, 29322, 29348, 29349, 29356</div>
             </td>
-            <td class="center ws-pop-cell">~112,173</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10630,7 +10695,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,435</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,450</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29831</dd></div>
@@ -10690,9 +10755,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~4,450 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29831</div>
             </td>
-            <td class="center ws-pop-cell">~4,435</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10717,7 +10782,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,043</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29555</dd></div>
@@ -10777,9 +10842,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~6,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29555</div>
             </td>
-            <td class="center ws-pop-cell">~6,043</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10804,7 +10869,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,960</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29676</dd></div>
@@ -10864,9 +10929,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29676</div>
             </td>
-            <td class="center ws-pop-cell">~5,960</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10891,7 +10956,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,467</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29556</dd></div>
@@ -10951,9 +11016,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~11,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29556</div>
             </td>
-            <td class="center ws-pop-cell">~11,467</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10978,7 +11043,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,073</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29560</dd></div>
@@ -11038,9 +11103,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~12,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29560</div>
             </td>
-            <td class="center ws-pop-cell">~12,073</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11065,7 +11130,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,985</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29563</dd></div>
@@ -11125,9 +11190,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29563</div>
             </td>
-            <td class="center ws-pop-cell">~1,985</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11152,7 +11217,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,511</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29575</dd></div>
@@ -11212,9 +11277,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~19,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29575</div>
             </td>
-            <td class="center ws-pop-cell">~19,511</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11239,7 +11304,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,460</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,450</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29069</dd></div>
@@ -11299,9 +11364,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,450 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29069</div>
             </td>
-            <td class="center ws-pop-cell">~4,460</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11326,7 +11391,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~100,526</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~101,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29058, 29067, 29707, 29720, 29744</dd></div>
@@ -11386,9 +11451,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~101,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29058, 29067, 29707, 29720, 29744</div>
             </td>
-            <td class="center ws-pop-cell">~100,526</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11413,7 +11478,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,819</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29360</dd></div>
@@ -11473,9 +11538,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~21,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29360</div>
             </td>
-            <td class="center ws-pop-cell">~21,819</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11500,7 +11565,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,994</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~78,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29303, 29323, 29338, 29349, 29368</dd></div>
@@ -11560,9 +11625,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~78,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29303, 29323, 29338, 29349, 29368</div>
             </td>
-            <td class="center ws-pop-cell">~77,994</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11587,7 +11652,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,344</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29657</dd></div>
@@ -11647,9 +11712,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~16,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29657</div>
             </td>
-            <td class="center ws-pop-cell">~16,344</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11732,9 +11797,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11759,7 +11824,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,077</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29001, 29102</dd></div>
@@ -11819,9 +11884,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~18,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29001, 29102</div>
             </td>
-            <td class="center ws-pop-cell">~18,077</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11846,7 +11911,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,325</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29519, 29543, 29546, 29565, 29571, 29574, 29581, 29589, 29592</dd></div>
@@ -11906,9 +11971,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~39,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29519, 29543, 29546, 29565, 29571, 29574, 29581, 29589, 29592</div>
             </td>
-            <td class="center ws-pop-cell">~39,325</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11933,7 +11998,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,736</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29512</dd></div>
@@ -11993,9 +12058,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~17,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29512</div>
             </td>
-            <td class="center ws-pop-cell">~17,736</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12020,7 +12085,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,413</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29303</dd></div>
@@ -12080,9 +12145,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~27,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29303</div>
             </td>
-            <td class="center ws-pop-cell">~27,413</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12165,9 +12230,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 29839</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12192,7 +12257,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,842</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29574</dd></div>
@@ -12252,9 +12317,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~9,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29574</div>
             </td>
-            <td class="center ws-pop-cell">~9,842</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12279,7 +12344,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,175</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29803, 29809</dd></div>
@@ -12339,9 +12404,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~41,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29803, 29809</div>
             </td>
-            <td class="center ws-pop-cell">~41,175</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12366,7 +12431,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,505</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29841</dd></div>
@@ -12426,9 +12491,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~32,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29841</div>
             </td>
-            <td class="center ws-pop-cell">~32,505</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12453,7 +12518,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,422</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29670</dd></div>
@@ -12513,9 +12578,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29670</div>
             </td>
-            <td class="center ws-pop-cell">~10,422</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12540,7 +12605,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,318</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29671</dd></div>
@@ -12600,9 +12665,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~19,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29671</div>
             </td>
-            <td class="center ws-pop-cell">~19,318</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12627,7 +12692,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,751</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29643, 29678, 29689, 29693</dd></div>
@@ -12687,9 +12752,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~43,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29643, 29678, 29689, 29693</div>
             </td>
-            <td class="center ws-pop-cell">~43,751</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12714,7 +12779,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~204,268</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~204,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29611, 29621, 29640, 29642, 29657, 29673, 29697</dd></div>
@@ -12774,9 +12839,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~204,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29611, 29621, 29640, 29642, 29657, 29673, 29697</div>
             </td>
-            <td class="center ws-pop-cell">~204,268</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12801,7 +12866,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~113,909</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~114,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29730, 29731, 29732</dd></div>
@@ -12861,9 +12926,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~114,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29730, 29731, 29732</div>
             </td>
-            <td class="center ws-pop-cell">~113,909</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12888,7 +12953,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~97,148</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~97,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29621, 29623, 29624, 29625, 29670</dd></div>
@@ -12948,9 +13013,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~97,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29621, 29623, 29624, 29625, 29670</div>
             </td>
-            <td class="center ws-pop-cell">~97,148</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12975,7 +13040,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,399</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29665, 29672, 29675, 29676, 29678, 29693, 29696</dd></div>
@@ -13035,9 +13100,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~60,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29665, 29672, 29675, 29676, 29678, 29693, 29696</div>
             </td>
-            <td class="center ws-pop-cell">~60,399</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13062,7 +13127,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,359</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29172</dd></div>
@@ -13122,9 +13187,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29172</div>
             </td>
-            <td class="center ws-pop-cell">~9,359</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13149,7 +13214,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,348</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29630, 29657, 29671, 29682, 29685</dd></div>
@@ -13209,9 +13274,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~57,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29630, 29657, 29671, 29682, 29685</div>
             </td>
-            <td class="center ws-pop-cell">~57,348</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13236,7 +13301,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,942</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29365, 29385</dd></div>
@@ -13296,9 +13361,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~22,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29365, 29385</div>
             </td>
-            <td class="center ws-pop-cell">~22,942</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13323,7 +13388,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,680</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29928</dd></div>
@@ -13383,9 +13448,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~14,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29928</div>
             </td>
-            <td class="center ws-pop-cell">~14,680</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13410,7 +13475,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~82,107</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~82,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29640, 29641, 29642, 29657</dd></div>
@@ -13470,9 +13535,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~82,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29640, 29641, 29642, 29657</div>
             </td>
-            <td class="center ws-pop-cell">~82,107</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13497,7 +13562,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~256,305</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~256,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29301, 29302, 29303, 29306, 29307, 29316, 29320, 29322, 29323, 29324, 29329, 29330, 29333, 29346, 29349, 29369, 29372, 29374, 29376, 29378, 29385</dd></div>
@@ -13557,9 +13622,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~256,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29301, 29302, 29303, 29306, 29307, 29316, 29320, 29322, 29323, 29324, 29329, 29330, 29333, 29346, 29349, 29369, 29372, 29374, 29376, 29378, 29385</div>
             </td>
-            <td class="center ws-pop-cell">~256,305</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13642,9 +13707,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 29808</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13669,7 +13734,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~82,668</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~82,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29150, 29153, 29154</dd></div>
@@ -13729,9 +13794,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~82,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29150, 29153, 29154</div>
             </td>
-            <td class="center ws-pop-cell">~82,668</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13756,7 +13821,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,273</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29322, 29356</dd></div>
@@ -13816,9 +13881,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~19,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29322, 29356</div>
             </td>
-            <td class="center ws-pop-cell">~19,273</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13843,7 +13908,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,028</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29708</dd></div>
@@ -13903,9 +13968,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~42,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29708</div>
             </td>
-            <td class="center ws-pop-cell">~42,028</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13930,7 +13995,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,380</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29536, 29547, 29563, 29565, 29567</dd></div>
@@ -13990,9 +14055,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~27,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29536, 29547, 29563, 29565, 29567</div>
             </td>
-            <td class="center ws-pop-cell">~27,380</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14017,7 +14082,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,646</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29816, 29822, 29828, 29834, 29841, 29842, 29851</dd></div>
@@ -14077,9 +14142,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~51,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29816, 29822, 29828, 29834, 29841, 29842, 29851</div>
             </td>
-            <td class="center ws-pop-cell">~51,646</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14104,7 +14169,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,439</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29691, 29696</dd></div>
@@ -14164,9 +14229,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~17,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29691, 29696</div>
             </td>
-            <td class="center ws-pop-cell">~17,439</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14191,7 +14256,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,678</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29475, 29488</dd></div>
@@ -14251,9 +14316,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>11 sites
                 </div>
+                <div class="ws-meta">~24,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29475, 29488</div>
             </td>
-            <td class="center ws-pop-cell">~24,678</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14278,7 +14343,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,774</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29056, 29479, 29510, 29518, 29554, 29556, 29560, 29564, 29580, 29590</dd></div>
@@ -14338,9 +14403,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~58,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29056, 29479, 29510, 29518, 29554, 29556, 29560, 29564, 29580, 29590</div>
             </td>
-            <td class="center ws-pop-cell">~58,774</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14365,7 +14430,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,403</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29625, 29626, 29684</dd></div>
@@ -14425,9 +14490,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~47,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29625, 29626, 29684</div>
             </td>
-            <td class="center ws-pop-cell">~47,403</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14452,7 +14517,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,789</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29669</dd></div>
@@ -14512,9 +14577,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~13,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29669</div>
             </td>
-            <td class="center ws-pop-cell">~13,789</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14539,7 +14604,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,420</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29693</dd></div>
@@ -14599,9 +14664,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~13,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29693</div>
             </td>
-            <td class="center ws-pop-cell">~13,420</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14626,7 +14691,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,042</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29669, 29697</dd></div>
@@ -14686,9 +14751,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~28,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29669, 29697</div>
             </td>
-            <td class="center ws-pop-cell">~28,042</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14713,7 +14778,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,352</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29745</dd></div>
@@ -14773,9 +14838,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~34,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29745</div>
             </td>
-            <td class="center ws-pop-cell">~34,352</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14800,7 +14865,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~83,609</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~83,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29708, 29715</dd></div>
@@ -14860,9 +14925,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~83,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29708, 29715</div>
             </td>
-            <td class="center ws-pop-cell">~83,609</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14887,7 +14952,7 @@
                         <p class="ws-tip-state">SOUTH CAROLINA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,352</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>29745</dd></div>
@@ -14947,9 +15012,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~34,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 29745</div>
             </td>
-            <td class="center ws-pop-cell">~34,352</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -15062,7 +15127,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -15121,6 +15186,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

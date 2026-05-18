@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,336</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80435</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~8,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80435</div>
             </td>
-            <td class="center ws-pop-cell">~8,336</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~81,633</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~81,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80817, 80911, 80925</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>9 sites
                 </div>
+                <div class="ws-meta">~81,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80817, 80911, 80925</div>
             </td>
-            <td class="center ws-pop-cell">~81,633</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~95,547</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~95,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80601, 80602, 80640</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~95,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80601, 80602, 80640</div>
             </td>
-            <td class="center ws-pop-cell">~95,547</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,602</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81435</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81435</div>
             </td>
-            <td class="center ws-pop-cell">~5,602</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -920,7 +985,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~280,602</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~281,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80023, 80221, 80229, 80233, 80241, 80260, 80602</dd></div>
@@ -980,9 +1045,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~281,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80023, 80221, 80229, 80233, 80241, 80260, 80602</div>
             </td>
-            <td class="center ws-pop-cell">~280,602</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1008,7 +1073,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~56,503</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~56,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80602, 80603</dd></div>
@@ -1068,9 +1133,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~56,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80602, 80603</div>
             </td>
-            <td class="center ws-pop-cell">~56,503</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1096,7 +1161,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,082</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80915, 80922, 80928, 80939, 80951</dd></div>
@@ -1156,9 +1221,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~58,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80915, 80922, 80928, 80939, 80951</div>
             </td>
-            <td class="center ws-pop-cell">~58,082</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1242,9 +1307,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 80314</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1270,7 +1335,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~285,020</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~285,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80503, 80504, 80513, 80534, 80537, 80538, 80542, 80543, 80550, 80651</dd></div>
@@ -1330,9 +1395,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~285,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80503, 80504, 80513, 80534, 80537, 80538, 80542, 80543, 80550, 80651</div>
             </td>
-            <td class="center ws-pop-cell">~285,020</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1358,7 +1423,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~203,380</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~203,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80108, 80112, 80124, 80134, 80138</dd></div>
@@ -1418,9 +1483,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>11 sites
                 </div>
+                <div class="ws-meta">~203,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80108, 80112, 80124, 80134, 80138</div>
             </td>
-            <td class="center ws-pop-cell">~203,380</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1446,7 +1511,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~205,857</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~206,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80015, 80016, 80111, 80112</dd></div>
@@ -1506,9 +1571,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~206,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80015, 80016, 80111, 80112</div>
             </td>
-            <td class="center ws-pop-cell">~205,857</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1534,7 +1599,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,694</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81230</dd></div>
@@ -1594,9 +1659,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>9 sites
                 </div>
+                <div class="ws-meta">~10,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81230</div>
             </td>
-            <td class="center ws-pop-cell">~10,694</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1622,7 +1687,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,605</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81067</dd></div>
@@ -1682,9 +1747,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81067</div>
             </td>
-            <td class="center ws-pop-cell">~5,605</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1710,7 +1775,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~111,496</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~111,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80134, 80138</dd></div>
@@ -1770,9 +1835,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~111,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80134, 80138</div>
             </td>
-            <td class="center ws-pop-cell">~111,496</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1798,7 +1863,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,395</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80110, 80113, 80120</dd></div>
@@ -1858,9 +1923,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~77,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80110, 80113, 80120</div>
             </td>
-            <td class="center ws-pop-cell">~77,395</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1886,7 +1951,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,024</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80014</dd></div>
@@ -1946,9 +2011,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~39,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80014</div>
             </td>
-            <td class="center ws-pop-cell">~39,024</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1973,7 +2038,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,245</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81101</dd></div>
@@ -2033,9 +2098,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~15,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81101</div>
             </td>
-            <td class="center ws-pop-cell">~15,245</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2060,7 +2125,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,043</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,050</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81120</dd></div>
@@ -2120,9 +2185,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~2,050 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81120</div>
             </td>
-            <td class="center ws-pop-cell">~2,043</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2147,7 +2212,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~204,051</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~204,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80002, 80003, 80004, 80005, 80007, 80030, 80033, 80403</dd></div>
@@ -2207,9 +2272,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~204,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80002, 80003, 80004, 80005, 80007, 80030, 80033, 80403</div>
             </td>
-            <td class="center ws-pop-cell">~204,051</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2234,7 +2299,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,599</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81611</dd></div>
@@ -2294,9 +2359,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81611</div>
             </td>
-            <td class="center ws-pop-cell">~9,599</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2321,7 +2386,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~469,466</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~469,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80010, 80011, 80012, 80013, 80014, 80015, 80016, 80017, 80018, 80019, 80045, 80102, 80137</dd></div>
@@ -2381,9 +2446,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~469,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80010, 80011, 80012, 80013, 80014, 80015, 80016, 80017, 80018, 80019, 80045, 80102, 80137</div>
             </td>
-            <td class="center ws-pop-cell">~469,466</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2468,9 +2533,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81635, 81636</div>
             </td>
-            <td class="center ws-pop-cell">~7,000</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2495,7 +2560,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,074</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80510, 80513, 80534</dd></div>
@@ -2555,9 +2620,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~36,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80510, 80513, 80534</div>
             </td>
-            <td class="center ws-pop-cell">~36,074</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2582,7 +2647,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,663</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80422, 80452</dd></div>
@@ -2642,9 +2707,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~7,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80422, 80452</div>
             </td>
-            <td class="center ws-pop-cell">~7,663</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2669,7 +2734,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~121,924</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~122,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80301, 80302, 80303, 80304, 80305</dd></div>
@@ -2729,9 +2794,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~122,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80301, 80302, 80303, 80304, 80305</div>
             </td>
-            <td class="center ws-pop-cell">~121,924</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2756,7 +2821,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,811</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80424</dd></div>
@@ -2816,9 +2881,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80424</div>
             </td>
-            <td class="center ws-pop-cell">~10,811</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2843,7 +2908,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~245,221</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~245,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80020, 80021, 80023, 80026, 80027, 80234, 80516</dd></div>
@@ -2903,9 +2968,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~245,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80020, 80021, 80023, 80026, 80027, 80234, 80516</div>
             </td>
-            <td class="center ws-pop-cell">~245,221</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2930,7 +2995,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,727</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80723</dd></div>
@@ -2990,9 +3055,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~6,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80723</div>
             </td>
-            <td class="center ws-pop-cell">~6,727</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3017,7 +3082,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,007</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81211</dd></div>
@@ -3077,9 +3142,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~8,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81211</div>
             </td>
-            <td class="center ws-pop-cell">~8,007</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3104,7 +3169,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,267</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,250</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80807</dd></div>
@@ -3164,9 +3229,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~4,250 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80807</div>
             </td>
-            <td class="center ws-pop-cell">~4,267</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3191,7 +3256,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,146</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81212</dd></div>
@@ -3251,9 +3316,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~32,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81212</div>
             </td>
-            <td class="center ws-pop-cell">~32,146</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3278,7 +3343,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,109</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81623</dd></div>
@@ -3338,9 +3403,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~17,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81623</div>
             </td>
-            <td class="center ws-pop-cell">~17,109</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3365,7 +3430,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,259</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80108</dd></div>
@@ -3425,9 +3490,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~33,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80108</div>
             </td>
-            <td class="center ws-pop-cell">~33,259</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3452,7 +3517,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,259</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80108</dd></div>
@@ -3512,9 +3577,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~33,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80108</div>
             </td>
-            <td class="center ws-pop-cell">~33,259</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3539,7 +3604,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~96,195</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~96,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80104, 80108, 80109</dd></div>
@@ -3599,9 +3664,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~96,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80104, 80108, 80109</div>
             </td>
-            <td class="center ws-pop-cell">~96,195</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3626,7 +3691,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~99,216</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~99,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80126, 80129, 80130</dd></div>
@@ -3686,9 +3751,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~99,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80126, 80129, 80130</div>
             </td>
-            <td class="center ws-pop-cell">~99,216</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3713,7 +3778,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~686</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~690</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80427</dd></div>
@@ -3773,9 +3838,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~690 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80427</div>
             </td>
-            <td class="center ws-pop-cell">~686</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3800,7 +3865,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~231,104</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~231,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80504, 80514, 80516, 80534, 80543, 80603, 80621, 80631, 80642, 80644, 80645, 80651</dd></div>
@@ -3860,9 +3925,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~231,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80504, 80514, 80516, 80534, 80543, 80603, 80621, 80631, 80642, 80644, 80645, 80651</div>
             </td>
-            <td class="center ws-pop-cell">~231,104</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3887,7 +3952,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,049</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81401, 81403</dd></div>
@@ -3947,9 +4012,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~35,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81401, 81403</div>
             </td>
-            <td class="center ws-pop-cell">~35,049</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3974,7 +4039,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~107,760</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~108,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81503, 81504, 81505, 81506, 81520, 81521, 81526, 81527</dd></div>
@@ -4034,9 +4099,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~108,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81503, 81504, 81505, 81506, 81520, 81521, 81526, 81527</div>
             </td>
-            <td class="center ws-pop-cell">~107,760</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4061,7 +4126,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,884</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80116</dd></div>
@@ -4121,9 +4186,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80116</div>
             </td>
-            <td class="center ws-pop-cell">~4,884</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4208,9 +4273,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~15,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80925</div>
             </td>
-            <td class="center ws-pop-cell">~15,500</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4235,7 +4300,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~627,907</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~628,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80809, 80829, 80831, 80903, 80904, 80905, 80906, 80907, 80908, 80909, 80910, 80911, 80914, 80915, 80916, 80917, 80918, 80919, 80920, 80921, 80922, 80923, 80924, 80925, 80926, 80927, 80929, 80938, 80951</dd></div>
@@ -4295,9 +4360,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~628,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80809, 80829, 80831, 80903, 80904, 80905, 80906, 80907, 80908, 80909, 80910, 80911, 80914, 80915, 80916, 80917, 80918, 80919, 80920, 80921, 80922, 80923, 80924, 80925, 80926, 80927, 80929, 80938, 80951</div>
             </td>
-            <td class="center ws-pop-cell">~627,907</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4322,7 +4387,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~96,733</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~96,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80215, 80228, 80401</dd></div>
@@ -4382,9 +4447,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~96,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80215, 80228, 80401</div>
             </td>
-            <td class="center ws-pop-cell">~96,733</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4409,7 +4474,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~148,001</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~148,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80033, 80214, 80215, 80226, 80401</dd></div>
@@ -4469,9 +4534,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~148,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80033, 80214, 80215, 80226, 80401</div>
             </td>
-            <td class="center ws-pop-cell">~148,001</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4496,7 +4561,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,118</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80443</dd></div>
@@ -4556,9 +4621,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~4,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80443</div>
             </td>
-            <td class="center ws-pop-cell">~4,118</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4583,7 +4648,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,649</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81321</dd></div>
@@ -4643,9 +4708,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81321</div>
             </td>
-            <td class="center ws-pop-cell">~14,649</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4670,7 +4735,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,449</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81625, 81626</dd></div>
@@ -4730,9 +4795,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81625, 81626</div>
             </td>
-            <td class="center ws-pop-cell">~12,449</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4757,7 +4822,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,181</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81415, 81419</dd></div>
@@ -4817,9 +4882,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81415, 81419</div>
             </td>
-            <td class="center ws-pop-cell">~5,181</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4844,7 +4909,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~762</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~760</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81130</dd></div>
@@ -4904,9 +4969,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~760 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81130</div>
             </td>
-            <td class="center ws-pop-cell">~762</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4989,9 +5054,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 80523</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5074,9 +5139,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 80523</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5101,7 +5166,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,478</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80526</dd></div>
@@ -5161,9 +5226,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~44,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80526</div>
             </td>
-            <td class="center ws-pop-cell">~44,478</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5188,7 +5253,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,275</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80514</dd></div>
@@ -5248,9 +5313,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80514</div>
             </td>
-            <td class="center ws-pop-cell">~6,275</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5275,7 +5340,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,812</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81416</dd></div>
@@ -5335,9 +5400,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~13,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81416</div>
             </td>
-            <td class="center ws-pop-cell">~13,812</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5362,7 +5427,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,113,704</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2.1 million</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80002, 80003, 80004, 80005, 80007, 80010, 80011, 80012, 80014, 80019, 80021, 80022, 80030, 80031, 80033, 80110, 80111, 80112, 80113, 80120, 80121, 80122, 80123, 80124, 80125, 80126, 80127, 80128, 80129, 80130, 80134, 80137, 80202, 80203, 80204, 80205, 80206, 80207, 80209, 80210, 80211, 80212, 80214, 80215, 80216, 80218, 80219, 80220, 80221, 80222, 80223, 80224, 80225, 80226, 80227, 80228, 80229, 80230, 80231, 80232, 80235, 80236, 80237, 80238, 80239, 80246, 80247, 80249, 80264, 80265, 80293, 80294, 80401, 80403, 80465, 80642</dd></div>
@@ -5422,9 +5487,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~2.1 million residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80002, 80003, 80004, 80005, 80007, 80010, 80011, 80012, 80014, 80019, 80021, 80022, 80030, 80031, 80033, 80110, 80111, 80112, 80113, 80120, 80121, 80122, 80123, 80124, 80125, 80126, 80127, 80128, 80129, 80130, 80134, 80137, 80202, 80203, 80204, 80205, 80206, 80207, 80209, 80210, 80211, 80212, 80214, 80215, 80216, 80218, 80219, 80220, 80221, 80222, 80223, 80224, 80225, 80226, 80227, 80228, 80229, 80230, 80231, 80232, 80235, 80236, 80237, 80238, 80239, 80246, 80247, 80249, 80264, 80265, 80293, 80294, 80401, 80403, 80465, 80642</div>
             </td>
-            <td class="center ws-pop-cell">~2,113,704</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5449,7 +5514,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,070</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81323</dd></div>
@@ -5509,9 +5574,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81323</div>
             </td>
-            <td class="center ws-pop-cell">~5,070</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5536,7 +5601,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,767</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80921</dd></div>
@@ -5596,9 +5661,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~23,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80921</div>
             </td>
-            <td class="center ws-pop-cell">~23,767</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5623,7 +5688,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,334</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81301, 81303</dd></div>
@@ -5683,9 +5748,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~39,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81301, 81303</div>
             </td>
-            <td class="center ws-pop-cell">~39,334</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5710,7 +5775,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,338</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81620, 81632, 81657</dd></div>
@@ -5770,9 +5835,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>11 sites
                 </div>
+                <div class="ws-meta">~27,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81620, 81632, 81657</div>
             </td>
-            <td class="center ws-pop-cell">~27,338</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5797,7 +5862,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,335</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81631</dd></div>
@@ -5857,9 +5922,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~8,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81631</div>
             </td>
-            <td class="center ws-pop-cell">~8,335</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5884,7 +5949,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~72,841</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~72,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80015</dd></div>
@@ -5944,9 +6009,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~72,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80015</div>
             </td>
-            <td class="center ws-pop-cell">~72,841</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5971,7 +6036,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,711</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80524</dd></div>
@@ -6031,9 +6096,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~38,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80524</div>
             </td>
-            <td class="center ws-pop-cell">~38,711</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6058,7 +6123,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,840</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80615</dd></div>
@@ -6118,9 +6183,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80615</div>
             </td>
-            <td class="center ws-pop-cell">~8,840</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6145,7 +6210,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,442</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,450</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80466</dd></div>
@@ -6205,9 +6270,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~3,450 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80466</div>
             </td>
-            <td class="center ws-pop-cell">~3,442</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6232,7 +6297,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,998</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80516</dd></div>
@@ -6292,9 +6357,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~35,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80516</div>
             </td>
-            <td class="center ws-pop-cell">~34,998</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6319,7 +6384,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,407</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80517</dd></div>
@@ -6379,9 +6444,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~10,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80517</div>
             </td>
-            <td class="center ws-pop-cell">~10,407</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6406,7 +6471,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,048</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80620</dd></div>
@@ -6466,9 +6531,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~21,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80620</div>
             </td>
-            <td class="center ws-pop-cell">~21,048</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6493,7 +6558,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~67,971</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~68,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80401, 80437, 80439, 80457</dd></div>
@@ -6553,9 +6618,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~68,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80401, 80437, 80439, 80457</div>
             </td>
-            <td class="center ws-pop-cell">~67,971</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6580,7 +6645,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,309</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80260</dd></div>
@@ -6640,9 +6705,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~35,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80260</div>
             </td>
-            <td class="center ws-pop-cell">~35,309</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6667,7 +6732,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~62,263</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~62,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80504, 80520</dd></div>
@@ -6727,9 +6792,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~62,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80504, 80520</div>
             </td>
-            <td class="center ws-pop-cell">~62,263</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6754,7 +6819,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,226</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81221, 81226, 81244</dd></div>
@@ -6814,9 +6879,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81221, 81226, 81244</div>
             </td>
-            <td class="center ws-pop-cell">~9,226</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6841,7 +6906,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~66,133</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~66,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80817, 80911</dd></div>
@@ -6901,9 +6966,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~66,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80817, 80911</div>
             </td>
-            <td class="center ws-pop-cell">~66,133</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6928,7 +6993,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~86,439</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~86,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80504, 80514, 80530, 80621</dd></div>
@@ -6988,9 +7053,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~86,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80504, 80514, 80530, 80621</div>
             </td>
-            <td class="center ws-pop-cell">~86,439</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7015,7 +7080,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,118</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80443</dd></div>
@@ -7075,9 +7140,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~4,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80443</div>
             </td>
-            <td class="center ws-pop-cell">~4,118</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7102,7 +7167,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~200,736</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~201,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80521, 80524, 80525, 80526, 80528</dd></div>
@@ -7162,9 +7227,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~201,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80521, 80524, 80525, 80526, 80528</div>
             </td>
-            <td class="center ws-pop-cell">~200,736</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7189,7 +7254,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~259,504</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~260,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80521, 80525, 80526, 80528, 80538, 80547, 80550</dd></div>
@@ -7249,9 +7314,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~260,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80521, 80525, 80526, 80528, 80538, 80547, 80550</div>
             </td>
-            <td class="center ws-pop-cell">~259,504</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7334,9 +7399,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: 80261</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7361,7 +7426,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,085</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80701</dd></div>
@@ -7421,9 +7486,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~17,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80701</div>
             </td>
-            <td class="center ws-pop-cell">~17,085</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7448,7 +7513,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,777</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80401</dd></div>
@@ -7508,9 +7573,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~42,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80401</div>
             </td>
-            <td class="center ws-pop-cell">~42,777</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7535,7 +7600,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,547</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81601, 81602</dd></div>
@@ -7595,9 +7660,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~16,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81601, 81602</div>
             </td>
-            <td class="center ws-pop-cell">~16,547</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7622,7 +7687,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~63,586</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~63,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80401, 80402, 80403, 80419</dd></div>
@@ -7682,9 +7747,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~63,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80401, 80402, 80403, 80419</div>
             </td>
-            <td class="center ws-pop-cell">~63,586</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7709,7 +7774,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,777</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80401</dd></div>
@@ -7769,9 +7834,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~42,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80401</div>
             </td>
-            <td class="center ws-pop-cell">~42,777</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7796,7 +7861,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,207</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80482</dd></div>
@@ -7856,9 +7921,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~1,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80482</div>
             </td>
-            <td class="center ws-pop-cell">~1,207</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7883,7 +7948,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~63,658</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~63,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81501, 81503, 81505, 81506</dd></div>
@@ -7943,9 +8008,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~63,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81501, 81503, 81505, 81506</div>
             </td>
-            <td class="center ws-pop-cell">~63,658</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7970,7 +8035,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~374,761</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~375,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80512, 80521, 80524, 80525, 80528, 80534, 80535, 80543, 80547, 80550, 80620, 80631, 80634</dd></div>
@@ -8030,9 +8095,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~375,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80512, 80521, 80524, 80525, 80528, 80534, 80535, 80543, 80547, 80550, 80620, 80631, 80634</div>
             </td>
-            <td class="center ws-pop-cell">~374,761</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8057,7 +8122,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,733</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81637</dd></div>
@@ -8117,9 +8182,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81637</div>
             </td>
-            <td class="center ws-pop-cell">~9,733</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8144,7 +8209,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,560</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,550</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81639</dd></div>
@@ -8204,9 +8269,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~2,550 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81639</div>
             </td>
-            <td class="center ws-pop-cell">~2,560</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8231,7 +8296,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,146</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80642</dd></div>
@@ -8291,9 +8356,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80642</div>
             </td>
-            <td class="center ws-pop-cell">~5,146</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8318,7 +8383,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,316</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80452</dd></div>
@@ -8378,9 +8443,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~3,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80452</div>
             </td>
-            <td class="center ws-pop-cell">~3,316</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8405,7 +8470,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,058</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80112</dd></div>
@@ -8465,9 +8530,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~36,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80112</div>
             </td>
-            <td class="center ws-pop-cell">~36,058</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8492,7 +8557,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,368</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80534</dd></div>
@@ -8552,9 +8617,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~19,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80534</div>
             </td>
-            <td class="center ws-pop-cell">~19,368</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8579,7 +8644,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,601</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81050</dd></div>
@@ -8639,9 +8704,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81050</div>
             </td>
-            <td class="center ws-pop-cell">~9,601</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8666,7 +8731,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~91,701</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~91,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80026, 80027, 80303</dd></div>
@@ -8726,9 +8791,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~91,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80026, 80027, 80303</div>
             </td>
-            <td class="center ws-pop-cell">~91,701</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8753,7 +8818,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,143</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81052</dd></div>
@@ -8813,9 +8878,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81052</div>
             </td>
-            <td class="center ws-pop-cell">~9,143</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8840,7 +8905,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~232,250</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~232,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80026, 80301, 80501, 80503, 80504, 80516</dd></div>
@@ -8900,9 +8965,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~232,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80026, 80301, 80501, 80503, 80504, 80516</div>
             </td>
-            <td class="center ws-pop-cell">~232,250</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8927,7 +8992,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,291</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80828</dd></div>
@@ -8987,9 +9052,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80828</div>
             </td>
-            <td class="center ws-pop-cell">~2,291</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9014,7 +9079,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,617</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80603</dd></div>
@@ -9074,9 +9139,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~15,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80603</div>
             </td>
-            <td class="center ws-pop-cell">~15,617</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9101,7 +9166,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~139,984</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~140,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80501, 80503, 80504</dd></div>
@@ -9161,9 +9226,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~140,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80501, 80503, 80504</div>
             </td>
-            <td class="center ws-pop-cell">~139,984</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9188,7 +9253,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,161</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80027</dd></div>
@@ -9248,9 +9313,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~34,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80027</div>
             </td>
-            <td class="center ws-pop-cell">~34,161</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9275,7 +9340,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~92,549</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~92,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80537, 80538</dd></div>
@@ -9335,9 +9400,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~92,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80537, 80538</div>
             </td>
-            <td class="center ws-pop-cell">~92,549</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9362,7 +9427,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,576</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80829</dd></div>
@@ -9422,9 +9487,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80829</div>
             </td>
-            <td class="center ws-pop-cell">~5,576</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9449,7 +9514,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,665</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81401</dd></div>
@@ -9509,9 +9574,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~23,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81401</div>
             </td>
-            <td class="center ws-pop-cell">~23,665</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9536,7 +9601,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~111,441</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~111,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80112, 80134</dd></div>
@@ -9596,9 +9661,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~111,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80112, 80134</div>
             </td>
-            <td class="center ws-pop-cell">~111,441</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9623,7 +9688,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,824</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80831</dd></div>
@@ -9683,9 +9748,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~31,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80831</div>
             </td>
-            <td class="center ws-pop-cell">~31,824</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9710,7 +9775,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,978</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81621, 81623</dd></div>
@@ -9770,9 +9835,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~23,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81621, 81623</div>
             </td>
-            <td class="center ws-pop-cell">~22,978</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9797,7 +9862,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,109</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80543</dd></div>
@@ -9857,9 +9922,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80543</div>
             </td>
-            <td class="center ws-pop-cell">~9,109</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9884,7 +9949,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,766</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81144</dd></div>
@@ -9944,9 +10009,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~6,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81144</div>
             </td>
-            <td class="center ws-pop-cell">~6,766</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9971,7 +10036,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,079</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81320, 81321, 81323, 81324, 81327, 81328, 81335</dd></div>
@@ -10031,9 +10096,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~26,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81320, 81321, 81323, 81324, 81327, 81328, 81335</div>
             </td>
-            <td class="center ws-pop-cell">~26,079</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10058,7 +10123,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,049</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81401, 81403</dd></div>
@@ -10118,9 +10183,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~35,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81401, 81403</div>
             </td>
-            <td class="center ws-pop-cell">~35,049</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10145,7 +10210,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,159</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80132</dd></div>
@@ -10205,9 +10270,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~28,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80132</div>
             </td>
-            <td class="center ws-pop-cell">~28,159</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10232,7 +10297,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,765</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80649, 80653, 80654, 80701, 80705, 80723, 80733, 80742, 80750</dd></div>
@@ -10292,9 +10357,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~29,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80649, 80653, 80654, 80701, 80705, 80723, 80733, 80742, 80750</div>
             </td>
-            <td class="center ws-pop-cell">~29,765</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10319,7 +10384,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,783</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80465</dd></div>
@@ -10379,9 +10444,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~15,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80465</div>
             </td>
-            <td class="center ws-pop-cell">~15,783</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10406,7 +10471,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,383</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80487</dd></div>
@@ -10466,9 +10531,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~18,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80487</div>
             </td>
-            <td class="center ws-pop-cell">~18,383</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10493,7 +10558,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,879</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81147</dd></div>
@@ -10553,9 +10618,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~12,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81147</div>
             </td>
-            <td class="center ws-pop-cell">~12,879</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10580,7 +10645,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,528</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81647</dd></div>
@@ -10640,9 +10705,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81647</div>
             </td>
-            <td class="center ws-pop-cell">~6,528</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10667,7 +10732,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,605</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81067</dd></div>
@@ -10727,9 +10792,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81067</div>
             </td>
-            <td class="center ws-pop-cell">~5,605</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10754,7 +10819,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,747</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80002, 80004, 80403</dd></div>
@@ -10814,9 +10879,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~76,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80002, 80004, 80403</div>
             </td>
-            <td class="center ws-pop-cell">~76,747</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10841,7 +10906,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~112,095</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~112,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80546, 80550, 80610, 80615, 80622, 80624, 80631, 80646, 80648, 80650</dd></div>
@@ -10901,9 +10966,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~112,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80546, 80550, 80610, 80615, 80622, 80624, 80631, 80646, 80648, 80650</div>
             </td>
-            <td class="center ws-pop-cell">~112,095</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10928,7 +10993,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~309</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~310</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80612</dd></div>
@@ -10988,9 +11053,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~310 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80612</div>
             </td>
-            <td class="center ws-pop-cell">~309</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11015,7 +11080,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~134,831</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~135,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80124, 80125, 80126, 80129, 80130</dd></div>
@@ -11075,9 +11140,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~135,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80124, 80125, 80126, 80129, 80130</div>
             </td>
-            <td class="center ws-pop-cell">~134,831</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11102,7 +11167,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~146,455</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~146,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80233, 80234, 80241, 80260</dd></div>
@@ -11162,9 +11227,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~146,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80233, 80234, 80241, 80260</div>
             </td>
-            <td class="center ws-pop-cell">~146,455</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11189,7 +11254,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,879</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81147</dd></div>
@@ -11249,9 +11314,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~12,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81147</div>
             </td>
-            <td class="center ws-pop-cell">~12,879</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11276,7 +11341,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,824</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80831</dd></div>
@@ -11336,9 +11401,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~31,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80831</div>
             </td>
-            <td class="center ws-pop-cell">~31,824</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11363,7 +11428,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,146</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81212</dd></div>
@@ -11423,9 +11488,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~32,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81212</div>
             </td>
-            <td class="center ws-pop-cell">~32,146</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11450,7 +11515,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,052</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80461</dd></div>
@@ -11510,9 +11575,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~7,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80461</div>
             </td>
-            <td class="center ws-pop-cell">~7,052</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11537,7 +11602,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,605</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81067</dd></div>
@@ -11597,9 +11662,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81067</div>
             </td>
-            <td class="center ws-pop-cell">~5,605</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11624,7 +11689,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,940</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80118</dd></div>
@@ -11684,9 +11749,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~5,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80118</div>
             </td>
-            <td class="center ws-pop-cell">~5,940</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11711,7 +11776,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~75,383</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~75,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80134</dd></div>
@@ -11771,9 +11836,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~75,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80134</div>
             </td>
-            <td class="center ws-pop-cell">~75,383</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11798,7 +11863,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~129,282</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~129,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81001, 81003, 81004, 81006, 81007, 81008</dd></div>
@@ -11858,9 +11923,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~129,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81001, 81003, 81004, 81006, 81007, 81008</div>
             </td>
-            <td class="center ws-pop-cell">~129,282</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11885,7 +11950,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,337</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81007</dd></div>
@@ -11945,9 +12010,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~34,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81007</div>
             </td>
-            <td class="center ws-pop-cell">~34,337</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11972,7 +12037,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,130</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81650</dd></div>
@@ -12032,9 +12097,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81650</div>
             </td>
-            <td class="center ws-pop-cell">~14,130</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12059,7 +12124,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,048</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80125</dd></div>
@@ -12119,9 +12184,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~13,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80125</div>
             </td>
-            <td class="center ws-pop-cell">~13,048</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12146,7 +12211,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,922</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81201</dd></div>
@@ -12206,9 +12271,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~8,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81201</div>
             </td>
-            <td class="center ws-pop-cell">~8,922</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12233,7 +12298,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~66,133</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~66,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80817, 80911</dd></div>
@@ -12293,9 +12358,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~66,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80817, 80911</div>
             </td>
-            <td class="center ws-pop-cell">~66,133</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12320,7 +12385,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~234</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~230</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80546</dd></div>
@@ -12380,9 +12445,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~230 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80546</div>
             </td>
-            <td class="center ws-pop-cell">~234</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12407,7 +12472,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,426</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80497, 80498</dd></div>
@@ -12467,9 +12532,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~8,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80497, 80498</div>
             </td>
-            <td class="center ws-pop-cell">~8,426</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12494,7 +12559,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,076</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81615</dd></div>
@@ -12554,9 +12619,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~3,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81615</div>
             </td>
-            <td class="center ws-pop-cell">~3,076</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12581,7 +12646,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~87,980</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~88,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80022, 80024, 80037, 80603, 80640</dd></div>
@@ -12641,9 +12706,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~88,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80022, 80024, 80037, 80603, 80640</div>
             </td>
-            <td class="center ws-pop-cell">~87,980</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12668,7 +12733,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,097</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81006, 81022</dd></div>
@@ -12728,9 +12793,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~13,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81006, 81022</div>
             </td>
-            <td class="center ws-pop-cell">~13,097</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12755,7 +12820,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,383</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80487</dd></div>
@@ -12815,9 +12880,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~18,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80487</div>
             </td>
-            <td class="center ws-pop-cell">~18,383</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12842,7 +12907,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,263</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80751</dd></div>
@@ -12902,9 +12967,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~17,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80751</div>
             </td>
-            <td class="center ws-pop-cell">~17,263</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -12929,7 +12994,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,732</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80906</dd></div>
@@ -12989,9 +13054,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~38,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80906</div>
             </td>
-            <td class="center ws-pop-cell">~38,732</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13016,7 +13081,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,384</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81403</dd></div>
@@ -13076,9 +13141,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~11,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81403</div>
             </td>
-            <td class="center ws-pop-cell">~11,384</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13103,7 +13168,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,161</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~34,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80027</dd></div>
@@ -13163,9 +13228,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~34,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80027</div>
             </td>
-            <td class="center ws-pop-cell">~34,161</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13190,7 +13255,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,602</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81435</dd></div>
@@ -13250,9 +13315,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81435</div>
             </td>
-            <td class="center ws-pop-cell">~5,602</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13277,7 +13342,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,722</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81401, 81403, 81416, 81425, 81427, 81432</dd></div>
@@ -13337,9 +13402,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~58,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81401, 81403, 81416, 81425, 81427, 81432</div>
             </td>
-            <td class="center ws-pop-cell">~58,722</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13364,7 +13429,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,930</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81082, 81091</dd></div>
@@ -13424,9 +13489,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81082, 81091</div>
             </td>
-            <td class="center ws-pop-cell">~12,930</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13451,7 +13516,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,159</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80132</dd></div>
@@ -13511,9 +13576,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~28,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80132</div>
             </td>
-            <td class="center ws-pop-cell">~28,159</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13538,7 +13603,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,733</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81637</dd></div>
@@ -13598,9 +13663,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81637</div>
             </td>
-            <td class="center ws-pop-cell">~9,733</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13625,7 +13690,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,665</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80840</dd></div>
@@ -13685,9 +13750,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80840</div>
             </td>
-            <td class="center ws-pop-cell">~6,665</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13712,7 +13777,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,697</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80913</dd></div>
@@ -13772,9 +13837,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80913</div>
             </td>
-            <td class="center ws-pop-cell">~6,697</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13799,7 +13864,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~112,903</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~113,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81503, 81504, 81505, 81506, 81507, 81521, 81524, 81525, 81526</dd></div>
@@ -13859,9 +13924,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~113,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81503, 81504, 81505, 81506, 81507, 81521, 81524, 81525, 81526</div>
             </td>
-            <td class="center ws-pop-cell">~112,903</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13886,7 +13951,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,051</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>81657</dd></div>
@@ -13946,9 +14011,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 81657</div>
             </td>
-            <td class="center ws-pop-cell">~5,051</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -13973,7 +14038,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,862</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80549</dd></div>
@@ -14033,9 +14098,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~13,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80549</div>
             </td>
-            <td class="center ws-pop-cell">~13,862</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14060,7 +14125,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,792</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80512, 80524, 80535</dd></div>
@@ -14120,9 +14185,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~42,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80512, 80524, 80535</div>
             </td>
-            <td class="center ws-pop-cell">~42,792</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14147,7 +14212,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~261,940</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~262,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80003, 80005, 80020, 80021, 80023, 80030, 80031, 80035, 80036, 80234</dd></div>
@@ -14207,9 +14272,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~262,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80003, 80005, 80020, 80021, 80023, 80030, 80031, 80035, 80036, 80234</div>
             </td>
-            <td class="center ws-pop-cell">~261,940</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14234,7 +14299,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,428</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80550</dd></div>
@@ -14294,9 +14359,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~41,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80550</div>
             </td>
-            <td class="center ws-pop-cell">~41,428</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14321,7 +14386,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,207</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80482</dd></div>
@@ -14381,9 +14446,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~1,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80482</div>
             </td>
-            <td class="center ws-pop-cell">~1,207</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14408,7 +14473,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,922</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80863</dd></div>
@@ -14468,9 +14533,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80863</div>
             </td>
-            <td class="center ws-pop-cell">~12,922</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14495,7 +14560,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,824</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80831</dd></div>
@@ -14555,9 +14620,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~31,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80831</div>
             </td>
-            <td class="center ws-pop-cell">~31,824</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14582,7 +14647,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,159</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80132</dd></div>
@@ -14642,9 +14707,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~28,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80132</div>
             </td>
-            <td class="center ws-pop-cell">~28,159</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14669,7 +14734,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,407</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80517</dd></div>
@@ -14729,9 +14794,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80517</div>
             </td>
-            <td class="center ws-pop-cell">~10,407</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14756,7 +14821,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,477</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80446</dd></div>
@@ -14816,9 +14881,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~3,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80446</div>
             </td>
-            <td class="center ws-pop-cell">~3,477</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -14843,7 +14908,7 @@
                         <p class="ws-tip-state">COLORADO</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,657</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,650</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>80759</dd></div>
@@ -14903,9 +14968,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~4,650 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 80759</div>
             </td>
-            <td class="center ws-pop-cell">~4,657</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -15018,7 +15083,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -15077,6 +15142,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

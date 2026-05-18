@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,544</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97530</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97530</div>
             </td>
-            <td class="center ws-pop-cell">~8,544</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,713</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97838</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~27,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97838</div>
             </td>
-            <td class="center ws-pop-cell">~27,713</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~54,678</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~54,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97601, 97603</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~54,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97601, 97603</div>
             </td>
-            <td class="center ws-pop-cell">~54,678</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,105</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97477</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~38,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97477</div>
             </td>
-            <td class="center ws-pop-cell">~38,105</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -920,7 +985,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~127,276</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~127,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97701, 97702, 97703</dd></div>
@@ -980,9 +1045,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>9 sites
                 </div>
+                <div class="ws-meta">~127,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97701, 97702, 97703</div>
             </td>
-            <td class="center ws-pop-cell">~127,276</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1066,9 +1131,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1094,7 +1159,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~88,120</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~88,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97206, 97222</dd></div>
@@ -1154,9 +1219,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~88,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97206, 97222</div>
             </td>
-            <td class="center ws-pop-cell">~88,120</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1182,7 +1247,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,344</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~40,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97454, 97478</dd></div>
@@ -1242,9 +1307,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~40,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97454, 97478</div>
             </td>
-            <td class="center ws-pop-cell">~40,344</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1270,7 +1335,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,226</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97115, 97132</dd></div>
@@ -1330,9 +1395,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~35,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97115, 97132</div>
             </td>
-            <td class="center ws-pop-cell">~35,226</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1358,7 +1423,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~110,069</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~110,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97015, 97086, 97089, 97236</dd></div>
@@ -1418,9 +1483,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~110,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97015, 97086, 97089, 97236</div>
             </td>
-            <td class="center ws-pop-cell">~110,069</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1446,7 +1511,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,373</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97477, 97478</dd></div>
@@ -1506,9 +1571,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~77,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97477, 97478</div>
             </td>
-            <td class="center ws-pop-cell">~77,373</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1534,7 +1599,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,744</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~44,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97330</dd></div>
@@ -1594,9 +1659,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~44,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97330</div>
             </td>
-            <td class="center ws-pop-cell">~44,744</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1621,7 +1686,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~66,978</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~67,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97321, 97322</dd></div>
@@ -1681,9 +1746,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~67,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97321, 97322</div>
             </td>
-            <td class="center ws-pop-cell">~66,978</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1708,7 +1773,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,197</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97520, 97540</dd></div>
@@ -1768,9 +1833,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~35,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97520, 97540</div>
             </td>
-            <td class="center ws-pop-cell">~35,197</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1795,7 +1860,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,914</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97103</dd></div>
@@ -1855,9 +1920,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~17,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97103</div>
             </td>
-            <td class="center ws-pop-cell">~17,914</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1882,7 +1947,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,943</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97325</dd></div>
@@ -1942,9 +2007,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~6,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97325</div>
             </td>
-            <td class="center ws-pop-cell">~6,943</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1969,7 +2034,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~93,997</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~94,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97701, 97702</dd></div>
@@ -2029,9 +2094,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~94,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97701, 97702</div>
             </td>
-            <td class="center ws-pop-cell">~93,997</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2056,7 +2121,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,636</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97814</dd></div>
@@ -2116,9 +2181,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~12,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97814</div>
             </td>
-            <td class="center ws-pop-cell">~12,636</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2143,7 +2208,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,328</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97411</dd></div>
@@ -2203,9 +2268,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~7,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97411</div>
             </td>
-            <td class="center ws-pop-cell">~7,328</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2230,7 +2295,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~280,584</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~281,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97003, 97005, 97006, 97007, 97008, 97076, 97078, 97223, 97225</dd></div>
@@ -2290,9 +2355,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~281,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97003, 97005, 97006, 97007, 97008, 97076, 97078, 97223, 97225</div>
             </td>
-            <td class="center ws-pop-cell">~280,584</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2375,9 +2440,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2402,7 +2467,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,252</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97818</dd></div>
@@ -2462,9 +2527,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~5,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97818</div>
             </td>
-            <td class="center ws-pop-cell">~5,252</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2489,7 +2554,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,372</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97415</dd></div>
@@ -2549,9 +2614,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~14,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97415</div>
             </td>
-            <td class="center ws-pop-cell">~14,372</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2576,7 +2641,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,815</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97013</dd></div>
@@ -2636,9 +2701,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~24,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97013</div>
             </td>
-            <td class="center ws-pop-cell">~24,815</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2663,7 +2728,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,271</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97502</dd></div>
@@ -2723,9 +2788,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~29,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97502</div>
             </td>
-            <td class="center ws-pop-cell">~29,271</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2808,9 +2873,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2835,7 +2900,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,855</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97058</dd></div>
@@ -2895,9 +2960,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~20,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97058</div>
             </td>
-            <td class="center ws-pop-cell">~20,855</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2922,7 +2987,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~223,944</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~224,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97015, 97027, 97086, 97206, 97222, 97266, 97267</dd></div>
@@ -2982,9 +3047,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~224,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97015, 97027, 97086, 97206, 97222, 97266, 97267</div>
             </td>
-            <td class="center ws-pop-cell">~223,944</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3009,7 +3074,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,927</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97004, 97045</dd></div>
@@ -3069,9 +3134,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~61,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97004, 97045</div>
             </td>
-            <td class="center ws-pop-cell">~61,927</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3096,7 +3161,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,178</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97420</dd></div>
@@ -3156,9 +3221,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~28,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97420</div>
             </td>
-            <td class="center ws-pop-cell">~28,178</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3183,7 +3248,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,945</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97423</dd></div>
@@ -3243,9 +3308,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97423</div>
             </td>
-            <td class="center ws-pop-cell">~5,945</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3270,7 +3335,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,009</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97019, 97060</dd></div>
@@ -3330,9 +3395,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~25,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97019, 97060</div>
             </td>
-            <td class="center ws-pop-cell">~25,009</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3357,7 +3422,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,984</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97113</dd></div>
@@ -3417,9 +3482,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~15,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97113</div>
             </td>
-            <td class="center ws-pop-cell">~14,984</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3444,7 +3509,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~71,305</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~71,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97330, 97331, 97333</dd></div>
@@ -3504,9 +3569,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~71,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97330, 97331, 97333</div>
             </td>
-            <td class="center ws-pop-cell">~71,305</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3531,7 +3596,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,382</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97424</dd></div>
@@ -3591,9 +3656,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~18,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97424</div>
             </td>
-            <td class="center ws-pop-cell">~18,382</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3618,7 +3683,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,209</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97426</dd></div>
@@ -3678,9 +3743,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~10,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97426</div>
             </td>
-            <td class="center ws-pop-cell">~10,209</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3705,7 +3770,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,825</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97760</dd></div>
@@ -3765,9 +3830,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97760</div>
             </td>
-            <td class="center ws-pop-cell">~7,825</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3792,7 +3857,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,547</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97031, 97041, 97044</dd></div>
@@ -3852,9 +3917,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~22,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97031, 97041, 97044</div>
             </td>
-            <td class="center ws-pop-cell">~22,547</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3879,7 +3944,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,201</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97338</dd></div>
@@ -3939,9 +4004,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~23,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97338</div>
             </td>
-            <td class="center ws-pop-cell">~23,201</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3966,7 +4031,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,136</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97734, 97741</dd></div>
@@ -4026,9 +4091,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~17,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97734, 97741</div>
             </td>
-            <td class="center ws-pop-cell">~17,136</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4053,7 +4118,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,151</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,150</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97020</dd></div>
@@ -4113,9 +4178,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,150 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97020</div>
             </td>
-            <td class="center ws-pop-cell">~1,151</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4140,7 +4205,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,693</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97524</dd></div>
@@ -4200,9 +4265,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~15,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97524</div>
             </td>
-            <td class="center ws-pop-cell">~15,693</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4227,7 +4292,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,279</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97023</dd></div>
@@ -4287,9 +4352,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~11,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97023</div>
             </td>
-            <td class="center ws-pop-cell">~11,279</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4314,7 +4379,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~212,242</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~212,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97401, 97402, 97403, 97404, 97405, 97408, 97440</dd></div>
@@ -4374,9 +4439,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~212,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97401, 97402, 97403, 97404, 97405, 97408, 97440</div>
             </td>
-            <td class="center ws-pop-cell">~212,242</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4401,7 +4466,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,488</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97024</dd></div>
@@ -4461,9 +4526,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~11,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97024</div>
             </td>
-            <td class="center ws-pop-cell">~11,488</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4488,7 +4553,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,605</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97344</dd></div>
@@ -4548,9 +4613,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~1,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97344</div>
             </td>
-            <td class="center ws-pop-cell">~1,605</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4575,7 +4640,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,636</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97439</dd></div>
@@ -4635,9 +4700,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~15,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97439</div>
             </td>
-            <td class="center ws-pop-cell">~15,636</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4662,7 +4727,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,048</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97116, 97117</dd></div>
@@ -4722,9 +4787,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~30,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97116, 97117</div>
             </td>
-            <td class="center ws-pop-cell">~30,048</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4749,7 +4814,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,572</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97027, 97267</dd></div>
@@ -4809,9 +4874,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~43,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97027, 97267</div>
             </td>
-            <td class="center ws-pop-cell">~43,572</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4836,7 +4901,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~72,793</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~72,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97526, 97527</dd></div>
@@ -4896,9 +4961,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~72,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97526, 97527</div>
             </td>
-            <td class="center ws-pop-cell">~72,793</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4923,7 +4988,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,131</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,150</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97111</dd></div>
@@ -4983,9 +5048,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,150 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97111</div>
             </td>
-            <td class="center ws-pop-cell">~4,131</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5010,7 +5075,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~86,115</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~86,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97030, 97080</dd></div>
@@ -5070,9 +5135,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~86,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97030, 97080</div>
             </td>
-            <td class="center ws-pop-cell">~86,115</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5097,7 +5162,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,405</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97446</dd></div>
@@ -5157,9 +5222,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97446</div>
             </td>
-            <td class="center ws-pop-cell">~5,405</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5184,7 +5249,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,636</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97439</dd></div>
@@ -5244,9 +5309,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~15,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97439</div>
             </td>
-            <td class="center ws-pop-cell">~15,636</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5271,7 +5336,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~102,711</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~103,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97123, 97124</dd></div>
@@ -5331,9 +5396,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~103,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97123, 97124</div>
             </td>
-            <td class="center ws-pop-cell">~102,711</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5358,7 +5423,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,376</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97031</dd></div>
@@ -5418,9 +5483,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~19,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97031</div>
             </td>
-            <td class="center ws-pop-cell">~19,376</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5445,7 +5510,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,736</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,750</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97032</dd></div>
@@ -5505,9 +5570,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,750 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97032</div>
             </td>
-            <td class="center ws-pop-cell">~4,736</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5532,7 +5597,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,376</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97031</dd></div>
@@ -5592,9 +5657,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~19,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97031</div>
             </td>
-            <td class="center ws-pop-cell">~19,376</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5619,7 +5684,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,144</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97351</dd></div>
@@ -5679,9 +5744,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~11,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97351</div>
             </td>
-            <td class="center ws-pop-cell">~11,144</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5706,7 +5771,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,143</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97303</dd></div>
@@ -5766,9 +5831,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>15 sites
                 </div>
+                <div class="ws-meta">~41,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97303</div>
             </td>
-            <td class="center ws-pop-cell">~41,143</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5793,7 +5858,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,465</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97341, 97367, 97388</dd></div>
@@ -5853,9 +5918,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~15,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97341, 97367, 97388</div>
             </td>
-            <td class="center ws-pop-cell">~15,465</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5880,7 +5945,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,646</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97850</dd></div>
@@ -5940,9 +6005,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~16,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97850</div>
             </td>
-            <td class="center ws-pop-cell">~16,646</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5967,7 +6032,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,391</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97127</dd></div>
@@ -6027,9 +6092,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~4,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97127</div>
             </td>
-            <td class="center ws-pop-cell">~4,391</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6054,7 +6119,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,445</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~77,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97034, 97035, 97068</dd></div>
@@ -6114,9 +6179,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~77,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97034, 97035, 97068</div>
             </td>
-            <td class="center ws-pop-cell">~77,445</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6141,7 +6206,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,285</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97630</dd></div>
@@ -6201,9 +6266,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97630</div>
             </td>
-            <td class="center ws-pop-cell">~5,285</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6228,7 +6293,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,777</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97355</dd></div>
@@ -6288,9 +6353,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~32,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97355</div>
             </td>
-            <td class="center ws-pop-cell">~32,777</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6315,7 +6380,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,230</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97367</dd></div>
@@ -6375,9 +6440,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~11,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97367</div>
             </td>
-            <td class="center ws-pop-cell">~11,230</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6402,7 +6467,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,390</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97741</dd></div>
@@ -6462,9 +6527,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~13,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97741</div>
             </td>
-            <td class="center ws-pop-cell">~13,390</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6489,7 +6554,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,794</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97111, 97127, 97128</dd></div>
@@ -6549,9 +6614,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~46,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97111, 97127, 97128</div>
             </td>
-            <td class="center ws-pop-cell">~46,794</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6576,7 +6641,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~203,433</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~203,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97501, 97502, 97503, 97504, 97520, 97524, 97530, 97535, 97540</dd></div>
@@ -6636,9 +6701,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~203,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97501, 97502, 97503, 97504, 97520, 97524, 97530, 97535, 97540</div>
             </td>
-            <td class="center ws-pop-cell">~203,433</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6663,7 +6728,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,423</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97038</dd></div>
@@ -6723,9 +6788,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~16,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97038</div>
             </td>
-            <td class="center ws-pop-cell">~16,423</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6750,7 +6815,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,557</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97361</dd></div>
@@ -6810,9 +6875,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~13,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97361</div>
             </td>
-            <td class="center ws-pop-cell">~13,557</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6837,7 +6902,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,107</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97362</dd></div>
@@ -6897,9 +6962,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~4,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97362</div>
             </td>
-            <td class="center ws-pop-cell">~4,107</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -6924,7 +6989,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,632</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97457</dd></div>
@@ -6984,9 +7049,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97457</div>
             </td>
-            <td class="center ws-pop-cell">~9,632</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7011,7 +7076,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,289</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97132</dd></div>
@@ -7071,9 +7136,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~31,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97132</div>
             </td>
-            <td class="center ws-pop-cell">~31,289</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7098,7 +7163,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,845</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97365, 97366</dd></div>
@@ -7158,9 +7223,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97365, 97366</div>
             </td>
-            <td class="center ws-pop-cell">~12,845</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7185,7 +7250,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~80,630</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~80,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97027, 97222, 97267</dd></div>
@@ -7245,9 +7310,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~80,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97027, 97222, 97267</div>
             </td>
-            <td class="center ws-pop-cell">~80,630</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7272,7 +7337,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,802</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97914</dd></div>
@@ -7332,9 +7397,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~19,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97914</div>
             </td>
-            <td class="center ws-pop-cell">~19,802</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7359,7 +7424,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,575</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97045</dd></div>
@@ -7419,9 +7484,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~57,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97045</div>
             </td>
-            <td class="center ws-pop-cell">~57,575</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7446,7 +7511,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,302</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97601</dd></div>
@@ -7506,9 +7571,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>9 sites
                 </div>
+                <div class="ws-meta">~22,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97601</div>
             </td>
-            <td class="center ws-pop-cell">~22,302</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7533,7 +7598,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,748</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97801</dd></div>
@@ -7593,9 +7658,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~21,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97801</div>
             </td>
-            <td class="center ws-pop-cell">~21,748</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7620,7 +7685,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,193</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97370</dd></div>
@@ -7680,9 +7745,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97370</div>
             </td>
-            <td class="center ws-pop-cell">~9,193</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7707,7 +7772,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,863</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,850</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97535</dd></div>
@@ -7767,9 +7832,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,850 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97535</div>
             </td>
-            <td class="center ws-pop-cell">~4,863</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7852,9 +7917,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7879,7 +7944,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,032,353</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1.0 million</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97030, 97034, 97035, 97080, 97086, 97201, 97202, 97203, 97204, 97205, 97206, 97209, 97210, 97211, 97212, 97213, 97214, 97215, 97216, 97217, 97218, 97219, 97220, 97221, 97222, 97223, 97225, 97227, 97229, 97230, 97231, 97232, 97233, 97236, 97239, 97266</dd></div>
@@ -7939,9 +8004,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~1.0 million residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97030, 97034, 97035, 97080, 97086, 97201, 97202, 97203, 97204, 97205, 97206, 97209, 97210, 97211, 97212, 97213, 97214, 97215, 97216, 97217, 97218, 97219, 97220, 97221, 97222, 97223, 97225, 97227, 97229, 97230, 97231, 97232, 97233, 97236, 97239, 97266</div>
             </td>
-            <td class="center ws-pop-cell">~1,032,353</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -7966,7 +8031,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,552</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97754</dd></div>
@@ -8026,9 +8091,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~21,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97754</div>
             </td>
-            <td class="center ws-pop-cell">~21,552</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8053,7 +8118,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,166</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97223, 97225</dd></div>
@@ -8113,9 +8178,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~76,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97223, 97225</div>
             </td>
-            <td class="center ws-pop-cell">~76,166</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8140,7 +8205,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,545</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~43,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97756</dd></div>
@@ -8200,9 +8265,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~43,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97756</div>
             </td>
-            <td class="center ws-pop-cell">~43,545</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8227,7 +8292,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,425</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97467</dd></div>
@@ -8287,9 +8352,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97467</div>
             </td>
-            <td class="center ws-pop-cell">~5,425</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8314,7 +8379,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,109</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97034, 97035</dd></div>
@@ -8374,9 +8439,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~47,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97034, 97035</div>
             </td>
-            <td class="center ws-pop-cell">~47,109</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8401,7 +8466,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,420</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97702</dd></div>
@@ -8461,9 +8526,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~52,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97702</div>
             </td>
-            <td class="center ws-pop-cell">~52,420</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8488,7 +8553,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,420</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97702</dd></div>
@@ -8548,9 +8613,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~52,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97702</div>
             </td>
-            <td class="center ws-pop-cell">~52,420</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8575,7 +8640,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~129,859</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~130,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97024, 97030, 97230, 97233</dd></div>
@@ -8635,9 +8700,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~130,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97024, 97030, 97230, 97233</div>
             </td>
-            <td class="center ws-pop-cell">~129,859</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8662,7 +8727,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,064</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97470</dd></div>
@@ -8722,9 +8787,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~19,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97470</div>
             </td>
-            <td class="center ws-pop-cell">~19,064</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8749,7 +8814,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~237,839</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~238,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97301, 97302, 97304, 97305, 97306, 97308, 97309, 97310, 97311, 97312, 97314, 97317</dd></div>
@@ -8809,9 +8874,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~238,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97301, 97302, 97304, 97305, 97306, 97308, 97309, 97310, 97311, 97312, 97314, 97317</div>
             </td>
-            <td class="center ws-pop-cell">~237,839</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8836,7 +8901,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,159</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97009, 97055</dd></div>
@@ -8896,9 +8961,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~28,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97009, 97055</div>
             </td>
-            <td class="center ws-pop-cell">~28,159</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -8923,7 +8988,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,645</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97056</dd></div>
@@ -8983,9 +9048,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~12,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97056</div>
             </td>
-            <td class="center ws-pop-cell">~12,645</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9010,7 +9075,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,097</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97376</dd></div>
@@ -9070,9 +9135,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~1,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97376</div>
             </td>
-            <td class="center ws-pop-cell">~1,097</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9097,7 +9162,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,260</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97138</dd></div>
@@ -9157,9 +9222,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~11,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97138</div>
             </td>
-            <td class="center ws-pop-cell">~11,260</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9184,7 +9249,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,523</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97378</dd></div>
@@ -9244,9 +9309,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~10,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97378</div>
             </td>
-            <td class="center ws-pop-cell">~10,523</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9271,7 +9336,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,438</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97140</dd></div>
@@ -9331,9 +9396,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~28,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97140</div>
             </td>
-            <td class="center ws-pop-cell">~28,438</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9358,7 +9423,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,526</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97381</dd></div>
@@ -9418,9 +9483,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~15,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97381</div>
             </td>
-            <td class="center ws-pop-cell">~15,526</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9445,7 +9510,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,543</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97051</dd></div>
@@ -9505,9 +9570,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~17,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97051</div>
             </td>
-            <td class="center ws-pop-cell">~17,543</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9532,7 +9597,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,992</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97383</dd></div>
@@ -9592,9 +9657,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97383</div>
             </td>
-            <td class="center ws-pop-cell">~9,992</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9619,7 +9684,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~81,270</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~81,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97301, 97317</dd></div>
@@ -9679,9 +9744,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~81,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97301, 97317</div>
             </td>
-            <td class="center ws-pop-cell">~81,270</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9706,7 +9771,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,326</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97707</dd></div>
@@ -9766,9 +9831,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~6,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97707</div>
             </td>
-            <td class="center ws-pop-cell">~6,326</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9793,7 +9858,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,265</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97479</dd></div>
@@ -9853,9 +9918,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~10,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97479</div>
             </td>
-            <td class="center ws-pop-cell">~10,265</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9880,7 +9945,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,437</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97386</dd></div>
@@ -9940,9 +10005,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~15,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97386</div>
             </td>
-            <td class="center ws-pop-cell">~15,437</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -9967,7 +10032,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,641</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97540</dd></div>
@@ -10027,9 +10092,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~8,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97540</div>
             </td>
-            <td class="center ws-pop-cell">~8,641</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10054,7 +10119,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,855</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97058</dd></div>
@@ -10114,9 +10179,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~20,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97058</div>
             </td>
-            <td class="center ws-pop-cell">~20,855</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10141,7 +10206,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~115,056</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~115,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97140, 97223, 97224</dd></div>
@@ -10201,9 +10266,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~115,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97140, 97223, 97224</div>
             </td>
-            <td class="center ws-pop-cell">~115,056</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10228,7 +10293,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,795</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97141</dd></div>
@@ -10288,9 +10353,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~12,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97141</div>
             </td>
-            <td class="center ws-pop-cell">~12,795</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10315,7 +10380,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,076</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97391</dd></div>
@@ -10375,9 +10440,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97391</div>
             </td>
-            <td class="center ws-pop-cell">~6,076</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10402,7 +10467,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,632</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97457</dd></div>
@@ -10462,9 +10527,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~9,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97457</div>
             </td>
-            <td class="center ws-pop-cell">~9,632</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10489,7 +10554,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,145</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97060</dd></div>
@@ -10549,9 +10614,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~22,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97060</div>
             </td>
-            <td class="center ws-pop-cell">~22,145</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10576,7 +10641,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~581,838</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~582,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>78739, 97003, 97005, 97006, 97007, 97008, 97078, 97123, 97124, 97133, 97201, 97219, 97223, 97224, 97225, 97229</dd></div>
@@ -10636,9 +10701,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~582,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 78739, 97003, 97005, 97006, 97007, 97008, 97078, 97123, 97124, 97133, 97201, 97219, 97223, 97224, 97225, 97229</div>
             </td>
-            <td class="center ws-pop-cell">~581,838</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10663,7 +10728,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,845</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97062</dd></div>
@@ -10723,9 +10788,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~28,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97062</div>
             </td>
-            <td class="center ws-pop-cell">~28,845</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10750,7 +10815,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,081</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97882</dd></div>
@@ -10810,9 +10875,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~8,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97882</div>
             </td>
-            <td class="center ws-pop-cell">~8,081</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10837,7 +10902,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,246</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97470, 97471</dd></div>
@@ -10897,9 +10962,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~51,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97470, 97471</div>
             </td>
-            <td class="center ws-pop-cell">~51,246</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -10924,7 +10989,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,809</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97487</dd></div>
@@ -10984,9 +11049,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~8,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97487</div>
             </td>
-            <td class="center ws-pop-cell">~8,809</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11011,7 +11076,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,698</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97138, 97146</dd></div>
@@ -11071,9 +11136,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~18,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97138, 97146</div>
             </td>
-            <td class="center ws-pop-cell">~18,698</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11098,7 +11163,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,266</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~51,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97034, 97068</dd></div>
@@ -11158,9 +11223,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~51,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97034, 97068</div>
             </td>
-            <td class="center ws-pop-cell">~51,266</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11185,7 +11250,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,682</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97005, 97225</dd></div>
@@ -11245,9 +11310,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~53,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97005, 97225</div>
             </td>
-            <td class="center ws-pop-cell">~53,682</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11272,7 +11337,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,001</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97070</dd></div>
@@ -11332,9 +11397,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~26,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97070</div>
             </td>
-            <td class="center ws-pop-cell">~26,001</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11359,7 +11424,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,289</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97496</dd></div>
@@ -11419,9 +11484,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~7,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97496</div>
             </td>
-            <td class="center ws-pop-cell">~7,289</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11446,7 +11511,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,633</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97024, 97060</dd></div>
@@ -11506,9 +11571,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~33,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97024, 97060</div>
             </td>
-            <td class="center ws-pop-cell">~33,633</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11533,7 +11598,7 @@
                         <p class="ws-tip-state">OREGON</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,534</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>97071</dd></div>
@@ -11593,9 +11658,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~31,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 97071</div>
             </td>
-            <td class="center ws-pop-cell">~31,534</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -11708,7 +11773,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -11767,6 +11832,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

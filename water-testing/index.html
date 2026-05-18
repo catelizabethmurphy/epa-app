@@ -101,7 +101,14 @@
     border-collapse: collapse;
     font-family: "PT Sans", sans-serif;
     font-size: 1rem;
+    table-layout: fixed;
 }
+#wt-state-table th, #wt-state-table td,
+.wt-worst th, .wt-worst td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.wt-worst td { white-space: normal; }
 .wt-table th, .wt-table td {
     padding: 0.65rem 0.7rem;
     border-bottom: 1px solid #eee;
@@ -136,6 +143,8 @@
     margin-right: 0.4rem;
     min-width: 1px;
     opacity: 0.85;
+    width: calc(var(--bar-pct, 0) * 5px);
+    max-width: 100%;
 }
 .wt-bar--low { background: #b85c00; }
 .wt-bar--ok  { background: #8a8a8a; opacity: 0.4; }
@@ -369,7 +378,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -492,6 +501,77 @@
     padding-top: 0.9rem;
     max-width: 760px;
 }
+
+/* ── Mobile tweaks ───────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+    .wt-strip { flex-wrap: wrap; }
+    .wt-stat { flex: 1 1 45%; min-width: 0; padding: 0.7rem 0.85rem; }
+    .wt-stat-num { font-size: 1.35rem; }
+    .wt-stat-lbl { font-size: 0.66rem; }
+
+    .wt-search { padding: 0.9rem 1rem 1rem; }
+    .wt-search-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.75rem 0;
+    }
+    .wt-search-result { width: 100%; gap: 0.7rem; }
+    .wt-search-count { min-width: 0; flex: 0 0 auto; }
+    .wt-search-num { font-size: 1.65rem; }
+    .wt-search-name { font-size: 0.95rem; }
+    .wt-search-jump { align-self: stretch; text-align: center; padding: 0.5rem 0.7rem; }
+
+    .wt-table { font-size: 0.85rem; }
+    .wt-table th, .wt-table td { padding: 0.55rem 0.4rem; }
+
+    /* Top-state ranking: hide system counts on mobile */
+    #wt-state-table .wt-col-tested,
+    #wt-state-table .wt-col-over { display: none; }
+    #wt-state-table th:first-child,
+    #wt-state-table td:first-child { padding-right: 1.5rem; width: 38%; }
+    #wt-state-table th:last-child,
+    #wt-state-table td:last-child { padding-left: 0; white-space: nowrap; }
+    /* Bar uses a smaller scale on mobile so the % stays on the same line */
+    #wt-state-table .wt-bar {
+        width: calc(var(--bar-pct, 0) * 1.5px);
+        max-width: 55%;
+        height: 8px;
+    }
+
+    /* Worst-25: hide state, residents, sample date so it fits the viewport */
+    .wt-worst .wt-col-state,
+    .wt-worst .wt-col-pop,
+    .wt-worst .wt-col-date { display: none; }
+    /* Re-allocate the freed colgroup width to the visible columns */
+    .wt-worst > colgroup > col:nth-child(1) { width: 48%; }
+    .wt-worst > colgroup > col:nth-child(4) { width: 26%; }
+    .wt-worst > colgroup > col:nth-child(5) { width: 26%; }
+    .wt-worst .wt-state-inline {
+        display: block;
+        font-size: 0.7rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-top: 0.15rem;
+    }
+
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
+}
+.wt-state-inline { display: none; }
 </style>
 
 </head>
@@ -499,7 +579,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="index.html">PFAS in My Community</a>
             <a href="../federal-regulations/index.html">Federal Regulations</a>
             <a href="../state-legislation/index.html">State Legislation</a>
@@ -558,11 +641,17 @@
 
 <div style="overflow-x:auto;">
 <table class="wt-table" id="wt-state-table">
+    <colgroup>
+        <col style="width:25%">
+        <col class="wt-col-tested" style="width:18%">
+        <col class="wt-col-over" style="width:17%">
+        <col style="width:40%">
+    </colgroup>
     <thead>
         <tr>
             <th>State</th>
-            <th class="num">Systems tested</th>
-            <th class="num">Over limit</th>
+            <th class="center wt-col-tested">Systems tested</th>
+            <th class="center wt-col-over">Over limit</th>
             <th>% over limit (any of five PFAS)</th>
         </tr>
     </thead>
@@ -574,11 +663,11 @@
                 <a href="new-jersey/index.html">New Jersey</a>
                 
             </td>
-            <td class="num">265</td>
-            <td class="num">156</td>
+            <td class="center wt-col-tested">265</td>
+            <td class="center wt-col-over">156</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 106.0px;"></span>
+                      style="--bar-pct: 58.9;"></span>
                 58.9%
             </td>
         </tr>
@@ -589,11 +678,11 @@
                 <a href="connecticut/index.html">Connecticut</a>
                 
             </td>
-            <td class="num">63</td>
-            <td class="num">35</td>
+            <td class="center wt-col-tested">63</td>
+            <td class="center wt-col-over">35</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 100.0px;"></span>
+                      style="--bar-pct: 55.6;"></span>
                 55.6%
             </td>
         </tr>
@@ -604,11 +693,11 @@
                 <a href="south-carolina/index.html">South Carolina</a>
                 
             </td>
-            <td class="num">165</td>
-            <td class="num">69</td>
+            <td class="center wt-col-tested">165</td>
+            <td class="center wt-col-over">69</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 75.3px;"></span>
+                      style="--bar-pct: 41.8;"></span>
                 41.8%
             </td>
         </tr>
@@ -619,11 +708,11 @@
                 <a href="massachusetts/index.html">Massachusetts</a>
                 
             </td>
-            <td class="num">263</td>
-            <td class="num">108</td>
+            <td class="center wt-col-tested">263</td>
+            <td class="center wt-col-over">108</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 73.9px;"></span>
+                      style="--bar-pct: 41.1;"></span>
                 41.1%
             </td>
         </tr>
@@ -634,11 +723,11 @@
                 <a href="north-carolina/index.html">North Carolina</a>
                 
             </td>
-            <td class="num">288</td>
-            <td class="num">117</td>
+            <td class="center wt-col-tested">288</td>
+            <td class="center wt-col-over">117</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 73.1px;"></span>
+                      style="--bar-pct: 40.6;"></span>
                 40.6%
             </td>
         </tr>
@@ -649,11 +738,11 @@
                 <a href="florida/index.html">Florida</a>
                 
             </td>
-            <td class="num">405</td>
-            <td class="num">158</td>
+            <td class="center wt-col-tested">405</td>
+            <td class="center wt-col-over">158</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 70.2px;"></span>
+                      style="--bar-pct: 39.0;"></span>
                 39.0%
             </td>
         </tr>
@@ -664,11 +753,11 @@
                 <a href="delaware/index.html">Delaware</a>
                 
             </td>
-            <td class="num">36</td>
-            <td class="num">14</td>
+            <td class="center wt-col-tested">36</td>
+            <td class="center wt-col-over">14</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 70.0px;"></span>
+                      style="--bar-pct: 38.9;"></span>
                 38.9%
             </td>
         </tr>
@@ -679,11 +768,11 @@
                 <a href="rhode-island/index.html">Rhode Island</a>
                 
             </td>
-            <td class="num">29</td>
-            <td class="num">11</td>
+            <td class="center wt-col-tested">29</td>
+            <td class="center wt-col-over">11</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 68.3px;"></span>
+                      style="--bar-pct: 37.9;"></span>
                 37.9%
             </td>
         </tr>
@@ -694,11 +783,11 @@
                 <a href="new-hampshire/index.html">New Hampshire</a>
                 
             </td>
-            <td class="num">51</td>
-            <td class="num">16</td>
+            <td class="center wt-col-tested">51</td>
+            <td class="center wt-col-over">16</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 56.5px;"></span>
+                      style="--bar-pct: 31.4;"></span>
                 31.4%
             </td>
         </tr>
@@ -709,11 +798,11 @@
                 <a href="pennsylvania/index.html">Pennsylvania</a>
                 
             </td>
-            <td class="num">390</td>
-            <td class="num">120</td>
+            <td class="center wt-col-tested">390</td>
+            <td class="center wt-col-over">120</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 55.4px;"></span>
+                      style="--bar-pct: 30.8;"></span>
                 30.8%
             </td>
         </tr>
@@ -724,11 +813,11 @@
                 <a href="alabama/index.html">Alabama</a>
                 
             </td>
-            <td class="num">307</td>
-            <td class="num">80</td>
+            <td class="center wt-col-tested">307</td>
+            <td class="center wt-col-over">80</td>
             <td>
                 <span class="wt-bar"
-                      style="width: 46.9px;"></span>
+                      style="--bar-pct: 26.1;"></span>
                 26.1%
             </td>
         </tr>
@@ -739,11 +828,11 @@
                 <a href="california/index.html">California</a>
                 
             </td>
-            <td class="num">700</td>
-            <td class="num">166</td>
+            <td class="center wt-col-tested">700</td>
+            <td class="center wt-col-over">166</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 42.7px;"></span>
+                      style="--bar-pct: 23.7;"></span>
                 23.7%
             </td>
         </tr>
@@ -754,11 +843,11 @@
                 <a href="west-virginia/index.html">West Virginia</a>
                 
             </td>
-            <td class="num">103</td>
-            <td class="num">21</td>
+            <td class="center wt-col-tested">103</td>
+            <td class="center wt-col-over">21</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 36.7px;"></span>
+                      style="--bar-pct: 20.4;"></span>
                 20.4%
             </td>
         </tr>
@@ -769,11 +858,11 @@
                 <a href="maryland/index.html">Maryland</a>
                 
             </td>
-            <td class="num">83</td>
-            <td class="num">16</td>
+            <td class="center wt-col-tested">83</td>
+            <td class="center wt-col-over">16</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 34.7px;"></span>
+                      style="--bar-pct: 19.3;"></span>
                 19.3%
             </td>
         </tr>
@@ -784,11 +873,11 @@
                 <a href="ohio/index.html">Ohio</a>
                 
             </td>
-            <td class="num">347</td>
-            <td class="num">60</td>
+            <td class="center wt-col-tested">347</td>
+            <td class="center wt-col-over">60</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 31.1px;"></span>
+                      style="--bar-pct: 17.3;"></span>
                 17.3%
             </td>
         </tr>
@@ -799,11 +888,11 @@
                 <a href="georgia/index.html">Georgia</a>
                 
             </td>
-            <td class="num">255</td>
-            <td class="num">44</td>
+            <td class="center wt-col-tested">255</td>
+            <td class="center wt-col-over">44</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 31.1px;"></span>
+                      style="--bar-pct: 17.3;"></span>
                 17.3%
             </td>
         </tr>
@@ -814,11 +903,11 @@
                 <a href="arizona/index.html">Arizona</a>
                 
             </td>
-            <td class="num">151</td>
-            <td class="num">26</td>
+            <td class="center wt-col-tested">151</td>
+            <td class="center wt-col-over">26</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 31.0px;"></span>
+                      style="--bar-pct: 17.2;"></span>
                 17.2%
             </td>
         </tr>
@@ -829,11 +918,11 @@
                 <a href="new-york/index.html">New York</a>
                 
             </td>
-            <td class="num">333</td>
-            <td class="num">52</td>
+            <td class="center wt-col-tested">333</td>
+            <td class="center wt-col-over">52</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 28.1px;"></span>
+                      style="--bar-pct: 15.6;"></span>
                 15.6%
             </td>
         </tr>
@@ -844,11 +933,11 @@
                 <a href="washington/index.html">Washington</a>
                 
             </td>
-            <td class="num">247</td>
-            <td class="num">35</td>
+            <td class="center wt-col-tested">247</td>
+            <td class="center wt-col-over">35</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 25.5px;"></span>
+                      style="--bar-pct: 14.2;"></span>
                 14.2%
             </td>
         </tr>
@@ -859,11 +948,11 @@
                 <a href="kentucky/index.html">Kentucky</a>
                 
             </td>
-            <td class="num">231</td>
-            <td class="num">32</td>
+            <td class="center wt-col-tested">231</td>
+            <td class="center wt-col-over">32</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 24.9px;"></span>
+                      style="--bar-pct: 13.9;"></span>
                 13.9%
             </td>
         </tr>
@@ -874,11 +963,11 @@
                 <a href="tennessee/index.html">Tennessee</a>
                 
             </td>
-            <td class="num">277</td>
-            <td class="num">37</td>
+            <td class="center wt-col-tested">277</td>
+            <td class="center wt-col-over">37</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 24.0px;"></span>
+                      style="--bar-pct: 13.4;"></span>
                 13.4%
             </td>
         </tr>
@@ -889,11 +978,11 @@
                 <a href="alaska/index.html">Alaska</a>
                 
             </td>
-            <td class="num">30</td>
-            <td class="num">4</td>
+            <td class="center wt-col-tested">30</td>
+            <td class="center wt-col-over">4</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 24.0px;"></span>
+                      style="--bar-pct: 13.3;"></span>
                 13.3%
             </td>
         </tr>
@@ -904,11 +993,11 @@
                 <a href="maine/index.html">Maine</a>
                 
             </td>
-            <td class="num">41</td>
-            <td class="num">5</td>
+            <td class="center wt-col-tested">41</td>
+            <td class="center wt-col-over">5</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 22.0px;"></span>
+                      style="--bar-pct: 12.2;"></span>
                 12.2%
             </td>
         </tr>
@@ -919,11 +1008,11 @@
                 <a href="virginia/index.html">Virginia</a>
                 
             </td>
-            <td class="num">171</td>
-            <td class="num">20</td>
+            <td class="center wt-col-tested">171</td>
+            <td class="center wt-col-over">20</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 21.1px;"></span>
+                      style="--bar-pct: 11.7;"></span>
                 11.7%
             </td>
         </tr>
@@ -934,11 +1023,11 @@
                 <a href="wisconsin/index.html">Wisconsin</a>
                 
             </td>
-            <td class="num">202</td>
-            <td class="num">23</td>
+            <td class="center wt-col-tested">202</td>
+            <td class="center wt-col-over">23</td>
             <td>
                 <span class="wt-bar wt-bar--low"
-                      style="width: 20.5px;"></span>
+                      style="--bar-pct: 11.4;"></span>
                 11.4%
             </td>
         </tr>
@@ -949,11 +1038,11 @@
                 <a href="texas/index.html">Texas</a>
                 
             </td>
-            <td class="num">1150</td>
-            <td class="num">108</td>
+            <td class="center wt-col-tested">1150</td>
+            <td class="center wt-col-over">108</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 16.9px;"></span>
+                      style="--bar-pct: 9.4;"></span>
                 9.4%
             </td>
         </tr>
@@ -964,11 +1053,11 @@
                 <a href="indiana/index.html">Indiana</a>
                 
             </td>
-            <td class="num">230</td>
-            <td class="num">21</td>
+            <td class="center wt-col-tested">230</td>
+            <td class="center wt-col-over">21</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 16.4px;"></span>
+                      style="--bar-pct: 9.1;"></span>
                 9.1%
             </td>
         </tr>
@@ -979,11 +1068,11 @@
                 <a href="colorado/index.html">Colorado</a>
                 
             </td>
-            <td class="num">165</td>
-            <td class="num">15</td>
+            <td class="center wt-col-tested">165</td>
+            <td class="center wt-col-over">15</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 16.4px;"></span>
+                      style="--bar-pct: 9.1;"></span>
                 9.1%
             </td>
         </tr>
@@ -994,11 +1083,11 @@
                 <a href="minnesota/index.html">Minnesota</a>
                 
             </td>
-            <td class="num">196</td>
-            <td class="num">17</td>
+            <td class="center wt-col-tested">196</td>
+            <td class="center wt-col-over">17</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 15.6px;"></span>
+                      style="--bar-pct: 8.7;"></span>
                 8.7%
             </td>
         </tr>
@@ -1009,11 +1098,11 @@
                 <a href="oregon/index.html">Oregon</a>
                 
             </td>
-            <td class="num">127</td>
-            <td class="num">11</td>
+            <td class="center wt-col-tested">127</td>
+            <td class="center wt-col-over">11</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 15.6px;"></span>
+                      style="--bar-pct: 8.7;"></span>
                 8.7%
             </td>
         </tr>
@@ -1024,11 +1113,11 @@
                 <a href="oklahoma/index.html">Oklahoma</a>
                 
             </td>
-            <td class="num">166</td>
-            <td class="num">13</td>
+            <td class="center wt-col-tested">166</td>
+            <td class="center wt-col-over">13</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 14.1px;"></span>
+                      style="--bar-pct: 7.8;"></span>
                 7.8%
             </td>
         </tr>
@@ -1039,11 +1128,11 @@
                 <a href="nebraska/index.html">Nebraska</a>
                 
             </td>
-            <td class="num">53</td>
-            <td class="num">4</td>
+            <td class="center wt-col-tested">53</td>
+            <td class="center wt-col-over">4</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 13.6px;"></span>
+                      style="--bar-pct: 7.5;"></span>
                 7.5%
             </td>
         </tr>
@@ -1054,11 +1143,11 @@
                 <a href="nevada/index.html">Nevada</a>
                 
             </td>
-            <td class="num">58</td>
-            <td class="num">4</td>
+            <td class="center wt-col-tested">58</td>
+            <td class="center wt-col-over">4</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 12.4px;"></span>
+                      style="--bar-pct: 6.9;"></span>
                 6.9%
             </td>
         </tr>
@@ -1069,11 +1158,11 @@
                 <a href="new-mexico/index.html">New Mexico</a>
                 
             </td>
-            <td class="num">73</td>
-            <td class="num">5</td>
+            <td class="center wt-col-tested">73</td>
+            <td class="center wt-col-over">5</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 12.3px;"></span>
+                      style="--bar-pct: 6.8;"></span>
                 6.8%
             </td>
         </tr>
@@ -1084,11 +1173,11 @@
                 <a href="idaho/index.html">Idaho</a>
                 
             </td>
-            <td class="num">61</td>
-            <td class="num">4</td>
+            <td class="center wt-col-tested">61</td>
+            <td class="center wt-col-over">4</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 11.8px;"></span>
+                      style="--bar-pct: 6.6;"></span>
                 6.6%
             </td>
         </tr>
@@ -1099,11 +1188,11 @@
                 <a href="illinois/index.html">Illinois</a>
                 
             </td>
-            <td class="num">487</td>
-            <td class="num">27</td>
+            <td class="center wt-col-tested">487</td>
+            <td class="center wt-col-over">27</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 10.0px;"></span>
+                      style="--bar-pct: 5.5;"></span>
                 5.5%
             </td>
         </tr>
@@ -1114,11 +1203,11 @@
                 <a href="iowa/index.html">Iowa</a>
                 
             </td>
-            <td class="num">152</td>
-            <td class="num">8</td>
+            <td class="center wt-col-tested">152</td>
+            <td class="center wt-col-over">8</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 9.5px;"></span>
+                      style="--bar-pct: 5.3;"></span>
                 5.3%
             </td>
         </tr>
@@ -1129,11 +1218,11 @@
                 <a href="kansas/index.html">Kansas</a>
                 
             </td>
-            <td class="num">103</td>
-            <td class="num">5</td>
+            <td class="center wt-col-tested">103</td>
+            <td class="center wt-col-over">5</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 8.7px;"></span>
+                      style="--bar-pct: 4.9;"></span>
                 4.9%
             </td>
         </tr>
@@ -1144,11 +1233,11 @@
                 <a href="montana/index.html">Montana</a>
                 
             </td>
-            <td class="num">45</td>
-            <td class="num">2</td>
+            <td class="center wt-col-tested">45</td>
+            <td class="center wt-col-over">2</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 8.0px;"></span>
+                      style="--bar-pct: 4.4;"></span>
                 4.4%
             </td>
         </tr>
@@ -1159,11 +1248,11 @@
                 <a href="south-dakota/index.html">South Dakota</a>
                 
             </td>
-            <td class="num">49</td>
-            <td class="num">2</td>
+            <td class="center wt-col-tested">49</td>
+            <td class="center wt-col-over">2</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 7.3px;"></span>
+                      style="--bar-pct: 4.1;"></span>
                 4.1%
             </td>
         </tr>
@@ -1174,11 +1263,11 @@
                 <a href="missouri/index.html">Missouri</a>
                 
             </td>
-            <td class="num">232</td>
-            <td class="num">9</td>
+            <td class="center wt-col-tested">232</td>
+            <td class="center wt-col-over">9</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 7.0px;"></span>
+                      style="--bar-pct: 3.9;"></span>
                 3.9%
             </td>
         </tr>
@@ -1189,11 +1278,11 @@
                 <a href="utah/index.html">Utah</a>
                 
             </td>
-            <td class="num">129</td>
-            <td class="num">5</td>
+            <td class="center wt-col-tested">129</td>
+            <td class="center wt-col-over">5</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 7.0px;"></span>
+                      style="--bar-pct: 3.9;"></span>
                 3.9%
             </td>
         </tr>
@@ -1204,11 +1293,11 @@
                 <a href="wyoming/index.html">Wyoming</a>
                 
             </td>
-            <td class="num">33</td>
-            <td class="num">1</td>
+            <td class="center wt-col-tested">33</td>
+            <td class="center wt-col-over">1</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 5.5px;"></span>
+                      style="--bar-pct: 3.0;"></span>
                 3.0%
             </td>
         </tr>
@@ -1219,11 +1308,11 @@
                 <a href="mississippi/index.html">Mississippi</a>
                 
             </td>
-            <td class="num">239</td>
-            <td class="num">7</td>
+            <td class="center wt-col-tested">239</td>
+            <td class="center wt-col-over">7</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 5.3px;"></span>
+                      style="--bar-pct: 2.9;"></span>
                 2.9%
             </td>
         </tr>
@@ -1234,11 +1323,11 @@
                 <a href="vermont/index.html">Vermont</a>
                 
             </td>
-            <td class="num">38</td>
-            <td class="num">1</td>
+            <td class="center wt-col-tested">38</td>
+            <td class="center wt-col-over">1</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 4.7px;"></span>
+                      style="--bar-pct: 2.6;"></span>
                 2.6%
             </td>
         </tr>
@@ -1249,11 +1338,11 @@
                 <a href="louisiana/index.html">Louisiana</a>
                 
             </td>
-            <td class="num">268</td>
-            <td class="num">7</td>
+            <td class="center wt-col-tested">268</td>
+            <td class="center wt-col-over">7</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 4.7px;"></span>
+                      style="--bar-pct: 2.6;"></span>
                 2.6%
             </td>
         </tr>
@@ -1264,11 +1353,11 @@
                 <a href="michigan/index.html">Michigan</a>
                 
             </td>
-            <td class="num">319</td>
-            <td class="num">8</td>
+            <td class="center wt-col-tested">319</td>
+            <td class="center wt-col-over">8</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 4.5px;"></span>
+                      style="--bar-pct: 2.5;"></span>
                 2.5%
             </td>
         </tr>
@@ -1279,11 +1368,11 @@
                 <a href="arkansas/index.html">Arkansas</a>
                 
             </td>
-            <td class="num">172</td>
-            <td class="num">1</td>
+            <td class="center wt-col-tested">172</td>
+            <td class="center wt-col-over">1</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 1.0px;"></span>
+                      style="--bar-pct: 0.6;"></span>
                 0.6%
             </td>
         </tr>
@@ -1294,11 +1383,11 @@
                 <a href="district-of-columbia/index.html">District of Columbia</a>
                 
             </td>
-            <td class="num">3</td>
-            <td class="num">0</td>
+            <td class="center wt-col-tested">3</td>
+            <td class="center wt-col-over">0</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 0.0px;"></span>
+                      style="--bar-pct: 0.0;"></span>
                 0.0%
             </td>
         </tr>
@@ -1309,11 +1398,11 @@
                 <a href="hawaii/index.html">Hawaii</a>
                 
             </td>
-            <td class="num">45</td>
-            <td class="num">0</td>
+            <td class="center wt-col-tested">45</td>
+            <td class="center wt-col-over">0</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 0.0px;"></span>
+                      style="--bar-pct: 0.0;"></span>
                 0.0%
             </td>
         </tr>
@@ -1324,11 +1413,11 @@
                 <a href="north-dakota/index.html">North Dakota</a>
                 
             </td>
-            <td class="num">38</td>
-            <td class="num">0</td>
+            <td class="center wt-col-tested">38</td>
+            <td class="center wt-col-over">0</td>
             <td>
                 <span class="wt-bar wt-bar--ok"
-                      style="width: 0.0px;"></span>
+                      style="--bar-pct: 0.0;"></span>
                 0.0%
             </td>
         </tr>
@@ -1347,15 +1436,23 @@
 <p class="wt-section-sub">Ranked by how many times above the EPA standard the system's worst sample registered.</p>
 
 <div style="overflow-x:auto;">
-<table class="wt-table">
+<table class="wt-table wt-worst">
+    <colgroup>
+        <col style="width:25%">
+        <col class="wt-col-state" style="width:18%">
+        <col class="wt-col-pop" style="width:17%">
+        <col style="width:11%">
+        <col style="width:17%">
+        <col class="wt-col-date" style="width:12%">
+    </colgroup>
     <thead>
         <tr>
             <th>Water system</th>
-            <th class="center">State</th>
-            <th class="center">Residents served</th>
-            <th class="center">Contaminant</th>
+            <th class="center wt-col-state">State</th>
+            <th class="center wt-col-pop">Residents served</th>
+            <th>Contaminant</th>
             <th class="center">× EPA standard</th>
-            <th class="center">Sample date</th>
+            <th class="center wt-col-date">Sample date</th>
         </tr>
     </thead>
     <tbody>
@@ -1363,276 +1460,301 @@
         <tr>
             <td>
                 <div>Nashville, Town of</div>
+                <div class="wt-state-inline">NC · ~20,000 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 2 ZIP codes</div>
             </td>
-            <td class="center">NC</td>
-            <td class="center">~20,025</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--sev">122×</td>
-            <td class="center">2024-09-23</td>
+            <td class="center wt-col-state">NC</td>
+            <td class="center wt-col-pop">~20,000</td>
+            <td>PFOS</td><td class="center wt-times wt-times--sev">122×</td>
+            <td class="center wt-col-date">2024-09-23</td>
         </tr>
         
         <tr>
             <td>
                 <div>Running Springs Water District</div>
+                <div class="wt-state-inline">CA · ~4,900 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">CA</td>
-            <td class="center">~4,884</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--sev">59×</td>
-            <td class="center">2025-07-29</td>
+            <td class="center wt-col-state">CA</td>
+            <td class="center wt-col-pop">~4,900</td>
+            <td>PFOS</td><td class="center wt-times wt-times--sev">59×</td>
+            <td class="center wt-col-date">2025-07-29</td>
         </tr>
         
         <tr>
             <td>
                 <div>Collegeville Trappe Joint PWD</div>
+                <div class="wt-state-inline">PA · ~42,700 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">PA</td>
-            <td class="center">~42,656</td>
-            <td class="center">PFOA</td><td class="center wt-times wt-times--sev">59×</td>
-            <td class="center">2023-03-22</td>
+            <td class="center wt-col-state">PA</td>
+            <td class="center wt-col-pop">~42,700</td>
+            <td>PFOA</td><td class="center wt-times wt-times--sev">59×</td>
+            <td class="center wt-col-date">2023-03-22</td>
         </tr>
         
         <tr>
             <td>
                 <div>Potrero Elementary School</div>
+                <div class="wt-state-inline">CA · ~620 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">CA</td>
-            <td class="center">~624</td>
-            <td class="center">PFOA</td><td class="center wt-times wt-times--high">47×</td>
-            <td class="center">2024-05-15</td>
+            <td class="center wt-col-state">CA</td>
+            <td class="center wt-col-pop">~620</td>
+            <td>PFOA</td><td class="center wt-times wt-times--high">47×</td>
+            <td class="center wt-col-date">2024-05-15</td>
         </tr>
         
         <tr>
             <td>
                 <div>Lubeck PSD</div>
+                <div class="wt-state-inline">WV · ~50,100 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 5 ZIP codes</div>
             </td>
-            <td class="center">WV</td>
-            <td class="center">~50,098</td>
-            <td class="center">PFOA</td><td class="center wt-times wt-times--high">45×</td>
-            <td class="center">2024-03-19</td>
+            <td class="center wt-col-state">WV</td>
+            <td class="center wt-col-pop">~50,100</td>
+            <td>PFOA</td><td class="center wt-times wt-times--high">45×</td>
+            <td class="center wt-col-date">2024-03-19</td>
         </tr>
         
         <tr>
             <td>
                 <div>Artondale Water System</div>
+                <div class="wt-state-inline">WA · ~42,300 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">WA</td>
-            <td class="center">~42,263</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--high">38×</td>
-            <td class="center">2023-04-17</td>
+            <td class="center wt-col-state">WA</td>
+            <td class="center wt-col-pop">~42,300</td>
+            <td>PFOS</td><td class="center wt-times wt-times--high">38×</td>
+            <td class="center wt-col-date">2023-04-17</td>
         </tr>
         
         <tr>
             <td>
                 <div>Emmaus Borough Public Water</div>
+                <div class="wt-state-inline">PA · ~18,700 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">PA</td>
-            <td class="center">~18,727</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--high">38×</td>
-            <td class="center">2024-08-01</td>
+            <td class="center wt-col-state">PA</td>
+            <td class="center wt-col-pop">~18,700</td>
+            <td>PFOS</td><td class="center wt-times wt-times--high">38×</td>
+            <td class="center wt-col-date">2024-08-01</td>
         </tr>
         
         <tr>
             <td>
                 <div>New Martinsville</div>
+                <div class="wt-state-inline">WV · ~7,800 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">WV</td>
-            <td class="center">~7,833</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--high">30×</td>
-            <td class="center">2023-05-16</td>
+            <td class="center wt-col-state">WV</td>
+            <td class="center wt-col-pop">~7,800</td>
+            <td>PFOS</td><td class="center wt-times wt-times--high">30×</td>
+            <td class="center wt-col-date">2023-05-16</td>
         </tr>
         
         <tr>
             <td>
                 <div>Pequenakonck Elementary School</div>
+                <div class="wt-state-inline">NY · ~5,000 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">NY</td>
-            <td class="center">~4,975</td>
-            <td class="center">PFOA</td><td class="center wt-times wt-times--high">28×</td>
-            <td class="center">2025-08-26</td>
+            <td class="center wt-col-state">NY</td>
+            <td class="center wt-col-pop">~5,000</td>
+            <td>PFOA</td><td class="center wt-times wt-times--high">28×</td>
+            <td class="center wt-col-date">2025-08-26</td>
         </tr>
         
         <tr>
             <td>
                 <div>Yeshiva Farm Settlement</div>
+                <div class="wt-state-inline">NY · ~15,800 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">NY</td>
-            <td class="center">~15,800</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--high">26×</td>
-            <td class="center">2023-10-24</td>
+            <td class="center wt-col-state">NY</td>
+            <td class="center wt-col-pop">~15,800</td>
+            <td>PFOS</td><td class="center wt-times wt-times--high">26×</td>
+            <td class="center wt-col-date">2023-10-24</td>
         </tr>
         
         <tr>
             <td>
                 <div>Potrero Elementary School</div>
+                <div class="wt-state-inline">CA · ~620 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">CA</td>
-            <td class="center">~624</td>
-            <td class="center">PFHxS</td><td class="center wt-times wt-times--high">25×</td>
-            <td class="center">2024-05-15</td>
+            <td class="center wt-col-state">CA</td>
+            <td class="center wt-col-pop">~620</td>
+            <td>PFHxS</td><td class="center wt-times wt-times--high">25×</td>
+            <td class="center wt-col-date">2024-05-15</td>
         </tr>
         
         <tr>
             <td>
                 <div>Raynham Center Water District</div>
+                <div class="wt-state-inline">MA · ~15,400 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 2 ZIP codes</div>
             </td>
-            <td class="center">MA</td>
-            <td class="center">~15,432</td>
-            <td class="center">PFOA</td><td class="center wt-times wt-times--med">23×</td>
-            <td class="center">2025-08-11</td>
+            <td class="center wt-col-state">MA</td>
+            <td class="center wt-col-pop">~15,400</td>
+            <td>PFOA</td><td class="center wt-times wt-times--med">23×</td>
+            <td class="center wt-col-date">2025-08-11</td>
         </tr>
         
         <tr>
             <td>
                 <div>City of Grand Prairie</div>
+                <div class="wt-state-inline">TX · ~288,000 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 6 ZIP codes</div>
             </td>
-            <td class="center">TX</td>
-            <td class="center">~287,625</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--med">20×</td>
-            <td class="center">2024-08-13</td>
+            <td class="center wt-col-state">TX</td>
+            <td class="center wt-col-pop">~288,000</td>
+            <td>PFOS</td><td class="center wt-times wt-times--med">20×</td>
+            <td class="center wt-col-date">2024-08-13</td>
         </tr>
         
         <tr>
             <td>
                 <div>Orangewood Water System</div>
+                <div class="wt-state-inline">FL · ~31,700 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 2 ZIP codes</div>
             </td>
-            <td class="center">FL</td>
-            <td class="center">~31,744</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--med">20×</td>
-            <td class="center">2023-02-28</td>
+            <td class="center wt-col-state">FL</td>
+            <td class="center wt-col-pop">~31,700</td>
+            <td>PFOS</td><td class="center wt-times wt-times--med">20×</td>
+            <td class="center wt-col-date">2023-02-28</td>
         </tr>
         
         <tr>
             <td>
                 <div>City of Oxford</div>
+                <div class="wt-state-inline">MS · ~45,300 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">MS</td>
-            <td class="center">~45,290</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--med">18×</td>
-            <td class="center">2025-03-03</td>
+            <td class="center wt-col-state">MS</td>
+            <td class="center wt-col-pop">~45,300</td>
+            <td>PFOS</td><td class="center wt-times wt-times--med">18×</td>
+            <td class="center wt-col-date">2025-03-03</td>
         </tr>
         
         <tr>
             <td>
                 <div>Potrero Elementary School</div>
+                <div class="wt-state-inline">CA · ~620 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">CA</td>
-            <td class="center">~624</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--med">16×</td>
-            <td class="center">2024-11-19</td>
+            <td class="center wt-col-state">CA</td>
+            <td class="center wt-col-pop">~620</td>
+            <td>PFOS</td><td class="center wt-times wt-times--med">16×</td>
+            <td class="center wt-col-date">2024-11-19</td>
         </tr>
         
         <tr>
             <td>
                 <div>Bayleaf Master</div>
+                <div class="wt-state-inline">NC · ~33,600 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">NC</td>
-            <td class="center">~33,609</td>
-            <td class="center">PFHxS</td><td class="center wt-times wt-times--med">15×</td>
-            <td class="center">2024-12-09</td>
+            <td class="center wt-col-state">NC</td>
+            <td class="center wt-col-pop">~33,600</td>
+            <td>PFHxS</td><td class="center wt-times wt-times--med">15×</td>
+            <td class="center wt-col-date">2024-12-09</td>
         </tr>
         
         <tr>
             <td>
                 <div>Irondale Water System</div>
+                <div class="wt-state-inline">AL · ~44,200 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 3 ZIP codes</div>
             </td>
-            <td class="center">AL</td>
-            <td class="center">~44,187</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--med">15×</td>
-            <td class="center">2023-10-12</td>
+            <td class="center wt-col-state">AL</td>
+            <td class="center wt-col-pop">~44,200</td>
+            <td>PFOS</td><td class="center wt-times wt-times--med">15×</td>
+            <td class="center wt-col-date">2023-10-12</td>
         </tr>
         
         <tr>
             <td>
                 <div>Liberty Utilities - Bellflower-Norwalk</div>
+                <div class="wt-state-inline">CA · ~214,000 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 5 ZIP codes</div>
             </td>
-            <td class="center">CA</td>
-            <td class="center">~214,128</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--med">15×</td>
-            <td class="center">2024-02-14</td>
+            <td class="center wt-col-state">CA</td>
+            <td class="center wt-col-pop">~214,000</td>
+            <td>PFOS</td><td class="center wt-times wt-times--med">15×</td>
+            <td class="center wt-col-date">2024-02-14</td>
         </tr>
         
         <tr>
             <td>
                 <div>Audubon Water Company</div>
+                <div class="wt-state-inline">PA · ~44,100 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 2 ZIP codes</div>
             </td>
-            <td class="center">PA</td>
-            <td class="center">~44,111</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--med">14×</td>
-            <td class="center">2024-03-11</td>
+            <td class="center wt-col-state">PA</td>
+            <td class="center wt-col-pop">~44,100</td>
+            <td>PFOS</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center wt-col-date">2024-03-11</td>
         </tr>
         
         <tr>
             <td>
                 <div>Abbeville City of</div>
+                <div class="wt-state-inline">SC · ~2,450 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">SC</td>
-            <td class="center">~2,456</td>
-            <td class="center">HFPO-DA</td><td class="center wt-times wt-times--med">14×</td>
-            <td class="center">2025-11-04</td>
+            <td class="center wt-col-state">SC</td>
+            <td class="center wt-col-pop">~2,450</td>
+            <td>HFPO-DA</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center wt-col-date">2025-11-04</td>
         </tr>
         
         <tr>
             <td>
                 <div>Lafayette</div>
+                <div class="wt-state-inline">GA · ~43,500 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 3 ZIP codes</div>
             </td>
-            <td class="center">GA</td>
-            <td class="center">~43,494</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--med">14×</td>
-            <td class="center">2025-04-16</td>
+            <td class="center wt-col-state">GA</td>
+            <td class="center wt-col-pop">~43,500</td>
+            <td>PFOS</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center wt-col-date">2025-04-16</td>
         </tr>
         
         <tr>
             <td>
                 <div>Caernarvon Twp Auth</div>
+                <div class="wt-state-inline">PA · ~12,100 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 2 ZIP codes</div>
             </td>
-            <td class="center">PA</td>
-            <td class="center">~12,052</td>
-            <td class="center">PFOA</td><td class="center wt-times wt-times--med">14×</td>
-            <td class="center">2025-04-14</td>
+            <td class="center wt-col-state">PA</td>
+            <td class="center wt-col-pop">~12,100</td>
+            <td>PFOA</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center wt-col-date">2025-04-14</td>
         </tr>
         
         <tr>
             <td>
                 <div>Tempe City of</div>
+                <div class="wt-state-inline">AZ · ~186,000 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 6 ZIP codes</div>
             </td>
-            <td class="center">AZ</td>
-            <td class="center">~186,340</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--med">14×</td>
-            <td class="center">2025-01-14</td>
+            <td class="center wt-col-state">AZ</td>
+            <td class="center wt-col-pop">~186,000</td>
+            <td>PFOS</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center wt-col-date">2025-01-14</td>
         </tr>
         
         <tr>
             <td>
                 <div>Somers Town House/hall</div>
+                <div class="wt-state-inline">NY · ~7,200 served</div>
                 <div style="font-size:0.72rem;color:#999;">Serves 1 ZIP code</div>
             </td>
-            <td class="center">NY</td>
-            <td class="center">~7,159</td>
-            <td class="center">PFOS</td><td class="center wt-times wt-times--med">14×</td>
-            <td class="center">2024-11-07</td>
+            <td class="center wt-col-state">NY</td>
+            <td class="center wt-col-pop">~7,200</td>
+            <td>PFOS</td><td class="center wt-times wt-times--med">14×</td>
+            <td class="center wt-col-date">2024-11-07</td>
         </tr>
         
     </tbody>
@@ -1791,7 +1913,7 @@
         }
         if (m.served_population) {
             metaRows += '<div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~' +
-                esc(fmtInt(m.served_population)) + '</dd></div>';
+                esc(m.served_population_label || fmtInt(m.served_population)) + '</dd></div>';
         }
         if (m.zips && m.zips.length) {
             metaRows += '<div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>' +
@@ -2006,6 +2128,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

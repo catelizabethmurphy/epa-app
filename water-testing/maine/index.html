@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,723</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04021, 04096, 04097</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~19,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04021, 04096, 04097</div>
             </td>
-            <td class="center ws-pop-cell">~19,723</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,986</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04073, 04083</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~22,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04073, 04083</div>
             </td>
-            <td class="center ws-pop-cell">~21,986</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,422</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04901, 04937, 04962, 04975, 04989</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~37,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04901, 04937, 04962, 04975, 04989</div>
             </td>
-            <td class="center ws-pop-cell">~37,422</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,971</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,950</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04252</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~4,950 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04252</div>
             </td>
-            <td class="center ws-pop-cell">~4,971</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -978,9 +1043,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1006,7 +1071,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,785</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04911, 04950, 04958</dd></div>
@@ -1066,9 +1131,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~8,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04911, 04950, 04958</div>
             </td>
-            <td class="center ws-pop-cell">~8,785</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1093,7 +1158,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,921</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04210, 04274</dd></div>
@@ -1153,9 +1218,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~29,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04210, 04274</div>
             </td>
-            <td class="center ws-pop-cell">~29,921</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1180,7 +1245,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,908</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04401, 04402, 04428, 04444, 04474</dd></div>
@@ -1240,9 +1305,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~60,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04401, 04402, 04428, 04444, 04474</div>
             </td>
-            <td class="center ws-pop-cell">~60,908</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1267,7 +1332,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,044</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04011, 04530, 04578, 04579</dd></div>
@@ -1327,9 +1392,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~41,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04011, 04530, 04578, 04579</div>
             </td>
-            <td class="center ws-pop-cell">~41,044</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1354,7 +1419,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,078</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04915</dd></div>
@@ -1414,9 +1479,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04915</div>
             </td>
-            <td class="center ws-pop-cell">~9,078</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1441,7 +1506,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,587</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04537, 04538, 04544, 04571, 04575, 04576</dd></div>
@@ -1501,9 +1566,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04537, 04538, 04544, 04571, 04575, 04576</div>
             </td>
-            <td class="center ws-pop-cell">~5,587</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1528,7 +1593,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,877</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04412, 04428, 04429, 04474</dd></div>
@@ -1588,9 +1653,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~21,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04412, 04428, 04429, 04474</div>
             </td>
-            <td class="center ws-pop-cell">~21,877</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1615,7 +1680,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,257</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04011, 04086</dd></div>
@@ -1675,9 +1740,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~31,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04011, 04086</div>
             </td>
-            <td class="center ws-pop-cell">~31,257</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1702,7 +1767,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,022</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04736</dd></div>
@@ -1762,9 +1827,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04736</div>
             </td>
-            <td class="center ws-pop-cell">~9,022</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1789,7 +1854,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,686</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04605</dd></div>
@@ -1849,9 +1914,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04605</div>
             </td>
-            <td class="center ws-pop-cell">~14,686</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1876,7 +1941,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,996</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04938, 04984, 04992</dd></div>
@@ -1936,9 +2001,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~11,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04938, 04984, 04992</div>
             </td>
-            <td class="center ws-pop-cell">~10,996</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1963,7 +2028,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,964</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,950</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04634</dd></div>
@@ -2023,9 +2088,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,950 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04634</div>
             </td>
-            <td class="center ws-pop-cell">~1,964</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2050,7 +2115,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,282</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04345</dd></div>
@@ -2110,9 +2175,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~12,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04345</div>
             </td>
-            <td class="center ws-pop-cell">~12,282</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2137,7 +2202,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,781</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04330, 04343, 04351</dd></div>
@@ -2197,9 +2262,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~28,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04330, 04343, 04351</div>
             </td>
-            <td class="center ws-pop-cell">~28,781</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2224,7 +2289,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,303</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04444</dd></div>
@@ -2284,9 +2349,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~9,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04444</div>
             </td>
-            <td class="center ws-pop-cell">~9,303</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2311,7 +2376,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,566</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04043</dd></div>
@@ -2371,9 +2436,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~11,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04043</div>
             </td>
-            <td class="center ws-pop-cell">~11,566</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2398,7 +2463,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,762</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03903, 03904, 03905, 03909</dd></div>
@@ -2458,9 +2523,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~27,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03903, 03904, 03905, 03909</div>
             </td>
-            <td class="center ws-pop-cell">~27,762</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2485,7 +2550,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,153</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04048, 04061</dd></div>
@@ -2545,9 +2610,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~6,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04048, 04061</div>
             </td>
-            <td class="center ws-pop-cell">~6,153</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2572,7 +2637,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,577</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~37,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04240</dd></div>
@@ -2632,9 +2697,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~37,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04240</div>
             </td>
-            <td class="center ws-pop-cell">~37,577</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2659,7 +2724,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~75,557</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~75,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04005, 04064, 04072, 04074</dd></div>
@@ -2719,9 +2784,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~75,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04005, 04064, 04072, 04074</div>
             </td>
-            <td class="center ws-pop-cell">~75,557</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2746,7 +2811,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,391</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~20,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04841, 04843, 04847, 04856, 04861</dd></div>
@@ -2806,9 +2871,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~20,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04841, 04843, 04847, 04856, 04861</div>
             </td>
-            <td class="center ws-pop-cell">~20,391</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2833,7 +2898,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,506</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04462</dd></div>
@@ -2893,9 +2958,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~4,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04462</div>
             </td>
-            <td class="center ws-pop-cell">~4,506</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2920,7 +2985,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,036</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04976</dd></div>
@@ -2980,9 +3045,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04976</div>
             </td>
-            <td class="center ws-pop-cell">~10,036</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3065,9 +3130,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3152,9 +3217,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~14,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04411, 04461, 04468</div>
             </td>
-            <td class="center ws-pop-cell">~14,000</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3179,7 +3244,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,171</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04473</dd></div>
@@ -3239,9 +3304,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04473</div>
             </td>
-            <td class="center ws-pop-cell">~8,171</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3266,7 +3331,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~214,073</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~214,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04021, 04038, 04062, 04071, 04074, 04084, 04092, 04098, 04101, 04102, 04103, 04104, 04105, 04106, 04107</dd></div>
@@ -3326,9 +3391,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~214,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04021, 04038, 04062, 04071, 04074, 04084, 04092, 04098, 04101, 04102, 04103, 04104, 04105, 04106, 04107</div>
             </td>
-            <td class="center ws-pop-cell">~214,073</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3353,7 +3418,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,772</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04769</dd></div>
@@ -3413,9 +3478,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~8,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04769</div>
             </td>
-            <td class="center ws-pop-cell">~8,772</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3440,7 +3505,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,871</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04276</dd></div>
@@ -3500,9 +3565,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~5,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04276</div>
             </td>
-            <td class="center ws-pop-cell">~5,871</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3527,7 +3592,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,766</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,750</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04042</dd></div>
@@ -3587,9 +3652,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,750 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04042</div>
             </td>
-            <td class="center ws-pop-cell">~4,766</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3614,7 +3679,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,512</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03901, 03908</dd></div>
@@ -3674,9 +3739,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~15,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03901, 03908</div>
             </td>
-            <td class="center ws-pop-cell">~15,512</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3701,7 +3766,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,161</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04609</dd></div>
@@ -3761,9 +3826,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04609</div>
             </td>
-            <td class="center ws-pop-cell">~5,161</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3788,7 +3853,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,169</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,150</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04785</dd></div>
@@ -3848,9 +3913,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,150 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04785</div>
             </td>
-            <td class="center ws-pop-cell">~2,169</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3875,7 +3940,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,169</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,150</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04785</dd></div>
@@ -3935,9 +4000,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,150 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04785</div>
             </td>
-            <td class="center ws-pop-cell">~2,169</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3962,7 +4027,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~981</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~980</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>04863</dd></div>
@@ -4022,9 +4087,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~980 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 04863</div>
             </td>
-            <td class="center ws-pop-cell">~981</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4049,7 +4114,7 @@
                         <p class="ws-tip-state">MAINE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,811</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03909</dd></div>
@@ -4109,9 +4174,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03909</div>
             </td>
-            <td class="center ws-pop-cell">~10,811</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4224,7 +4289,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -4283,6 +4348,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

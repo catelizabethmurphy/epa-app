@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,177</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02881</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02881</div>
             </td>
-            <td class="center ws-pop-cell">~7,177</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,382</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02852</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~23,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02852</div>
             </td>
-            <td class="center ws-pop-cell">~23,382</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,327</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02808, 02891, 06379</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~33,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02808, 02891, 06379</div>
             </td>
-            <td class="center ws-pop-cell">~33,327</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,758</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02852, 02874, 02877</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~29,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02852, 02874, 02877</div>
             </td>
-            <td class="center ws-pop-cell">~29,758</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -920,7 +985,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,142</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02864</dd></div>
@@ -980,9 +1045,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~36,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02864</div>
             </td>
-            <td class="center ws-pop-cell">~36,142</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1008,7 +1073,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~124,848</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~125,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02816, 02817, 02818, 02831, 02886, 02893</dd></div>
@@ -1068,9 +1133,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~125,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02816, 02817, 02818, 02831, 02886, 02893</div>
             </td>
-            <td class="center ws-pop-cell">~124,848</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1096,7 +1161,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,466</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02879, 02881, 02892</dd></div>
@@ -1156,9 +1221,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~35,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02879, 02881, 02892</div>
             </td>
-            <td class="center ws-pop-cell">~35,466</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1184,7 +1249,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,369</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02879</dd></div>
@@ -1244,9 +1309,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~22,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02879</div>
             </td>
-            <td class="center ws-pop-cell">~22,369</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1272,7 +1337,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~116,974</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~117,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>01504, 02019, 02864, 02895, 02896</dd></div>
@@ -1332,9 +1397,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~117,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 01504, 02019, 02864, 02895, 02896</div>
             </td>
-            <td class="center ws-pop-cell">~116,974</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1360,7 +1425,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,238</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02882</dd></div>
@@ -1420,9 +1485,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~13,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02882</div>
             </td>
-            <td class="center ws-pop-cell">~13,238</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1448,7 +1513,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,324</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02878</dd></div>
@@ -1508,9 +1573,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~16,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02878</div>
             </td>
-            <td class="center ws-pop-cell">~16,324</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1536,7 +1601,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~962</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~960</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02807</dd></div>
@@ -1596,9 +1661,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~960 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02807</div>
             </td>
-            <td class="center ws-pop-cell">~962</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1623,7 +1688,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,658</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02806, 02809, 02885</dd></div>
@@ -1683,9 +1748,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~50,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02806, 02809, 02885</div>
             </td>
-            <td class="center ws-pop-cell">~50,658</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1768,9 +1833,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1795,7 +1860,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,012</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02914, 02915, 02916</dd></div>
@@ -1855,9 +1920,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~47,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02914, 02915, 02916</div>
             </td>
-            <td class="center ws-pop-cell">~47,012</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1882,7 +1947,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,131</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02828, 02917</dd></div>
@@ -1942,9 +2007,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~22,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02828, 02917</div>
             </td>
-            <td class="center ws-pop-cell">~22,131</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1969,7 +2034,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,554</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02835</dd></div>
@@ -2029,9 +2094,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~5,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02835</div>
             </td>
-            <td class="center ws-pop-cell">~5,554</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2056,7 +2121,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,306</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02865</dd></div>
@@ -2116,9 +2181,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~18,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02865</div>
             </td>
-            <td class="center ws-pop-cell">~18,306</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2143,7 +2208,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,238</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02882</dd></div>
@@ -2203,9 +2268,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~13,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02882</div>
             </td>
-            <td class="center ws-pop-cell">~13,238</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2230,7 +2295,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,997</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~36,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02841, 02842, 02871</dd></div>
@@ -2290,9 +2355,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~36,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02841, 02842, 02871</div>
             </td>
-            <td class="center ws-pop-cell">~35,997</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2317,7 +2382,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,604</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~58,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02840, 02842, 02871</dd></div>
@@ -2377,9 +2442,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~58,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02840, 02842, 02871</div>
             </td>
-            <td class="center ws-pop-cell">~58,604</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2404,7 +2469,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~133,705</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~134,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02860, 02861, 02862, 02863, 02864</dd></div>
@@ -2464,9 +2529,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     
                 </div>
+                <div class="ws-meta">~134,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02860, 02861, 02862, 02863, 02864</div>
             </td>
-            <td class="center ws-pop-cell">~133,705</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2491,7 +2556,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,031</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02857</dd></div>
@@ -2551,9 +2616,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~8,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02857</div>
             </td>
-            <td class="center ws-pop-cell">~8,031</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2578,7 +2643,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,748</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02871</dd></div>
@@ -2638,9 +2703,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~17,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02871</div>
             </td>
-            <td class="center ws-pop-cell">~17,748</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2665,7 +2730,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~452,418</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~452,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02857, 02860, 02865, 02893, 02903, 02904, 02905, 02906, 02907, 02908, 02909, 02910, 02911, 02912, 02917, 02919, 02920, 02921</dd></div>
@@ -2725,9 +2790,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~452,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02857, 02860, 02865, 02893, 02903, 02904, 02905, 02906, 02907, 02908, 02909, 02910, 02911, 02912, 02917, 02919, 02920, 02921</div>
             </td>
-            <td class="center ws-pop-cell">~452,418</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2752,7 +2817,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,039</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02903</dd></div>
@@ -2812,9 +2877,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02903</div>
             </td>
-            <td class="center ws-pop-cell">~12,039</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2839,7 +2904,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,948</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~61,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02904, 02911, 02917</dd></div>
@@ -2899,9 +2964,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~61,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02904, 02911, 02917</div>
             </td>
-            <td class="center ws-pop-cell">~61,948</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2926,7 +2991,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~41,983</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~42,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02874, 02879, 02880, 02882, 02883</dd></div>
@@ -2986,9 +3051,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~42,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02874, 02879, 02880, 02882, 02883</div>
             </td>
-            <td class="center ws-pop-cell">~41,983</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3013,7 +3078,7 @@
                         <p class="ws-tip-state">RHODE ISLAND</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~97,068</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~97,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>02818, 02886, 02888, 02889</dd></div>
@@ -3073,9 +3138,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~97,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 02818, 02886, 02888, 02889</div>
             </td>
-            <td class="center ws-pop-cell">~97,068</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3188,7 +3253,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -3247,6 +3312,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

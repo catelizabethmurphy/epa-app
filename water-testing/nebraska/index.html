@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,543</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68048</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~13,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68048</div>
             </td>
-            <td class="center ws-pop-cell">~13,543</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,136</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69101, 69103</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>14 sites
                 </div>
+                <div class="ws-meta">~28,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69101, 69103</div>
             </td>
-            <td class="center ws-pop-cell">~28,136</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~56,980</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~57,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68801, 68802, 68803, 68810</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~57,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68801, 68802, 68803, 68810</div>
             </td>
-            <td class="center ws-pop-cell">~56,980</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,307</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68901</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>19 sites
                 </div>
+                <div class="ws-meta">~26,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68901</div>
             </td>
-            <td class="center ws-pop-cell">~26,307</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -920,7 +985,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,677</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69301</dd></div>
@@ -980,9 +1045,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~9,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69301</div>
             </td>
-            <td class="center ws-pop-cell">~9,677</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1007,7 +1072,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,397</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68920</dd></div>
@@ -1067,9 +1132,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~1,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68920</div>
             </td>
-            <td class="center ws-pop-cell">~1,397</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1094,7 +1159,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,292</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68002</dd></div>
@@ -1154,9 +1219,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68002</div>
             </td>
-            <td class="center ws-pop-cell">~2,292</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1181,7 +1246,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,329</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,350</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68305</dd></div>
@@ -1241,9 +1306,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~4,350 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68305</div>
             </td>
-            <td class="center ws-pop-cell">~4,329</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1268,7 +1333,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,718</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68818</dd></div>
@@ -1328,9 +1393,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~5,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68818</div>
             </td>
-            <td class="center ws-pop-cell">~5,718</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1355,7 +1420,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,232</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68310</dd></div>
@@ -1415,9 +1480,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~14,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68310</div>
             </td>
-            <td class="center ws-pop-cell">~14,232</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1502,9 +1567,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~580 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68926</div>
             </td>
-            <td class="center ws-pop-cell">~580</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1529,7 +1594,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,543</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68048</dd></div>
@@ -1589,9 +1654,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~13,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68048</div>
             </td>
-            <td class="center ws-pop-cell">~13,543</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1616,7 +1681,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,273</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,250</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69021</dd></div>
@@ -1676,9 +1741,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~1,250 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69021</div>
             </td>
-            <td class="center ws-pop-cell">~1,273</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1703,7 +1768,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,662</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68008</dd></div>
@@ -1763,9 +1828,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68008</div>
             </td>
-            <td class="center ws-pop-cell">~12,662</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1790,7 +1855,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,644</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,650</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68822</dd></div>
@@ -1850,9 +1915,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~4,650 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68822</div>
             </td>
-            <td class="center ws-pop-cell">~4,644</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1877,7 +1942,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,552</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69337</dd></div>
@@ -1937,9 +2002,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69337</div>
             </td>
-            <td class="center ws-pop-cell">~6,552</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2024,9 +2089,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~680 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68726</div>
             </td>
-            <td class="center ws-pop-cell">~680</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2051,7 +2116,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,224</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~30,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68601</dd></div>
@@ -2111,9 +2176,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~30,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68601</div>
             </td>
-            <td class="center ws-pop-cell">~30,224</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2138,7 +2203,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,079</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69130</dd></div>
@@ -2198,9 +2263,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~5,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69130</div>
             </td>
-            <td class="center ws-pop-cell">~5,079</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2225,7 +2290,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,727</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68333</dd></div>
@@ -2285,9 +2350,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~8,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68333</div>
             </td>
-            <td class="center ws-pop-cell">~8,727</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2312,7 +2377,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,827</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,850</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68937</dd></div>
@@ -2372,9 +2437,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~1,850 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68937</div>
             </td>
-            <td class="center ws-pop-cell">~1,827</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2399,7 +2464,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,903</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68352</dd></div>
@@ -2459,9 +2524,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~4,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68352</div>
             </td>
-            <td class="center ws-pop-cell">~4,903</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2486,7 +2551,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,864</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,850</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68355</dd></div>
@@ -2546,9 +2611,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,850 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68355</div>
             </td>
-            <td class="center ws-pop-cell">~4,864</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2573,7 +2638,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,304</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68025, 68026</dd></div>
@@ -2633,9 +2698,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~31,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68025, 68026</div>
             </td>
-            <td class="center ws-pop-cell">~31,304</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2660,7 +2725,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,707</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69341</dd></div>
@@ -2720,9 +2785,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~10,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69341</div>
             </td>
-            <td class="center ws-pop-cell">~10,707</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2747,7 +2812,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,111</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69138</dd></div>
@@ -2807,9 +2872,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~4,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69138</div>
             </td>
-            <td class="center ws-pop-cell">~4,111</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2834,7 +2899,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~752</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~750</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68044</dd></div>
@@ -2894,9 +2959,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~750 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68044</div>
             </td>
-            <td class="center ws-pop-cell">~752</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2921,7 +2986,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,155</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68028</dd></div>
@@ -2981,9 +3046,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~17,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68028</div>
             </td>
-            <td class="center ws-pop-cell">~17,155</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3008,7 +3073,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,606</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68949</dd></div>
@@ -3068,9 +3133,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>6 sites
                 </div>
+                <div class="ws-meta">~6,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68949</div>
             </td>
-            <td class="center ws-pop-cell">~6,606</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3095,7 +3160,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,582</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69033</dd></div>
@@ -3155,9 +3220,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~2,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69033</div>
             </td>
-            <td class="center ws-pop-cell">~2,582</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3182,7 +3247,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,338</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~38,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68845, 68847, 68848</dd></div>
@@ -3242,9 +3307,9 @@
                     <span class="ws-source ws-source--mx">Mixed source</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~38,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68845, 68847, 68848</div>
             </td>
-            <td class="center ws-pop-cell">~38,338</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3269,7 +3334,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,132</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68317, 68372, 68404, 68418, 68430, 68461, 68501</dd></div>
@@ -3329,9 +3394,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~11,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68317, 68372, 68404, 68418, 68430, 68461, 68501</div>
             </td>
-            <td class="center ws-pop-cell">~11,132</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3356,7 +3421,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,175</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68850</dd></div>
@@ -3416,9 +3481,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>10 sites
                 </div>
+                <div class="ws-meta">~12,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68850</div>
             </td>
-            <td class="center ws-pop-cell">~12,175</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3443,7 +3508,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~298,148</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~298,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68501, 68502, 68503, 68504, 68505, 68506, 68507, 68508, 68509, 68510, 68512, 68514, 68516, 68520, 68521, 68522, 68523, 68524, 68526, 68527, 68528, 68529, 68531, 68542, 68544, 68583, 68588</dd></div>
@@ -3503,9 +3568,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~298,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68501, 68502, 68503, 68504, 68505, 68506, 68507, 68508, 68509, 68510, 68512, 68514, 68516, 68520, 68521, 68522, 68523, 68524, 68526, 68527, 68528, 68529, 68531, 68542, 68544, 68583, 68588</div>
             </td>
-            <td class="center ws-pop-cell">~298,148</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3530,7 +3595,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,926</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69001</dd></div>
@@ -3590,9 +3655,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69001</div>
             </td>
-            <td class="center ws-pop-cell">~8,926</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3617,7 +3682,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~736,023</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~736,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68005, 68007, 68010, 68022, 68028, 68059, 68069, 68102, 68104, 68105, 68106, 68107, 68108, 68110, 68111, 68112, 68113, 68114, 68116, 68117, 68118, 68122, 68123, 68124, 68127, 68128, 68130, 68131, 68132, 68133, 68134, 68135, 68136, 68137, 68138, 68142, 68144, 68147, 68152, 68154, 68157, 68164, 68182, 68183</dd></div>
@@ -3677,9 +3742,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~736,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68005, 68007, 68010, 68022, 68028, 68059, 68069, 68102, 68104, 68105, 68106, 68107, 68108, 68110, 68111, 68112, 68113, 68114, 68116, 68117, 68118, 68122, 68123, 68124, 68127, 68128, 68130, 68131, 68132, 68133, 68134, 68135, 68136, 68137, 68138, 68142, 68144, 68147, 68152, 68154, 68157, 68164, 68182, 68183</div>
             </td>
-            <td class="center ws-pop-cell">~736,023</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3704,7 +3769,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,795</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68410</dd></div>
@@ -3764,9 +3829,9 @@
                     <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
                     
                 </div>
+                <div class="ws-meta">~8,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68410</div>
             </td>
-            <td class="center ws-pop-cell">~8,795</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3791,7 +3856,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,116</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68701</dd></div>
@@ -3851,9 +3916,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~31,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68701</div>
             </td>
-            <td class="center ws-pop-cell">~31,116</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3878,7 +3943,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,007</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69153</dd></div>
@@ -3938,9 +4003,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>7 sites
                 </div>
+                <div class="ws-meta">~6,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69153</div>
             </td>
-            <td class="center ws-pop-cell">~6,007</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4025,9 +4090,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~4,750 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68763</div>
             </td>
-            <td class="center ws-pop-cell">~4,750</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4052,7 +4117,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,237</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~52,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68046, 68133, 68157</dd></div>
@@ -4112,9 +4177,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~52,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68046, 68133, 68157</div>
             </td>
-            <td class="center ws-pop-cell">~52,237</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4139,7 +4204,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,155</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68028</dd></div>
@@ -4199,9 +4264,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~17,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68028</div>
             </td>
-            <td class="center ws-pop-cell">~17,155</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4226,7 +4291,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,304</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68025</dd></div>
@@ -4286,9 +4351,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~31,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68025</div>
             </td>
-            <td class="center ws-pop-cell">~31,304</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4313,7 +4378,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,203</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68661</dd></div>
@@ -4373,9 +4438,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~7,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68661</div>
             </td>
-            <td class="center ws-pop-cell">~7,203</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4400,7 +4465,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,231</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69361</dd></div>
@@ -4460,9 +4525,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~17,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69361</div>
             </td>
-            <td class="center ws-pop-cell">~17,231</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4487,7 +4552,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,101</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68434</dd></div>
@@ -4547,9 +4612,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68434</div>
             </td>
-            <td class="center ws-pop-cell">~9,101</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4574,7 +4639,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,260</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>69162</dd></div>
@@ -4634,9 +4699,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~7,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 69162</div>
             </td>
-            <td class="center ws-pop-cell">~7,260</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4661,7 +4726,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,167</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68776</dd></div>
@@ -4721,9 +4786,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~15,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68776</div>
             </td>
-            <td class="center ws-pop-cell">~15,167</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4748,7 +4813,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,680</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68731</dd></div>
@@ -4808,9 +4873,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~3,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68731</div>
             </td>
-            <td class="center ws-pop-cell">~3,680</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4893,9 +4958,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4920,7 +4985,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,980</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68787</dd></div>
@@ -4980,9 +5045,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~7,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68787</div>
             </td>
-            <td class="center ws-pop-cell">~6,980</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5007,7 +5072,7 @@
                         <p class="ws-tip-state">NEBRASKA</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,454</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~4,450</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>68788</dd></div>
@@ -5067,9 +5132,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~4,450 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68788</div>
             </td>
-            <td class="center ws-pop-cell">~4,454</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5154,9 +5219,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>12 sites
                 </div>
+                <div class="ws-meta">~9,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 68467</div>
             </td>
-            <td class="center ws-pop-cell">~9,600</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5269,7 +5334,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -5328,6 +5393,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

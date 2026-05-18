@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,513</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19947</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~19,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19947</div>
             </td>
-            <td class="center ws-pop-cell">~19,513</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,746</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19711</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~49,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19711</div>
             </td>
-            <td class="center ws-pop-cell">~49,746</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~381,016</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~381,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19701, 19702, 19703, 19711, 19713, 19720, 19733, 19801, 19802, 19803, 19804, 19809, 19810</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~381,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19701, 19702, 19703, 19711, 19713, 19720, 19733, 19801, 19802, 19803, 19804, 19809, 19810</div>
             </td>
-            <td class="center ws-pop-cell">~381,016</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -832,7 +897,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~315,943</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~316,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19701, 19702, 19707, 19711, 19713, 19720, 19804, 19805</dd></div>
@@ -892,9 +957,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>22 sites
                 </div>
+                <div class="ws-meta">~316,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19701, 19702, 19707, 19711, 19713, 19720, 19804, 19805</div>
             </td>
-            <td class="center ws-pop-cell">~315,943</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -920,7 +985,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,043</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19971</dd></div>
@@ -980,9 +1045,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~15,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19971</div>
             </td>
-            <td class="center ws-pop-cell">~15,043</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1008,7 +1073,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,043</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19971</dd></div>
@@ -1068,9 +1133,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~15,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19971</div>
             </td>
-            <td class="center ws-pop-cell">~15,043</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1096,7 +1161,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~440,853</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~441,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19082, 19701, 19702, 19707, 19708, 19710, 19720, 19732, 19801, 19802, 19803, 19804, 19805, 19806, 19807, 19808, 19809, 19810, 19850, 19880, 19884, 19898, 19899</dd></div>
@@ -1156,9 +1221,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~441,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19082, 19701, 19702, 19707, 19708, 19710, 19720, 19732, 19801, 19802, 19803, 19804, 19805, 19806, 19807, 19808, 19809, 19810, 19850, 19880, 19884, 19898, 19899</div>
             </td>
-            <td class="center ws-pop-cell">~440,853</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1184,7 +1249,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,204</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19977</dd></div>
@@ -1244,9 +1309,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~26,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19977</div>
             </td>
-            <td class="center ws-pop-cell">~26,204</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1272,7 +1337,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,761</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~28,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19958</dd></div>
@@ -1332,9 +1397,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~28,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19958</div>
             </td>
-            <td class="center ws-pop-cell">~28,761</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1360,7 +1425,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,818</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19940</dd></div>
@@ -1420,9 +1485,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~6,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19940</div>
             </td>
-            <td class="center ws-pop-cell">~6,818</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1448,7 +1513,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,876</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19939, 19945, 19967, 19970</dd></div>
@@ -1508,9 +1573,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~25,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19939, 19945, 19967, 19970</div>
             </td>
-            <td class="center ws-pop-cell">~25,876</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1536,7 +1601,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,324</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~69,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19947, 19951, 19966, 19968</dd></div>
@@ -1596,9 +1661,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~69,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19947, 19951, 19966, 19968</div>
             </td>
-            <td class="center ws-pop-cell">~69,324</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1624,7 +1689,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,340</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~29,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19930, 19939, 19944, 19945, 19975</dd></div>
@@ -1684,9 +1749,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~29,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19930, 19939, 19944, 19945, 19975</div>
             </td>
-            <td class="center ws-pop-cell">~29,340</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1712,7 +1777,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~93,615</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~93,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19951, 19958, 19966, 19968, 19969, 19971</dd></div>
@@ -1772,9 +1837,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>12 sites
                 </div>
+                <div class="ws-meta">~93,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19951, 19958, 19966, 19968, 19969, 19971</div>
             </td>
-            <td class="center ws-pop-cell">~93,615</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1800,7 +1865,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,693</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19975</dd></div>
@@ -1860,9 +1925,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19975</div>
             </td>
-            <td class="center ws-pop-cell">~9,693</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -1887,7 +1952,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,878</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19930</dd></div>
@@ -1947,9 +2012,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19930</div>
             </td>
-            <td class="center ws-pop-cell">~2,878</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2032,9 +2097,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                
                 <div class="ws-meta ws-zips-line">ZIPs served: NA</div>
             </td>
-            <td class="center ws-pop-cell">—</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2059,7 +2124,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~116,468</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~116,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19901, 19904, 19934, 19943, 19962, 19979</dd></div>
@@ -2119,9 +2184,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~116,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19901, 19904, 19934, 19943, 19962, 19979</div>
             </td>
-            <td class="center ws-pop-cell">~116,468</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2146,7 +2211,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,663</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~53,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19901, 19934</dd></div>
@@ -2206,9 +2271,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~53,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19901, 19934</div>
             </td>
-            <td class="center ws-pop-cell">~53,663</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2233,7 +2298,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,774</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~17,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19946, 19962</dd></div>
@@ -2293,9 +2358,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~17,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19946, 19962</div>
             </td>
-            <td class="center ws-pop-cell">~17,774</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2320,7 +2385,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,818</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19940</dd></div>
@@ -2380,9 +2445,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~6,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19940</div>
             </td>
-            <td class="center ws-pop-cell">~6,818</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2407,7 +2472,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~64</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19902</dd></div>
@@ -2467,9 +2532,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~60 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19902</div>
             </td>
-            <td class="center ws-pop-cell">~64</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2494,7 +2559,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,484</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~76,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19901, 19903, 19904</dd></div>
@@ -2554,9 +2619,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>16 sites
                 </div>
+                <div class="ws-meta">~76,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19901, 19903, 19904</div>
             </td>
-            <td class="center ws-pop-cell">~76,484</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2581,7 +2646,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,954</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19709</dd></div>
@@ -2641,9 +2706,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~49,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19709</div>
             </td>
-            <td class="center ws-pop-cell">~48,954</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2668,7 +2733,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~102,910</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~103,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19901, 19904, 19936, 19977</dd></div>
@@ -2728,9 +2793,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~103,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19901, 19904, 19936, 19977</div>
             </td>
-            <td class="center ws-pop-cell">~102,910</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2755,7 +2820,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,822</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~15,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19956</dd></div>
@@ -2815,9 +2880,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~15,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19956</div>
             </td>
-            <td class="center ws-pop-cell">~15,822</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2842,7 +2907,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,513</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19966</dd></div>
@@ -2902,9 +2967,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~32,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19966</div>
             </td>
-            <td class="center ws-pop-cell">~32,513</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2929,7 +2994,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,556</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19966, 19971</dd></div>
@@ -2989,9 +3054,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~47,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19966, 19971</div>
             </td>
-            <td class="center ws-pop-cell">~47,556</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3016,7 +3081,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,954</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19709</dd></div>
@@ -3076,9 +3141,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~49,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19709</div>
             </td>
-            <td class="center ws-pop-cell">~48,954</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3103,7 +3168,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,394</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19963</dd></div>
@@ -3163,9 +3228,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~21,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19963</div>
             </td>
-            <td class="center ws-pop-cell">~21,394</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3190,7 +3255,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,513</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19966</dd></div>
@@ -3250,9 +3315,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~32,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19966</div>
             </td>
-            <td class="center ws-pop-cell">~32,513</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3277,7 +3342,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,514</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19720</dd></div>
@@ -3337,9 +3402,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~60,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19720</div>
             </td>
-            <td class="center ws-pop-cell">~60,514</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3364,7 +3429,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~48,954</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~49,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19709</dd></div>
@@ -3424,9 +3489,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~49,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19709</div>
             </td>
-            <td class="center ws-pop-cell">~48,954</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3451,7 +3516,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,070</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19973</dd></div>
@@ -3511,9 +3576,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~26,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19973</div>
             </td>
-            <td class="center ws-pop-cell">~26,070</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3538,7 +3603,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,517</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19930, 19970</dd></div>
@@ -3598,9 +3663,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~10,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19930, 19970</div>
             </td>
-            <td class="center ws-pop-cell">~10,517</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3625,7 +3690,7 @@
                         <p class="ws-tip-state">DELAWARE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,693</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>19975</dd></div>
@@ -3685,9 +3750,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~9,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 19975</div>
             </td>
-            <td class="center ws-pop-cell">~9,693</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3800,7 +3865,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -3859,6 +3924,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 

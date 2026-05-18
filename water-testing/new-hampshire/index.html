@@ -175,9 +175,21 @@
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
-.ws-pop-cell { font-size: 1.05rem; color: #111; }
-.ws-sortable { cursor: pointer; user-select: none; }
-.ws-sortable:hover { color: #c0202a; }
+.ws-sort-btn {
+    display: inline-block;
+    margin-left: 0.6rem;
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.62rem;
+}
+.ws-sort-btn:hover { color: #c0202a; }
 .ws-sort-indicator {
     display: inline-block;
     margin-left: 0.2rem;
@@ -185,11 +197,13 @@
     color: #ccc;
     transition: color 0.1s;
 }
-.ws-sortable.ws-sort-desc .ws-sort-indicator,
-.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
-.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
-.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
-.ws-sortable .ws-sort-indicator::before { content: "↕"; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator,
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sort-btn.ws-sort-desc { color: #111; }
+.ws-sort-btn.ws-sort-asc  { color: #111; }
+.ws-sort-btn.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sort-btn.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sort-btn .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -290,7 +304,7 @@
     z-index: 50;
     box-sizing: border-box;
     width: min(38rem, calc(100vw - 2rem));
-    max-height: calc(100vh - 3rem);
+    max-height: calc(100vh - 5rem);
     overflow-y: auto;
     overflow-x: hidden;
     background: #fff;
@@ -304,6 +318,22 @@
     word-wrap: break-word;
     overflow-wrap: anywhere;
     white-space: normal;
+}
+@media (max-width: 700px) {
+    .ws-tip-panel {
+        top: calc(3rem + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        transform: none;
+        width: auto;
+        max-height: calc(100vh - 3.5rem - 0.5rem);
+        padding: 0.85rem 0.95rem 1rem;
+        font-size: 0.9rem;
+    }
+    .ws-tip-title { font-size: 1.05rem; }
+    .ws-tip-table { font-size: 0.75rem; }
+    .ws-tip-meta { font-size: 0.78rem; }
+    .ws-tip-meta dt { flex: 0 0 5.5rem; font-size: 0.58rem; }
 }
 .ws-tip-panel, .ws-tip-panel * { white-space: normal; }
 .ws-tip-panel * { min-width: 0; max-width: 100%; }
@@ -457,6 +487,38 @@
 }
 .ws-statelink-btn:hover { background: #fff; color: #111; }
 
+@media (max-width: 600px) {
+    .ws-strip { flex-wrap: wrap; overflow-x: visible; }
+    .ws-stat { flex: 1 1 45%; min-width: 0; }
+    .ws-stat-num { font-size: 1.1rem; }
+    .ws-stat-lbl { font-size: 0.62rem; }
+    .ws-table { font-size: 0.85rem; table-layout: fixed; }
+    #ws-table > colgroup > col:nth-child(1) { width: 38%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 62%; }
+    .ws-table th, .ws-table td { padding: 0.7rem 0.3rem; word-break: normal; overflow-wrap: anywhere; }
+    .ws-table th:first-child, .ws-table td:first-child { padding-left: 0; padding-right: 0.3rem; }
+    .ws-table th:last-child, .ws-table td:last-child { padding-left: 0.3rem; padding-right: 0; }
+    .ws-name { font-size: 0.92rem; line-height: 1.2; }
+    .ws-meta { font-size: 0.72rem; }
+    .ws-exceed-count { font-size: 0.92rem; white-space: nowrap; }
+    .ws-detect-note { font-size: 0.76rem; }
+    .ws-sort-btn { display: block; margin: 0.3rem 0 0; }
+    .ws-search-row { gap: 0.4rem; }
+    .ws-search-input { flex: 1 1 100%; }
+    .ws-filter-group { flex-wrap: wrap; }
+    .ws-statelink { padding: 1.1rem 1.1rem 1.2rem; }
+    .ws-statelink-hed { font-size: 1.1rem; }
+}
+@media (max-width: 400px) {
+    #ws-table > colgroup > col:nth-child(1) { width: 34%; }
+    #ws-table > colgroup > col:nth-child(2) { width: 66%; }
+    .ws-table { font-size: 0.8rem; }
+    .ws-name { font-size: 0.86rem; }
+    .ws-meta, .ws-zips-line { font-size: 0.68rem; }
+    .ws-exceed-count { font-size: 0.82rem; }
+    .ws-detect-note { font-size: 0.72rem; }
+}
+
 .ws-foot {
     font-family: "PT Sans", sans-serif;
     font-size: 0.78rem;
@@ -474,7 +536,10 @@
 <nav class="site-nav" id="site-nav">
     <div class="nav-inner">
         <a href="../../index.html" class="nav-brand">Home</a>
-        <div class="nav-links">
+        <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links" id="nav-links">
             <a href="../index.html">PFAS in My Community</a>
             <a href="../../federal-regulations/index.html">Federal Regulations</a>
             <a href="../../state-legislation/index.html">State Legislation</a>
@@ -542,16 +607,16 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:32%">
-        <col style="width:14%">
-        <col style="width:54%">
+        <col style="width:42%">
+        <col style="width:58%">
     </colgroup>
     <thead>
         <tr>
-            <th>Water system</th>
-            <th class="center ws-sortable" data-sort="pop">
-                Residents served
-                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            <th>
+                Water system
+                <button type="button" class="ws-sort-btn" id="ws-sort-pop" data-sort="pop" aria-label="Sort by residents served">
+                    Sort by residents served <span class="ws-sort-indicator" aria-hidden="true"></span>
+                </button>
             </th>
             <th>PFAS over the EPA limit</th>
         </tr>
@@ -568,7 +633,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,385</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~25,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03051</dd></div>
@@ -628,9 +693,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~25,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03051</div>
             </td>
-            <td class="center ws-pop-cell">~25,385</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -656,7 +721,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,114</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~46,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03079, 03087</dd></div>
@@ -716,9 +781,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~46,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03079, 03087</div>
             </td>
-            <td class="center ws-pop-cell">~46,114</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -744,7 +809,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,170</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03870</dd></div>
@@ -804,9 +869,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03870</div>
             </td>
-            <td class="center ws-pop-cell">~5,170</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -831,7 +896,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,484</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03052</dd></div>
@@ -891,9 +956,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~8,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03052</div>
             </td>
-            <td class="center ws-pop-cell">~8,484</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -919,7 +984,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,614</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03874</dd></div>
@@ -979,9 +1044,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~8,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03874</div>
             </td>
-            <td class="center ws-pop-cell">~8,614</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1007,7 +1072,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,224</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~21,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03811, 03841, 03865</dd></div>
@@ -1067,9 +1132,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>12 sites
                 </div>
+                <div class="ws-meta">~21,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03811, 03841, 03865</div>
             </td>
-            <td class="center ws-pop-cell">~21,224</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1095,7 +1160,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,441</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~35,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03801, 03823, 03840, 03854, 03870</dd></div>
@@ -1155,9 +1220,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>8 sites
                 </div>
+                <div class="ws-meta">~35,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03801, 03823, 03840, 03854, 03870</div>
             </td>
-            <td class="center ws-pop-cell">~35,441</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1183,7 +1248,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,809</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03452, 03461</dd></div>
@@ -1243,9 +1308,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~11,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03452, 03461</div>
             </td>
-            <td class="center ws-pop-cell">~11,809</td>
             <td>
                 
                 <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
@@ -1271,7 +1336,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,682</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~26,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03106, 03275</dd></div>
@@ -1331,9 +1396,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~26,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03106, 03275</div>
             </td>
-            <td class="center ws-pop-cell">~26,682</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1358,7 +1423,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~68,822</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~68,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03032, 03053, 03103</dd></div>
@@ -1418,9 +1483,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~68,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03032, 03053, 03103</div>
             </td>
-            <td class="center ws-pop-cell">~68,822</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1446,7 +1511,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,543</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~22,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03833</dd></div>
@@ -1506,9 +1571,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~22,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03833</div>
             </td>
-            <td class="center ws-pop-cell">~22,543</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1534,7 +1599,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,478</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03103, 03110</dd></div>
@@ -1594,9 +1659,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~60,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03103, 03110</div>
             </td>
-            <td class="center ws-pop-cell">~60,478</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1622,7 +1687,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,467</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~47,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03103, 03109</dd></div>
@@ -1682,9 +1747,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~47,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03103, 03109</div>
             </td>
-            <td class="center ws-pop-cell">~47,467</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1710,7 +1775,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,654</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,700</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03106</dd></div>
@@ -1770,9 +1835,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,700 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03106</div>
             </td>
-            <td class="center ws-pop-cell">~14,654</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1798,7 +1863,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,560</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~33,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03842, 03843, 03862, 03870, 03885</dd></div>
@@ -1858,9 +1923,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~33,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03842, 03843, 03862, 03870, 03885</div>
             </td>
-            <td class="center ws-pop-cell">~33,560</td>
             <td>
                 
                 <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
@@ -1886,7 +1951,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,286</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~60,300</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03038, 03053</dd></div>
@@ -1946,9 +2011,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~60,300 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03038, 03053</div>
             </td>
-            <td class="center ws-pop-cell">~60,286</td>
             <td>
                 
                 <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
@@ -1974,7 +2039,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,485</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03570</dd></div>
@@ -2034,9 +2099,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03570</div>
             </td>
-            <td class="center ws-pop-cell">~9,485</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2061,7 +2126,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,894</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03222</dd></div>
@@ -2121,9 +2186,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~5,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03222</div>
             </td>
-            <td class="center ws-pop-cell">~5,894</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2148,7 +2213,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,647</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~13,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03743</dd></div>
@@ -2208,9 +2273,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~13,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03743</div>
             </td>
-            <td class="center ws-pop-cell">~13,647</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2235,7 +2300,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,104</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~50,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03301, 03302, 03303, 03305</dd></div>
@@ -2295,9 +2360,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~50,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03301, 03302, 03303, 03305</div>
             </td>
-            <td class="center ws-pop-cell">~50,104</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2322,7 +2387,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,925</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~32,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03820</dd></div>
@@ -2382,9 +2447,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~32,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03820</div>
             </td>
-            <td class="center ws-pop-cell">~32,925</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2409,7 +2474,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,784</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~11,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03235, 03269</dd></div>
@@ -2469,9 +2534,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>4 sites
                 </div>
+                <div class="ws-meta">~11,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03235, 03269</div>
             </td>
-            <td class="center ws-pop-cell">~11,784</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2496,7 +2561,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,170</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03755</dd></div>
@@ -2556,9 +2621,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~10,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03755</div>
             </td>
-            <td class="center ws-pop-cell">~10,170</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2583,7 +2648,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,891</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~24,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03431</dd></div>
@@ -2643,9 +2708,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~24,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03431</div>
             </td>
-            <td class="center ws-pop-cell">~24,891</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2670,7 +2735,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,943</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03246</dd></div>
@@ -2730,9 +2795,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~16,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03246</div>
             </td>
-            <td class="center ws-pop-cell">~16,943</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2757,7 +2822,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,515</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~14,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03766, 03784</dd></div>
@@ -2817,9 +2882,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~14,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03766, 03784</div>
             </td>
-            <td class="center ws-pop-cell">~14,515</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2844,7 +2909,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,549</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03561, 03574</dd></div>
@@ -2904,9 +2969,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~8,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03561, 03574</div>
             </td>
-            <td class="center ws-pop-cell">~8,549</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -2931,7 +2996,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,175</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03838, 03845</dd></div>
@@ -2991,9 +3056,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~2,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03838, 03845</div>
             </td>
-            <td class="center ws-pop-cell">~2,175</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3018,7 +3083,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,139</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~27,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03054</dd></div>
@@ -3078,9 +3143,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~27,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03054</div>
             </td>
-            <td class="center ws-pop-cell">~27,139</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3105,7 +3170,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,151</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~16,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03055</dd></div>
@@ -3165,9 +3230,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~16,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03055</div>
             </td>
-            <td class="center ws-pop-cell">~16,151</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3192,7 +3257,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,179</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03257, 03284</dd></div>
@@ -3252,9 +3317,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03257, 03284</div>
             </td>
-            <td class="center ws-pop-cell">~5,179</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3339,9 +3404,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03857</div>
             </td>
-            <td class="center ws-pop-cell">~9,400</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3366,7 +3431,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,758</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03773</dd></div>
@@ -3426,9 +3491,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~7,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03773</div>
             </td>
-            <td class="center ws-pop-cell">~7,758</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3453,7 +3518,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,218</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~31,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03818, 03845, 03860, 03867</dd></div>
@@ -3513,9 +3578,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>5 sites
                 </div>
+                <div class="ws-meta">~31,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03818, 03845, 03860, 03867</div>
             </td>
-            <td class="center ws-pop-cell">~31,218</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3540,7 +3605,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,102</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~23,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03801</dd></div>
@@ -3600,9 +3665,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~23,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03801</div>
             </td>
-            <td class="center ws-pop-cell">~23,102</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3627,7 +3692,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,461</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~18,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03224, 03303</dd></div>
@@ -3687,9 +3752,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~18,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03224, 03303</div>
             </td>
-            <td class="center ws-pop-cell">~18,461</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3714,7 +3779,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~90,943</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~90,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03060, 03061, 03062, 03063, 03064</dd></div>
@@ -3774,9 +3839,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~90,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03060, 03061, 03062, 03063, 03064</div>
             </td>
-            <td class="center ws-pop-cell">~90,943</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3801,7 +3866,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,864</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03458, 03468</dd></div>
@@ -3861,9 +3926,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~6,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03458, 03468</div>
             </td>
-            <td class="center ws-pop-cell">~6,864</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3888,7 +3953,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,042</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~9,000</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03245, 03264</dd></div>
@@ -3948,9 +4013,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~9,000 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03245, 03264</div>
             </td>
-            <td class="center ws-pop-cell">~9,042</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -3975,7 +4040,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,429</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~8,400</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03049, 03061</dd></div>
@@ -4035,9 +4100,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~8,400 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03049, 03061</div>
             </td>
-            <td class="center ws-pop-cell">~8,429</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4062,7 +4127,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,773</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~10,800</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03077</dd></div>
@@ -4122,9 +4187,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>3 sites
                 </div>
+                <div class="ws-meta">~10,800 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03077</div>
             </td>
-            <td class="center ws-pop-cell">~10,773</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4149,7 +4214,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,194</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~7,200</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03812, 03838, 03845, 03860</dd></div>
@@ -4209,9 +4274,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~7,200 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03812, 03838, 03845, 03860</div>
             </td>
-            <td class="center ws-pop-cell">~7,194</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4236,7 +4301,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,072</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~39,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03839, 03867, 03868, 04027</dd></div>
@@ -4296,9 +4361,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~39,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03839, 03867, 03868, 04027</div>
             </td>
-            <td class="center ws-pop-cell">~39,072</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4323,7 +4388,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,751</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~3,750</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03818</dd></div>
@@ -4383,9 +4448,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~3,750 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03818</div>
             </td>
-            <td class="center ws-pop-cell">~3,751</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4410,7 +4475,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,088</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03878</dd></div>
@@ -4470,9 +4535,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~12,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03878</div>
             </td>
-            <td class="center ws-pop-cell">~12,088</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4497,7 +4562,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,620</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~19,600</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03824, 03861</dd></div>
@@ -4557,9 +4622,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~19,600 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03824, 03861</div>
             </td>
-            <td class="center ws-pop-cell">~19,620</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4584,7 +4649,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,045</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~2,050</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03443, 03466</dd></div>
@@ -4644,9 +4709,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~2,050 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03443, 03466</div>
             </td>
-            <td class="center ws-pop-cell">~2,045</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4671,7 +4736,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,135</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~12,100</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03748, 03753, 03784</dd></div>
@@ -4731,9 +4796,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~12,100 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03748, 03753, 03784</div>
             </td>
-            <td class="center ws-pop-cell">~12,135</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4758,7 +4823,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,360</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~1,350</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03849</dd></div>
@@ -4818,9 +4883,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     <span class="ws-meta-sep">·</span>2 sites
                 </div>
+                <div class="ws-meta">~1,350 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03849</div>
             </td>
-            <td class="center ws-pop-cell">~1,360</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4845,7 +4910,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,528</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~6,500</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03894, 03896</dd></div>
@@ -4905,9 +4970,9 @@
                     <span class="ws-source ws-source--sw">Surface water</span>
                     
                 </div>
+                <div class="ws-meta">~6,500 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03894, 03896</div>
             </td>
-            <td class="center ws-pop-cell">~6,528</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -4932,7 +4997,7 @@
                         <p class="ws-tip-state">NEW HAMPSHIRE</p>
                         <dl class="ws-tip-meta">
                             
-                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,925</dd></div>
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~5,900</dd></div>
                             
                             
                             <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>03229</dd></div>
@@ -4992,9 +5057,9 @@
                     <span class="ws-source ws-source--gw">Groundwater</span>
                     
                 </div>
+                <div class="ws-meta">~5,900 residents served</div>
                 <div class="ws-meta ws-zips-line">ZIPs served: 03229</div>
             </td>
-            <td class="center ws-pop-cell">~5,925</td>
             <td>
                 
                 <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
@@ -5107,7 +5172,7 @@
     // ── Sortable Residents column ────────────────────────────────────────
     var tbody = document.querySelector('#ws-table tbody');
     var originalOrder = rows.slice();  // snapshot for restore
-    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+    document.querySelectorAll('.ws-sort-btn').forEach(function (th) {
         var state = 0;  // 0 = default, 1 = desc, 2 = asc
         th.addEventListener('click', function () {
             state = (state + 1) % 3;
@@ -5166,6 +5231,23 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 window.addEventListener('scroll', () => {
     document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
 });
+
+// Mobile nav toggle
+(function() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.getElementById('nav-links');
+    if (!toggle || !links) return;
+    toggle.addEventListener('click', () => {
+        const open = links.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        links.classList.remove('is-open');
+        toggle.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }));
+})();
 </script>
 
 
