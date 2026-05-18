@@ -166,6 +166,22 @@
     border-bottom: 2px solid #111;
 }
 .ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.ws-table td.center, .ws-table th.center { text-align: center; font-variant-numeric: tabular-nums; }
+.ws-pop-cell { font-size: 1.05rem; color: #111; }
+.ws-sortable { cursor: pointer; user-select: none; }
+.ws-sortable:hover { color: #c0202a; }
+.ws-sort-indicator {
+    display: inline-block;
+    margin-left: 0.2rem;
+    font-size: 0.7rem;
+    color: #ccc;
+    transition: color 0.1s;
+}
+.ws-sortable.ws-sort-desc .ws-sort-indicator,
+.ws-sortable.ws-sort-asc  .ws-sort-indicator { color: #111; }
+.ws-sortable.ws-sort-desc .ws-sort-indicator::before { content: "↓"; }
+.ws-sortable.ws-sort-asc  .ws-sort-indicator::before { content: "↑"; }
+.ws-sortable .ws-sort-indicator::before { content: "↕"; }
 .ws-table tr.row-hidden { display: none; }
 .ws-status {
     font-family: "PT Sans", sans-serif;
@@ -185,8 +201,8 @@
 }
 .ws-meta {
     color: #888;
-    font-size: 0.74rem;
-    margin-top: 0.1rem;
+    font-size: 0.78rem;
+    margin-top: 0.25rem;
     font-family: "PT Sans", sans-serif;
     line-height: 1.3;
 }
@@ -224,10 +240,177 @@
     max-width: 640px;
 }
 .ws-zips-line {
-    margin-top: 0.25rem;
-    font-size: 0.78rem;
     font-style: italic;
+}
+
+/* ── Per-row result tooltip ─────────────────────────────────────────── */
+.ws-tip-host { position: relative; display: inline-block; margin-left: 0.4rem; }
+.ws-name-tail { white-space: nowrap; }
+.ws-tip-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.05rem;
+    height: 1.05rem;
+    border-radius: 50%;
+    background: #ecebe4;
+    color: #555;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.66rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    vertical-align: middle;
+}
+.ws-tip-btn:hover, .ws-tip-btn:focus,
+.ws-tip-host[data-open="1"] .ws-tip-btn { background: #111; color: #fff; outline: none; }
+.ws-tip-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 49;
+    display: none;
+}
+.ws-tip-backdrop.is-open { display: block; }
+.ws-tip-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+    box-sizing: border-box;
+    width: min(38rem, calc(100vw - 2rem));
+    max-height: calc(100vh - 3rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #fff;
+    border: 1px solid #111;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    padding: 1rem 1.1rem 1.3rem;
+    font-family: "PT Sans", sans-serif;
+    color: #222;
+    line-height: 1.4;
+    display: none;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+.ws-tip-panel, .ws-tip-panel * { white-space: normal; }
+.ws-tip-panel * { min-width: 0; max-width: 100%; }
+.ws-tip-close {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.55rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    line-height: 1;
     color: #888;
+    cursor: pointer;
+    padding: 0.2rem 0.35rem;
+}
+.ws-tip-close:hover { color: #111; }
+.ws-tip-host[data-open="1"] .ws-tip-panel { display: block; }
+.ws-tip-title {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0 0 0.55rem;
+    color: #111;
+    line-height: 1.25;
+}
+.ws-tip-meta {
+    margin: 0 0 0.7rem;
+    padding: 0 0 0.7rem;
+    border-bottom: 1px solid #eee;
+    font-size: 0.85rem;
+    color: #333;
+    line-height: 1.45;
+}
+.ws-tip-meta-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+}
+.ws-tip-meta-row:last-child { margin-bottom: 0; }
+.ws-tip-meta dt {
+    flex: 0 0 7rem;
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+}
+.ws-tip-meta dd {
+    flex: 1 1 auto;
+    margin: 0;
+    text-align: left;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+.ws-tip-state {
+    margin: -0.3rem 0 0.7rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+}
+.ws-tip-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    table-layout: fixed;
+}
+.ws-tip-table col.col-pfas { width: 22%; }
+.ws-tip-table col.col-peak { width: 38%; }
+.ws-tip-table col.col-lim  { width: 18%; }
+.ws-tip-table col.col-date { width: 22%; }
+.ws-tip-table th, .ws-tip-table td {
+    padding: 0.35rem 0.5rem 0.35rem 0;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-variant-numeric: tabular-nums;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+.ws-tip-table th:last-child, .ws-tip-table td:last-child { padding-right: 0; }
+.ws-tip-table th {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+    padding-top: 0;
+}
+/* Keep last-row border visible — was getting clipped under the panel's overflow. */
+.ws-tip-row--over td { color: #c0202a; font-weight: 700; }
+.ws-tip-row--ok  td { color: #1a6b35; }
+.ws-tip-row--nd  td { color: #1a6b35; }
+.ws-tip-foot {
+    font-size: 0.7rem;
+    color: #999;
+    margin: 0.6rem 0 0;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+.ws-pop {
+    margin-top: 0.3rem;
+    font-family: "PT Sans", sans-serif;
+    color: #444;
+    font-size: 0.92rem;
+    line-height: 1.2;
+}
+.ws-pop strong {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    color: #111;
+    font-size: 1.15rem;
 }
 
 .ws-statelink {
@@ -340,27 +523,78 @@
 <div style="overflow-x:auto;">
 <table class="ws-table" id="ws-table">
     <colgroup>
-        <col style="width:38%">
-        <col style="width:62%">
+        <col style="width:32%">
+        <col style="width:14%">
+        <col style="width:54%">
     </colgroup>
     <thead>
         <tr>
             <th>Water system</th>
+            <th class="center ws-sortable" data-sort="pop">
+                Residents served
+                <span class="ws-sort-indicator" aria-hidden="true"></span>
+            </th>
             <th>PFAS over the EPA limit</th>
         </tr>
     </thead>
     <tbody>
         {% for s in systems %}
         {% set ex_count = s.exceedances|length %}
-        <tr data-name="{{ s.name|lower }}" data-zips="{{ s.zips|join(' ') }}" data-status="{{ 'over' if s.exceeded else 'ok' }}">
+        <tr data-name="{{ s.name|lower }}" data-zips="{{ s.zips|join(' ') }}" data-status="{{ 'over' if s.exceeded else 'ok' }}" data-pop="{{ s.served_population or 0 }}">
             <td>
-                <div class="ws-name">{{ s.name }}</div>
+                {%- set name_words = s.name.split(' ') -%}
+                <div class="ws-name">
+                    {%- if name_words|length > 1 -%}
+                        {{ name_words[:-1]|join(' ') }}
+                        <span class="ws-name-tail">{{ name_words[-1] }}<span class="ws-tip-host" data-open="0">
+                    {%- else -%}
+                        <span class="ws-name-tail">{{ s.name }}<span class="ws-tip-host" data-open="0">
+                    {%- endif -%}
+                    <button type="button" class="ws-tip-btn" aria-label="See per-PFAS test results">i</button>
+                    <div class="ws-tip-panel" role="dialog" aria-label="{{ s.name }} test results">
+                        <button type="button" class="ws-tip-close" aria-label="Close">×</button>
+                        <p class="ws-tip-title">{{ s.name }}</p>
+                        <p class="ws-tip-state">{{ state.name|upper }}</p>
+                        <dl class="ws-tip-meta">
+                            {% if s.served_population %}
+                            <div class="ws-tip-meta-row"><dt>Residents served</dt><dd>~{{ "{:,}".format(s.served_population) }}</dd></div>
+                            {% endif %}
+                            {% if s.zips %}
+                            <div class="ws-tip-meta-row"><dt>ZIPs served</dt><dd>{{ s.zips|join(', ') }}</dd></div>
+                            {% endif %}
+                        </dl>
+                        <table class="ws-tip-table">
+                            <colgroup>
+                                <col class="col-pfas">
+                                <col class="col-peak">
+                                <col class="col-lim">
+                                <col class="col-date">
+                            </colgroup>
+                            <thead><tr><th>PFAS</th><th>Peak</th><th>EPA limit</th><th>Sample date</th></tr></thead>
+                            <tbody>
+                            {% for c in s.per_contaminant %}
+                            <tr class="ws-tip-row--{{ 'over' if c.over_limit else ('ok' if c.detected else 'nd') }}">
+                                <td>{{ c.contaminant }}</td>
+                                <td>
+                                    {%- if c.detected %}{{ "%.1f"|format(c.ppt) }} ppt
+                                    {%- else -%}Not detected{%- endif -%}
+                                </td>
+                                <td>{{ "%g"|format(c.limit) }} ppt</td>
+                                <td>{{ c.date or '—' }}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <p class="ws-tip-foot">Peak = highest individual sample concentration recorded at this system across the UCMR&nbsp;5 monitoring window. Non-detections fell below the minimum reporting level.</p>
+                    </div>
+                </span></span></div>
                 <div class="ws-meta">
                     {% if s.water_type %}<span class="ws-source ws-source--{{ s.water_type|lower }}">{{ s.water_type_label }}</span>{% endif %}
-                    {% if s.n_facilities > 1 %}<span class="ws-meta-sep">·</span>{{ s.n_facilities }} facilities{% endif %}
+                    {% if s.n_facilities > 1 %}<span class="ws-meta-sep">·</span>{{ s.n_facilities }} sites{% endif %}
                 </div>
                 {% if s.zips %}<div class="ws-meta ws-zips-line">ZIPs served: {{ s.zips|join(', ') }}</div>{% endif %}
             </td>
+            <td class="center ws-pop-cell">{% if s.served_population %}~{{ "{:,}".format(s.served_population) }}{% else %}—{% endif %}</td>
             <td>
                 {% if ex_count %}
                 <div class="ws-exceed-count">{{ ex_count }} of 5 PFAS over limit</div>
@@ -408,10 +642,14 @@
     Source: EPA Fifth Unregulated Contaminant Monitoring Rule (UCMR 5). "Worst exceedance" shows how many times above the EPA standard the system's highest sample registered, and which compound it was. Biden's 2024 rule set limits of 4 ppt for PFOA and PFOS and 10 ppt for PFHxS, PFNA, and HFPO-DA (GenX). The Trump EPA proposed rescinding the latter three in May 2025.
 </p>
 
+<div class="ws-tip-backdrop" id="ws-tip-backdrop"></div>
+
 <script>
 (function () {
     var input = document.getElementById('ws-search-input');
-    var rows = Array.prototype.slice.call(document.querySelectorAll('#ws-table tbody tr'));
+    // Direct-child selector so we don't also pick up <tr>s nested inside each
+    // row's tooltip <table>.
+    var rows = Array.prototype.slice.call(document.querySelectorAll('#ws-table > tbody > tr'));
     var count = document.getElementById('ws-search-count');
     var buttons = document.querySelectorAll('.ws-filter-btn');
     var total = rows.length;
@@ -447,6 +685,63 @@
             b.classList.add('active');
             filter = b.dataset.filter;
             apply();
+        });
+    });
+
+    // ── Per-row result modal ─────────────────────────────────────────────
+    var openTip = null;
+    var backdrop = document.getElementById('ws-tip-backdrop');
+
+    function closeTip() {
+        if (openTip) { openTip.dataset.open = '0'; openTip = null; }
+        if (backdrop) backdrop.classList.remove('is-open');
+    }
+    function openHost(host) {
+        if (openTip && openTip !== host) openTip.dataset.open = '0';
+        host.dataset.open = '1';
+        openTip = host;
+        if (backdrop) backdrop.classList.add('is-open');
+    }
+
+    document.querySelectorAll('.ws-tip-host').forEach(function (host) {
+        var btn = host.querySelector('.ws-tip-btn');
+        if (!btn) return;
+        btn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (host.dataset.open === '1') closeTip();
+            else openHost(host);
+        });
+        var panel = host.querySelector('.ws-tip-panel');
+        if (panel) panel.addEventListener('click', function (e) { e.stopPropagation(); });
+        var close = host.querySelector('.ws-tip-close');
+        if (close) close.addEventListener('click', function (e) { e.stopPropagation(); closeTip(); });
+    });
+    if (backdrop) backdrop.addEventListener('click', closeTip);
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeTip();
+    });
+
+    // ── Sortable Residents column ────────────────────────────────────────
+    var tbody = document.querySelector('#ws-table tbody');
+    var originalOrder = rows.slice();  // snapshot for restore
+    document.querySelectorAll('.ws-sortable').forEach(function (th) {
+        var state = 0;  // 0 = default, 1 = desc, 2 = asc
+        th.addEventListener('click', function () {
+            state = (state + 1) % 3;
+            th.classList.remove('ws-sort-desc', 'ws-sort-asc');
+            var sorted;
+            if (state === 0) {
+                sorted = originalOrder.slice();
+            } else {
+                var dir = state === 1 ? -1 : 1;
+                sorted = rows.slice().sort(function (a, b) {
+                    var av = parseInt(a.dataset.pop || '0', 10);
+                    var bv = parseInt(b.dataset.pop || '0', 10);
+                    return dir * (av - bv);
+                });
+                th.classList.add(state === 1 ? 'ws-sort-desc' : 'ws-sort-asc');
+            }
+            sorted.forEach(function (r) { tbody.appendChild(r); });
         });
     });
 })();

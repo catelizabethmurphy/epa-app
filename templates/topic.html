@@ -4,6 +4,74 @@
 {% block og_title %}{{ topic.title }}{% endblock %}
 {% block og_description %}{{ topic.description }}{% endblock %}
 
+{% block head %}
+<style>
+/* ── Timeline signal chip ───────────────────────────────────────────────
+   Direction sets the hue, force sets the treatment.
+   Label reads as a phrase: "Proposed Rollback", "Final Protection",
+   "Announced", "Court action", etc.                                    */
+.tl-chip {
+    display: inline-block;
+    padding: 0.28rem 0.55rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1.1;
+    border-radius: 2px;
+    --dir: #666;
+    --dir-bg: #f1f1f1;
+    --dir-tint: #fafafa;
+}
+.tl-chip--rollback   { --dir: #c0202a; --dir-bg: #c0202a; --dir-tint: #fff5f5; }
+.tl-chip--protection { --dir: #1a6b35; --dir-bg: #1a6b35; --dir-tint: #f3faf5; }
+.tl-chip--delay      { --dir: #935116; --dir-bg: #b85c00; --dir-tint: #fdf6ec; }
+.tl-chip--litigation { --dir: #5c3480; --dir-bg: #5c3480; --dir-tint: #f7f3fb; }
+.tl-chip--rhetoric   { --dir: #555;    --dir-bg: #777;    --dir-tint: #f4f4f4; }
+.tl-chip--other      { --dir: #666;    --dir-bg: #888;    --dir-tint: #f4f4f4; }
+
+/* Final / Court — solid filled */
+.tl-chip--force-final,
+.tl-chip--force-court {
+    background: var(--dir-bg);
+    color: #fff;
+    border: 1px solid var(--dir-bg);
+}
+
+/* Proposed — outlined, hue-tinted */
+.tl-chip--force-proposed {
+    background: var(--dir-tint);
+    color: var(--dir);
+    border: 1px solid var(--dir);
+}
+
+/* Announced — ghost, italic */
+.tl-chip--force-announced {
+    background: transparent;
+    color: var(--dir);
+    border: 1px dashed #bbb;
+    font-style: italic;
+}
+
+/* Withdrawn — strikethrough + faded */
+.tl-chip--force-withdrawn {
+    background: #f4f4f4;
+    color: var(--dir);
+    border: 1px solid #ccc;
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+/* Force unknown — subdued tinted pill */
+.tl-chip--force-none {
+    background: var(--dir-tint);
+    color: var(--dir);
+    border: 1px solid var(--dir);
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="topic-header">
     {% set eyebrow = topic.eyebrow or topic.subtitle or 'PFAS Federal Policy Record' %}
@@ -150,13 +218,43 @@
   {% elif sig_raw in ('protection','retained','policy') %}{% set sig_norm = 'protection' %}
   {% elif sig_raw in ('delay','under_reconsideration') %}{% set sig_norm = 'delay' %}
   {% elif sig_raw == 'litigation' %}{% set sig_norm = 'litigation' %}
+  {% elif sig_raw == 'rhetoric' %}{% set sig_norm = 'rhetoric' %}
   {% else %}{% set sig_norm = 'other' %}{% endif %}
+
+  {# Force (proposed / final / announced / withdrawn / court): prefer the
+     explicit `force` field on the item; fall back to a derivation for any
+     item that hasn't been hand-curated yet. #}
+  {% set tl_lc = (item.typeLabel or '') | lower %}
+  {% if item.force is defined and item.force %}{% set force = item.force %}
+  {% elif item.withdrawn %}{% set force = 'withdrawn' %}
+  {% elif 'proposed' in tl_lc or 'request for comment' in tl_lc or 'advanced notice' in tl_lc %}{% set force = 'proposed' %}
+  {% elif 'final' in tl_lc or 'designation' in tl_lc or 'rule' == tl_lc %}{% set force = 'final' %}
+  {% elif sig_norm == 'litigation' or 'court' in tl_lc or 'ruling' in tl_lc %}{% set force = 'court' %}
+  {% elif sig_norm == 'rhetoric' or 'statement' in tl_lc or 'press' in tl_lc or 'commitment' in tl_lc or item.pressId %}{% set force = 'announced' %}
+  {% else %}{% set force = '' %}{% endif %}
+  {# External-actor recolor: court rulings and congressional protections sit
+     in a different bucket from EPA action so they get a distinct blue hue.
+     We keep `sig_norm` intact for filtering/barcode and use a separate
+     `chip_variant` to drive the visual treatment + label. #}
+  {% set actor = '' %}
+  {% if 'court' in tl_lc or 'ruling' in tl_lc %}{% set actor = 'court' %}
+  {% elif 'congress' in tl_lc or 'legislation' in tl_lc %}{% set actor = 'congress' %}{% endif %}
+  {% if actor and sig_norm == 'protection' %}{% set chip_variant = actor ~ '-protection' %}
+  {% else %}{% set chip_variant = sig_norm %}{% endif %}
+  {% set dir_label = {'rollback':'Rollback','protection':'Protection','delay':'Delay','rhetoric':'Rhetoric','litigation':'Litigation','other':'Other'}.get(sig_norm, 'Protection') %}
+  {% if chip_variant == 'court-protection' %}{% set dir_label = 'Court ruling' %}
+  {% elif chip_variant == 'congress-protection' %}{% set dir_label = 'Congressional action' %}{% endif %}
+  {% set force_label = {'final':'Final','proposed':'Proposed','announced':'Announced','withdrawn':'Withdrawn','court':'Court'}.get(force, '') %}
+  {% if sig_norm == 'rhetoric' %}{% set chip_label = 'Announced' %}
+  {% elif force_label and force != 'court' %}{% set chip_label = force_label ~ ' ' ~ dir_label %}
+  {% else %}{% set chip_label = dir_label %}{% endif %}
 
   <div class="tl-entry tl-entry--{{ sig_raw }}{% if item.major %} tl-entry--major{% endif %}"
        id="tl-entry-{{ loop.index0 }}"
        data-idx="{{ loop.index0 }}"
        data-era="{{ item.era or '' }}"
        data-sig="{{ sig_norm }}"
+       data-force="{{ force }}"
        data-program="{{ item.programSlug or '' }}"
        data-title="{{ (item.title or '') | lower | e }}">
       <div class="tl-entry-left">
@@ -176,7 +274,7 @@
           </div>
           {% if item.description %}<p class="tl-desc">{{ item.description }}</p>{% endif %}
           <div class="tl-footer">
-              <span class="tl-signal-badge tl-signal-badge--{{ sig_norm }}">{{ sig_raw | replace('_',' ') }}</span>
+              <span class="tl-chip tl-chip--{{ chip_variant }} tl-chip--force-{{ force or 'none' }}">{{ chip_label }}</span>
           </div>
       </div>
   </div>
@@ -290,12 +388,17 @@ function parseDate(s) {
         var bucketKey = (entryEra || '') + ':' + date.getFullYear() + '-' + date.getMonth();
         var color = SIG_COLORS[entry.dataset.sig] || '#bbb';
         var titleEl = entry.querySelector('.tl-title');
+        var force = entry.dataset.force || '';
+        // Proposed / announced / withdrawn ticks are visually lighter so the
+        // eye lands on actual final actions first.
+        var isLight = (force === 'proposed' || force === 'announced' || force === 'withdrawn');
         tickData.push({
             idx:    entry.dataset.idx,
             pos:    parseFloat(pct(date)),
             era:    entryEra || '',
             bucket: bucketKey,
             color:  color,
+            light:  isLight,
             date:   dateEl.textContent.trim(),
             title:  (titleEl ? titleEl.textContent.trim() : ''),
         });
@@ -371,7 +474,9 @@ function parseDate(s) {
             ? 'calc(' + avgPos.toFixed(2) + '% + ' + item.pxOffset + 'px)'
             : avgPos.toFixed(2) + '%';
         group.forEach(function (t) { entryPosCSS[t.idx] = leftValue; });
-        html += '<div class="bcode-tick' + (isCluster ? ' bcode-tick--cluster' : '') + '"'
+        // If every event in this bucket is non-final, lighten the whole tick.
+        var allLight = group.every(function (t) { return t.light; });
+        html += '<div class="bcode-tick' + (isCluster ? ' bcode-tick--cluster' : '') + (allLight ? ' bcode-tick--light' : '') + '"'
              + ' style="left:' + leftValue + ';background:' + bg + '"'
              + ' data-era="' + (item.era || '') + '"'
              + ' data-idx="' + group[0].idx + '"'
@@ -629,6 +734,7 @@ function parseDate(s) {
     var entries    = Array.from(document.querySelectorAll('.tl-entry[data-idx]'));
     var eraBands   = Array.from(document.querySelectorAll('[data-era-band]'));
     var yearLabels = Array.from(document.querySelectorAll('[data-year-label]'));
+    var bcodeTicks = Array.from(document.querySelectorAll('.bcode-tick[data-idxlist]'));
     var searchEl   = document.getElementById('tl-search');
 
     var activeEra  = '';
@@ -638,6 +744,7 @@ function parseDate(s) {
 
     function applyFilters() {
         var visibleEras = new Set();
+        var visibleIdx  = new Set();
 
         entries.forEach(function (entry) {
             var ok = (!activeEra  || entry.dataset.era     === activeEra)
@@ -645,7 +752,18 @@ function parseDate(s) {
                   && (!activeProg || entry.dataset.program === activeProg || entry.dataset.program === 'both')
                   && (!activeQ    || entry.dataset.title.includes(activeQ));
             entry.style.display = ok ? '' : 'none';
-            if (ok) visibleEras.add(entry.dataset.era);
+            if (ok) {
+                visibleEras.add(entry.dataset.era);
+                visibleIdx.add(entry.dataset.idx);
+            }
+        });
+
+        // Barcode ticks: a tick can represent a cluster of entries
+        // (data-idxlist). Show it if any of its entries are still visible.
+        bcodeTicks.forEach(function (tick) {
+            var idxs = (tick.dataset.idxlist || '').split(',');
+            var anyVisible = idxs.some(function (i) { return visibleIdx.has(i); });
+            tick.style.display = anyVisible ? '' : 'none';
         });
 
         var firstBandSeen = false;

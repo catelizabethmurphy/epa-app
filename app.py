@@ -368,12 +368,15 @@ def get_water_summary():
     )[:25]:
         d = detail.get(r["pwsid"])
         peak = (d or {}).get("peak_by_contaminant", {}).get(r["contaminant"], {}) if d else {}
+        pop, matched = estimate_population_for_zips(r["zips"])
         worst_systems.append({
             **r,
             "peak_ppt": (peak.get("ppt") or r["max_result"] * 1000.0),
             "peak_date": peak.get("date", ""),
             "water_type": (d or {}).get("water_type", ""),
             "water_type_label": (d or {}).get("water_type_label", ""),
+            "served_population": pop,
+            "served_zip_match_count": matched,
         })
 
     # National totals — use unique physical samples derived from pws_data.csv,
@@ -966,6 +969,35 @@ WATER_TYPE_LABELS = {
 
 
 @lru_cache(maxsize=1)
+def get_zcta_population():
+    """ZCTA → ACS 5-year total population. Empty if fetch_census.py not run."""
+    path = DATA_DIR / "zcta_population.json"
+    if not path.exists():
+        return {}
+    with open(path) as f:
+        return json.load(f)
+
+
+def estimate_population_for_zips(zips):
+    """Sum ACS population across a system's served ZIPs.
+
+    Returns (estimated_population, matched_zip_count). Each ZIP that has no
+    ZCTA match silently drops out — common for PO-box-only ZIPs.
+    """
+    pop_by_zip = get_zcta_population()
+    if not pop_by_zip:
+        return (0, 0)
+    total = 0
+    matched = 0
+    for z in zips or ():
+        p = pop_by_zip.get(str(z).strip().zfill(5))
+        if p:
+            total += p
+            matched += 1
+    return (total, matched)
+
+
+@lru_cache(maxsize=1)
 def get_pws_detail():
     """Per-PWS aggregates derived from the sample-level UCMR 5 dataset.
 
@@ -1010,6 +1042,7 @@ def get_pws_detail():
                 "n_result_rows": 0,        # legacy: analytical-result rows
                 "n_detection_rows": 0,     # legacy: result rows above MRL
                 "peak_by_contaminant": {},
+                "last_date_by_contaminant": {},
             })
             fid = (r.get("facility_id") or "").strip()
             if fid and fid != "NA":
@@ -1021,6 +1054,13 @@ def get_pws_detail():
             sid = (r.get("sample_id") or "").strip()
             if sid:
                 entry["_sample_ids"].add(sid)
+
+            contam_name = (r.get("contaminant") or "").strip()
+            sample_date = _norm_date(r.get("collection_date") or "")
+            if contam_name and sample_date:
+                prev_last = entry["last_date_by_contaminant"].get(contam_name)
+                if prev_last is None or sample_date > prev_last:
+                    entry["last_date_by_contaminant"][contam_name] = sample_date
 
             if (r.get("analytical_results_sign") or "").strip() == "=":
                 entry["n_detection_rows"] += 1
@@ -1129,6 +1169,35 @@ def get_pws_index():
         entry["n_total_samples"] = d["n_samples"]
         entry["n_detections"] = d["n_detections"]
         entry["n_samples_over_limit"] = d["n_samples_over_limit"]
+        # All five PFAS, with peak detection (if any) and the system's status
+        # against each compound's EPA standard. Drives the per-row tooltip.
+        per_contam = []
+        for contam in ("PFOA", "PFOS", "PFHxS", "PFNA", "HFPO-DA"):
+            peak = d["peak_by_contaminant"].get(contam)
+            limit = PFAS_MCL_BY_CONTAMINANT.get(contam, 0)
+            if peak:
+                ppt = peak["ppt"]
+                over = limit and ppt > limit
+                per_contam.append({
+                    "contaminant": contam,
+                    "ppt": ppt,
+                    "limit": limit,
+                    "times": (ppt / limit) if (limit and ppt) else 0,
+                    "date": peak["date"],
+                    "detected": True,
+                    "over_limit": bool(over),
+                })
+            else:
+                per_contam.append({
+                    "contaminant": contam,
+                    "ppt": 0,
+                    "limit": limit,
+                    "times": 0,
+                    "date": d.get("last_date_by_contaminant", {}).get(contam, ""),
+                    "detected": False,
+                    "over_limit": False,
+                })
+        entry["per_contaminant"] = per_contam
         # Attach the peak-sample date for each exceeding contaminant.
         for contam, ex in entry["exceedances"].items():
             peak = d["peak_by_contaminant"].get(contam)
@@ -1147,6 +1216,9 @@ def get_pws_index():
             reverse=True,
         )
         entry["n_exceedances"] = len(entry["exceedances"])
+        pop, matched = estimate_population_for_zips(entry["zips"])
+        entry["served_population"] = pop
+        entry["served_zip_match_count"] = matched
 
     return list(index.values())
 
@@ -1180,6 +1252,8 @@ def pws_search_data():
             "state": p["state"],
             "zips": p["zips"],
             "n_exceedances": p["n_exceedances"],
+            "served_population": p.get("served_population") or 0,
+            "per_contaminant": p.get("per_contaminant") or [],
         }
         for p in get_pws_index()
     ]
