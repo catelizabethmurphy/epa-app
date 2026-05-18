@@ -6,7 +6,7 @@ from datetime import datetime
 from collections import Counter, defaultdict
 from functools import lru_cache
 from pathlib import Path
-from flask import Flask, render_template, abort, send_from_directory, redirect, url_for, jsonify
+from flask import Flask, render_template, abort, url_for, jsonify
 
 app = Flask(__name__)
 app.config['FREEZER_RELATIVE_URLS'] = True
@@ -58,14 +58,11 @@ app.config['FREEZER_STATIC_IGNORE'] = [
     'data/pws_data.csv',
     'data/pws_summaries.csv',
     'data/pws_summary_stats.csv',
-    'data/text/*',
     '.DS_Store',
     '*/.DS_Store',
 ]
 
 DATA_DIR = Path("static/data")
-
-SUBSTANTIVE_TYPES = {"Rule", "Proposed Rule", "Notice"}
 
 STATE_ABBR = {
     "Alabama": "AL",
@@ -132,48 +129,12 @@ def _load(path, default=None):
         return json.load(f)
 
 
-def get_documents():
-    return _load("documents.json", [])
-
-
-def get_dockets():
-    return _load("dockets.json", {})
-
-
-def get_fr_documents():
-    return _load("fr_documents.json", {})
-
-
-def get_press_releases():
-    return _load("press_releases.json", [])
-
-
-def get_similarities():
-    return _load("similarities.json", {})
-
-
-def get_events():
-    return _load("events.json", [])
-
-
-def get_status():
-    return _load("status.json", [])
-
-
-def get_sources():
-    return _load("sources.json", [])
-
-
-def get_pfas_context():
-    return _load("pfas_context.json", {})
-
-
 def get_timeline_page(slug):
     return _load(f"timelines/{slug}.json", {})
 
 
-def get_court_actions():
-    return _load("court_actions.json", [])
+def get_archives():
+    return _load("archives.json", {})
 
 
 def _clean_text(value):
@@ -446,316 +407,11 @@ def get_water_summary():
     }
 
 
-_MEETING_TITLE_KEYWORDS = ("meetings:", "meeting;", "advisory council",
-                           "community engagement", "national drinking water advisory")
-
-
-def _is_primary_doc(doc):
-    """True for docs that belong in the main regulatory timeline (not supplementary)."""
-    t = doc.get("documentType", "")
-    if t in ("Rule", "Proposed Rule"):
-        return True
-    if t == "Notice":
-        title = (doc.get("title") or "").lower()
-        return not any(kw in title for kw in _MEETING_TITLE_KEYWORDS)
-    return False
-
-
-def get_trump1_context():
-    return _load("trump1_context.json", {})
-
-
-def events_by_month(events):
-    """Group events list into [(year_month_label, [events]), ...]"""
-    from collections import OrderedDict
-    groups = OrderedDict()
-    import datetime
-    month_names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
-    for ev in sorted(events, key=lambda e: e.get("date") or "", reverse=True):
-        d = ev.get("date", "")
-        if not d:
-            continue
-        key = d[:7]
-        if key not in groups:
-            try:
-                y, m = int(d[:4]), int(d[5:7])
-                groups[key] = {"label": f"{month_names[m-1]} {y}", "events": []}
-            except (ValueError, IndexError):
-                groups[key] = {"label": key, "events": []}
-        groups[key]["events"].append(ev)
-    return list(groups.values())
-
-
-def get_doc_text(item_id, prefix=""):
-    """Return plain text for a document, or None."""
-    name = f"{prefix}{item_id}.txt" if prefix else f"{item_id}.txt"
-    p = DATA_DIR / "text" / name
-    return p.read_text(encoding="utf-8") if p.exists() else None
-
-
-FR_TYPE_MAP = {
-    "RULE": "Rule",
-    "PRORULE": "Proposed Rule",
-    "NOTICE": "Notice",
-    "PRESDOCU": "Presidential Document",
-}
-
-
-def normalize_fr_doc(fr_doc):
-    """Convert an FR document dict to the same shape as a regs.gov document."""
-    doc_num = fr_doc.get("documentNumber", "")
-    doc_type = FR_TYPE_MAP.get(fr_doc.get("type", ""), fr_doc.get("type", ""))
-    docket_ids = fr_doc.get("docketIds") or []
-    docket_id = docket_ids[0] if docket_ids else None
-    comment_end = fr_doc.get("commentsCloseDate") or ""
-    return {
-        "documentId": f"FR-{doc_num}",
-        "docketId": docket_id,
-        "title": fr_doc.get("title"),
-        "documentType": doc_type,
-        "postedDate": fr_doc.get("publicationDate", ""),
-        "commentEndDate": comment_end[:10] if comment_end else None,
-        "openForComment": bool(comment_end and comment_end >= "2026-01-01"),  # rough heuristic
-        "withdrawn": False,
-        "frDocNum": doc_num,
-        "signalType": fr_doc.get("signalType", "other"),
-        "category": fr_doc.get("category"),
-        "compounds": fr_doc.get("compounds", []),
-        "program": fr_doc.get("program"),
-        "era": fr_doc.get("era", "unknown"),
-        "mahaRelevant": fr_doc.get("mahaRelevant", False),
-        "isExtension": False,
-        "externalUrl": fr_doc.get("htmlUrl"),
-        "_source": "fr",
-    }
-
-
-def get_all_documents():
-    """Merge regulations.gov docs + Federal Register docs, deduplicated."""
-    regs_docs = get_documents()
-    fr_raw = get_fr_documents()
-
-    # Index regs docs by frDocNum so we can skip FR dupes
-    regs_fr_nums = {d.get("frDocNum") for d in regs_docs if d.get("frDocNum")}
-
-    merged = list(regs_docs)
-    for doc_num, fr_doc in fr_raw.items():
-        if doc_num not in regs_fr_nums:
-            merged.append(normalize_fr_doc(fr_doc))
-
-    return merged
-
-
-# ── Shared helpers ────────────────────────────────────────────────────────────
-
-def build_stats(documents, press_releases):
-    substantive = [d for d in documents if d.get("documentType") in SUBSTANTIVE_TYPES]
-    sigs = Counter(d.get("signalType") for d in substantive)
-    cats = Counter(d.get("category") for d in substantive if d.get("category"))
-    open_comment = sum(1 for d in documents if d.get("openForComment"))
-    extensions = sum(1 for d in documents if d.get("isExtension"))
-    maha_docs = sum(1 for d in substantive if d.get("mahaRelevant"))
-    return {
-        "total_docs": len(documents),
-        "substantive": len(substantive),
-        "press_count": len(press_releases),
-        "open_comment": open_comment,
-        "extensions": extensions,
-        "rollbacks": sigs.get("rollback", 0),
-        "protections": sigs.get("protection", 0),
-        "delays": sigs.get("delay", 0),
-        "maha_relevant": maha_docs,
-        "categories": cats.most_common(),
-    }
-
-
-def all_items_timeline(documents, press_releases):
-    """Merge documents + press releases into a date-sorted unified list."""
-    items = []
-
-    for doc in documents:
-        if doc.get("documentType") not in SUBSTANTIVE_TYPES:
-            continue
-        items.append({
-            "id": doc["documentId"],
-            "itemType": "regulation",
-            "title": doc.get("title") or doc["documentId"],
-            "date": (doc.get("postedDate") or "")[:10],
-            "signalType": doc.get("signalType", "other"),
-            "category": doc.get("category"),
-            "compounds": doc.get("compounds", []),
-            "program": doc.get("program"),
-            "documentType": doc.get("documentType"),
-            "openForComment": doc.get("openForComment", False),
-            "commentEndDate": (doc.get("commentEndDate") or "")[:10],
-            "mahaRelevant": doc.get("mahaRelevant", False),
-            "docketId": doc.get("docketId"),
-            "era": doc.get("era", "unknown"),
-            "_doc_id": doc["documentId"],
-        })
-
-    for pr in press_releases:
-        items.append({
-            "id": f"PR-{pr['pressId']}",
-            "itemType": "press_release",
-            "title": pr.get("title") or pr["pressId"],
-            "date": pr.get("date", ""),
-            "signalType": pr.get("signalType", "rhetoric"),
-            "category": pr.get("category"),
-            "compounds": pr.get("compounds", []),
-            "program": pr.get("program"),
-            "documentType": None,
-            "openForComment": False,
-            "commentEndDate": None,
-            "mahaRelevant": pr.get("mahaRelevant", False),
-            "externalUrl": pr.get("url"),
-            "body": (pr.get("body") or "")[:300],
-            "era": pr.get("era", "trump2"),
-            "_press_id": pr["pressId"],
-        })
-
-    return sorted(items, key=lambda x: x.get("date") or "", reverse=True)
-
-
 # ── Routes ────────────────────────────────────────────────────────────────────
 
 @app.route("/")
 def index():
-    documents = get_all_documents()
-    press_releases = get_press_releases()
-    status = get_status()
-    all_events = sorted(get_events(), key=lambda e: e.get("date") or "", reverse=True)
-    sources = get_sources()
-    pfas_context = get_pfas_context()
-    trump1 = get_trump1_context()
-    stats = build_stats(documents, press_releases)
-
-    recent = sorted(
-        [d for d in documents if d.get("documentType") in SUBSTANTIVE_TYPES],
-        key=lambda d: d.get("postedDate") or "",
-        reverse=True,
-    )[:20]
-
-    open_comment = sorted(
-        [d for d in documents if d.get("openForComment")],
-        key=lambda d: d.get("commentEndDate") or "",
-    )[:10]
-
-    calendar = events_by_month(all_events)
-
-    topics = _build_topics()
-    combined_url = url_for("pfas_programs")
-    # Stitch timeline description + url into each status card (same order)
-    for i, rule in enumerate(status):
-        if i < len(topics):
-            rule["timelineDescription"] = topics[i].get("description", "")
-            # Drinking water (0) and Superfund (1) go to combined page; reporting (2) stays solo
-            rule["timelineUrl"] = combined_url if i < 2 else topics[i].get("url", "")
-
-    return render_template("index.html",
-                           stats=stats,
-                           status=status,
-                           calendar=calendar,
-                           sources=sources,
-                           pfas_context=pfas_context,
-                           trump1=trump1,
-                           recent=recent,
-                           open_comment=open_comment)
-
-
-@app.route("/signals/")
-def signals():
-    return redirect(url_for('explore') + "?view=timeline")
-
-
-@app.route("/browse/")
-def browse():
-    documents = sorted(
-        [d for d in get_all_documents() if d.get("documentType") in SUBSTANTIVE_TYPES],
-        key=lambda d: d.get("postedDate") or "",
-        reverse=True,
-    )
-    categories = sorted({d.get("category") for d in documents if d.get("category")})
-    compounds = sorted({c for d in documents for c in d.get("compounds", [])})
-    programs = sorted({d.get("program") for d in documents if d.get("program")})
-    doc_types = sorted({d.get("documentType") for d in documents if d.get("documentType")})
-    eras = [e for e in ["trump1", "biden", "trump2"] if any(d.get("era") == e for d in documents)]
-    return render_template("browse.html",
-                           documents=documents,
-                           categories=categories,
-                           compounds=compounds,
-                           programs=programs,
-                           doc_types=doc_types,
-                           eras=eras)
-
-
-@app.route("/docket/<docket_id>/")
-def docket(docket_id):
-    all_docs = sorted(
-        [d for d in get_all_documents() if d.get("docketId") == docket_id],
-        key=lambda d: d.get("postedDate") or "",
-        reverse=True,
-    )
-    if not all_docs:
-        abort(404)
-    dockets = get_dockets()
-    docket_data = dockets.get(docket_id) or {"docketId": docket_id, "title": docket_id}
-    primary = [d for d in all_docs if _is_primary_doc(d)]
-    supplementary = [d for d in all_docs if not _is_primary_doc(d)]
-    return render_template("docket.html",
-                           docket=docket_data,
-                           primary=primary,
-                           supplementary=supplementary)
-
-
-@app.route("/document/<path:document_id>/")
-def document(document_id):
-    for doc in get_all_documents():
-        if doc["documentId"] == document_id:
-            dockets = get_dockets()
-            docket_data = dockets.get(doc.get("docketId"))
-            fr_docs = get_fr_documents()
-            fr = {}
-            # For native FR docs (FR-* prefix), the fr_doc IS the doc
-            if document_id.startswith("FR-"):
-                fr = fr_docs.get(document_id[3:], {})
-            elif doc.get("frDocNum") and doc["frDocNum"] in fr_docs:
-                fr = fr_docs[doc["frDocNum"]]
-            # Full text
-            full_text = (get_doc_text(document_id) or
-                         get_doc_text(document_id.replace("/", "-").replace("FR-", ""), prefix="FR-"))
-            sims = get_similarities()
-            related = sims.get(document_id, [])
-            return render_template("document.html",
-                                   document=doc,
-                                   docket=docket_data,
-                                   fr=fr,
-                                   full_text=full_text,
-                                   related=related)
-    abort(404)
-
-
-@app.route("/press/<press_id>/")
-def press(press_id):
-    for pr in get_press_releases():
-        if pr["pressId"] == press_id:
-            sims = get_similarities()
-            related = sims.get(f"PR-{press_id}", [])
-            return render_template("press.html",
-                                   press=pr,
-                                   related=related)
-    abort(404)
-
-
-@app.route("/topic/<topic_id>/")
-def topic(topic_id):
-    alias_map = {
-        "drinking-water-mcl": "drinking-water-limits",
-        "cercla-designation": "hazardous-substance-designation",
-        "tsca-reporting": "pfas-reporting",
-    }
-    slug = alias_map.get(topic_id, topic_id)
-    return _render_timeline_page(slug)
+    return render_template("index.html")
 
 
 ERA_RANK = {"trump1": 0, "biden": 1, "trump2": 2}
@@ -810,29 +466,6 @@ def _render_timeline_page(slug):
                            docket_ids=page.get("docketIds", []))
 
 
-@app.route("/timelines/<slug>/")
-def timeline_page(slug):
-    return _render_timeline_page(slug)
-
-
-@app.route("/drinking-water-limits/")
-def drinking_water_limits():
-    return timeline_page("drinking-water-limits")
-
-
-@app.route("/hazardous-substance-designation/")
-def hazardous_substance_designation():
-    return timeline_page("hazardous-substance-designation")
-
-
-@app.route("/pfas-reporting/")
-def pfas_reporting():
-    # No dedicated timeline JSON for the reporting program — fold into the
-    # combined federal-regulations view so url_for() callers still resolve and
-    # frozen-flask can bake a redirect page.
-    return redirect(url_for("pfas_programs"))
-
-
 @app.route("/federal-regulations/")
 def pfas_programs():
     page = get_timeline_page("pfas-programs")
@@ -849,28 +482,33 @@ def pfas_programs():
     return render_template("topic.html",
                            topic=topic_data,
                            timeline=_sort_timeline(page.get("timeline", [])),
-                           docket_ids=[],
                            programs=programs)
 
 
-@app.route("/court/<court_id>/")
-def court(court_id):
-    cases = get_court_actions()
-    case = next((c for c in cases if c["courtId"] == court_id), None)
-    if not case:
+@app.route("/archive/<slug>/")
+def archive(slug):
+    entries = get_archives()
+    entry = entries.get(slug)
+    if not entry:
         abort(404)
-    return render_template("court.html", case=case)
+    archive_html = ""
+    if entry.get("kind") == "html":
+        archive_html = _read_archived_html(entry["archivePath"])
+    return render_template("archive.html", entry=entry, archive_html=archive_html)
 
 
-def _topic_event_label(ev):
-    sig = ev.get("signalType", "other")
-    if sig == "litigation":
-        return "Court Action"
-    if sig == "rhetoric":
-        return "Statement"
-    if sig in ("rollback", "protection", "delay"):
-        return "Regulatory Action"
-    return "Milestone"
+def _read_archived_html(rel_path):
+    """Extract the <body> contents of an archived HTML page.
+
+    archive.py wrote each file as a full document; we only want the inner body
+    so it can be dropped into our chrome without duplicating html/head tags.
+    """
+    fp = Path(__file__).parent / "static" / rel_path
+    if not fp.exists():
+        return ""
+    raw = fp.read_text(encoding="utf-8", errors="replace")
+    m = re.search(r"<body[^>]*>(.*)</body>", raw, re.DOTALL | re.IGNORECASE)
+    return m.group(1) if m else raw
 
 
 @app.route("/state-legislation/")
@@ -1313,44 +951,6 @@ def water_testing_state(state_slug):
         systems=systems,
     )
 
-
-@app.route("/search/")
-def search():
-    return render_template("search.html")
-
-
-def _build_topics():
-    """Return list of topic metadata dicts for the three main PFAS programs."""
-    TOPIC_SLUGS = [
-        ("drinking-water-limits",          url_for("drinking_water_limits"),           "Drinking Water"),
-        ("hazardous-substance-designation", url_for("hazardous_substance_designation"), "Superfund"),
-        ("pfas-reporting",                 url_for("pfas_reporting"),                  "PFAS Reporting"),
-    ]
-    topics = []
-    for slug, route_url, program in TOPIC_SLUGS:
-        page = get_timeline_page(slug)
-        if not page:
-            continue
-        topics.append({
-            "title":         page.get("title", ""),
-            "eyebrow":       page.get("eyebrow", ""),
-            "description":   page.get("description", ""),
-            "currentStatus": page.get("currentStatus", ""),
-            "statusClass":   page.get("statusClass", ""),
-            "url":           route_url,
-        })
-    return topics
-
-
-@app.route("/explore/")
-def explore():
-    from flask import redirect
-    return redirect(url_for("index"))
-
-
-@app.route("/pagefind/<path:filename>")
-def pagefind(filename):
-    return send_from_directory("build/pagefind", filename)
 
 
 if __name__ == "__main__":

@@ -1,12 +1,8 @@
-import json
-import subprocess
 from pathlib import Path
 from flask_frozen import Freezer
 from app import (
     app,
-    get_all_documents,
-    get_press_releases,
-    get_court_actions,
+    get_archives,
     get_water_summary,
     _slugify,
     STATE_ABBR,
@@ -16,86 +12,13 @@ freezer = Freezer(app)
 
 
 @freezer.register_generator
-def docket():
-    seen = set()
-    for doc in get_all_documents():
-        did = doc.get("docketId")
-        if did and did not in seen:
-            seen.add(did)
-            yield {"docket_id": did}
-
-
-@freezer.register_generator
-def document():
-    for doc in get_all_documents():
-        yield {"document_id": doc["documentId"]}
-
-
-@freezer.register_generator
-def press():
-    for pr in get_press_releases():
-        yield {"press_id": pr["pressId"]}
-
-
-@freezer.register_generator
-def topic():
-    timelines_dir = Path("static/data/timelines")
-    # Aliases map to a real timeline slug; only emit those whose target JSON
-    # actually exists, so we don't bake routes that 404 at request time.
-    alias_targets = {
-        "drinking-water-mcl": "drinking-water-limits",
-        "cercla-designation": "hazardous-substance-designation",
-        "tsca-reporting": "pfas-reporting",
-    }
-    if timelines_dir.exists():
-        for path in timelines_dir.glob("*.json"):
-            yield {"topic_id": path.stem}
-    for slug, target in alias_targets.items():
-        if (timelines_dir / f"{target}.json").exists():
-            yield {"topic_id": slug}
-
-
-@freezer.register_generator
-def court():
-    for c in get_court_actions():
-        yield {"court_id": c["courtId"]}
-
-
-@freezer.register_generator
-def signals():
-    yield {}
-
-
-@freezer.register_generator
-def explore():
-    yield {}
-
-
-@freezer.register_generator
-def search():
-    yield {}
+def archive():
+    for slug in get_archives():
+        yield {"slug": slug}
 
 
 @freezer.register_generator
 def state_tracker():
-    yield {}
-
-
-@freezer.register_generator
-def timeline_page():
-    timelines_dir = Path("static/data/timelines")
-    if timelines_dir.exists():
-        for path in timelines_dir.glob("*.json"):
-            yield {"slug": path.stem}
-
-
-@freezer.register_generator
-def drinking_water_limits():
-    yield {}
-
-
-@freezer.register_generator
-def hazardous_substance_designation():
     yield {}
 
 
@@ -119,11 +42,10 @@ def water_testing_state():
             yield {"state_slug": slug}
 
 
+@freezer.register_generator
+def pfas_programs():
+    yield {}
+
+
 if __name__ == "__main__":
     freezer.freeze()
-    print("Running Pagefind indexer…")
-    subprocess.run(
-        ["npx", "--yes", "pagefind", "--site", "build/", "--output-path", "build/pagefind"],
-        check=True,
-    )
-    print("Pagefind index built.")

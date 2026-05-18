@@ -362,6 +362,10 @@
 .issue-table colgroup col:nth-child(4) { width: 25%; }
 .issue-table colgroup col:nth-child(5) { width: auto; }
 
+/* Inline description + stacked status badge shown only on mobile */
+.bill-note-inline,
+.bill-status-stacked { display: none; }
+
 /* ── Mobile tweaks ───────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
     .state-stat-strip { flex-direction: column; gap: 1px; margin: 1rem 0 1.25rem; }
@@ -389,43 +393,38 @@
     .state-table-wrap { padding: 0 0 0.5rem; overflow-x: visible; }
     .state-table { font-size: 0.85rem; table-layout: fixed; width: 100%; }
     .state-table th, .state-table td {
-        padding: 0.5rem 0.4rem;
-        overflow-wrap: anywhere;
+        padding: 0.55rem 0.4rem;
+        overflow-wrap: break-word;
         word-break: normal;
+        vertical-align: top;
     }
-    .state-table th:first-child, .state-table td:first-child { padding-left: 0; }
-    .state-table th:last-child, .state-table td:last-child { padding-right: 0; }
-    .state-table colgroup col:nth-child(1) { width: 44px; }
-    .state-table colgroup col:nth-child(2) { width: 70px; }
-    .state-table colgroup col:nth-child(3) { width: auto; }
-    .state-table colgroup col:nth-child(4) { width: auto; }
-    .year-table colgroup col:nth-child(1) { width: 80px; }
-    .year-table colgroup col:nth-child(2) { width: 70px; }
-    .sbadge { font-size: 0.55rem; padding: 0.12rem 0.32rem; }
+    /* Hide Status (col 2) and Notes (col 5) on mobile. The status badge moves
+       inline under the bill ID so the Bill column gets more room. */
+    .state-table th:nth-child(2), .state-table td:nth-child(2),
+    .state-table th:nth-child(5), .state-table td:nth-child(5) { display: none; }
 
-    /* Clickable bill rows to reveal notes */
-    .bill-row.has-notes { cursor: pointer; }
-    .bill-row.has-notes td:last-child::after {
-        content: "▾";
-        display: inline-block;
-        margin-left: 0.3rem;
-        color: #999;
-        font-size: 0.65rem;
-        transition: transform 0.15s;
+    .state-table colgroup col:nth-child(1) { width: 56px; }   /* Year */
+    .state-table colgroup col:nth-child(2) { width: 0; }      /* Status — hidden */
+    .state-table colgroup col:nth-child(3) { width: auto; }   /* Bill (stack) */
+    .state-table colgroup col:nth-child(4) { width: 26%; }    /* Issue */
+    .state-table colgroup col:nth-child(5) { width: 0; }      /* Notes — hidden */
+    .year-table colgroup col:nth-child(1) { width: 60px; }    /* State abbr */
+    .sbadge { font-size: 0.58rem; padding: 0.14rem 0.4rem; }
+
+    /* Status badge stacked under bill ID */
+    .bill-status-stacked {
+        display: block;
+        margin-top: 0.3rem;
     }
-    .bill-row.has-notes.is-open td:last-child::after {
-        transform: rotate(180deg);
-    }
-    .bill-notes-row td {
-        background: #fafaf6;
-        padding: 0.65rem 0.5rem;
-        font-size: 0.82rem;
-        color: #333;
+    /* Inline description under the badge */
+    .bill-note-inline {
+        display: block;
+        font-size: 0.78rem;
+        font-weight: 400;
+        color: #555;
         line-height: 1.45;
-        border-bottom: 1px solid #eee;
+        margin-top: 0.35rem;
     }
-    .bill-notes-row { display: none; }
-    .bill-notes-row.is-open { display: table-row; }
 }
 </style>
 {% endblock %}
@@ -556,6 +555,18 @@
                 </td>
                 <td>
                     <strong>{{ b.bill or "—" }}</strong>
+                    <div class="bill-status-stacked">
+                        {% if status_clean == "Adopted" %}
+                        <span class="sbadge sbadge--adopted">Adopted</span>
+                        {% elif status_clean == "Introduced" %}
+                        <span class="sbadge sbadge--introduced">Introduced</span>
+                        {% else %}
+                        <span class="sbadge sbadge--other">{{ status_clean or "—" }}</span>
+                        {% endif %}
+                    </div>
+                    {% if b.description and b.description != "—" %}
+                    <div class="bill-note-inline">{{ b.description }}</div>
+                    {% endif %}
                 </td>
                 <td>{{ b.issue or "Other" }}</td>
                 <td class="hide-mobile">{{ b.description or "—" }}</td>
@@ -604,6 +615,18 @@
                 </td>
                 <td>
                     <strong>{{ b.bill or "—" }}</strong>
+                    <div class="bill-status-stacked">
+                        {% if status_clean == "Adopted" %}
+                        <span class="sbadge sbadge--adopted">Adopted</span>
+                        {% elif status_clean == "Introduced" %}
+                        <span class="sbadge sbadge--introduced">Introduced</span>
+                        {% else %}
+                        <span class="sbadge sbadge--other">{{ status_clean or "—" }}</span>
+                        {% endif %}
+                    </div>
+                    {% if b.description and b.description != "—" %}
+                    <div class="bill-note-inline">{{ b.description }}</div>
+                    {% endif %}
                 </td>
                 <td>{{ b.issue or "Other" }}</td>
                 <td class="hide-mobile">{{ b.description or "—" }}</td>
@@ -653,6 +676,18 @@
                 </td>
                 <td>
                     <strong>{{ b.bill or "—" }}</strong>
+                    <div class="bill-status-stacked">
+                        {% if status_clean == "Adopted" %}
+                        <span class="sbadge sbadge--adopted">Adopted</span>
+                        {% elif status_clean == "Introduced" %}
+                        <span class="sbadge sbadge--introduced">Introduced</span>
+                        {% else %}
+                        <span class="sbadge sbadge--other">{{ status_clean or "—" }}</span>
+                        {% endif %}
+                    </div>
+                    {% if b.description and b.description != "—" %}
+                    <div class="bill-note-inline">{{ b.description }}</div>
+                    {% endif %}
                 </td>
                 <td class="hide-mobile">{{ b.description or "—" }}</td>
             </tr>
@@ -788,6 +823,21 @@
 
             var badge = card.querySelector('.year-count, .issue-count');
             if (badge) badge.textContent = visible + ' bill' + (visible !== 1 ? 's' : '');
+
+            // Combined "2025–2026" section: relabel header to the filtered
+            // year so the heading matches what's actually visible.
+            if (activeView === 'year') {
+                var label = card.querySelector('.year-num');
+                if (label && !label.dataset.origLabel) {
+                    label.dataset.origLabel = label.textContent;
+                }
+                if (label) {
+                    var multi = (card.dataset.years || '').split(' ').filter(Boolean);
+                    label.textContent = (activeYear && multi.length > 1)
+                        ? activeYear
+                        : label.dataset.origLabel;
+                }
+            }
         });
     }
 
@@ -1001,29 +1051,6 @@
             }, 50);
         }
     }
-})();
-
-// ── Mobile: expand notes inline (no horizontal scroll) ────────────────────────
-(function() {
-    if (!window.matchMedia || !window.matchMedia('(max-width: 600px)').matches) return;
-    document.querySelectorAll('.bill-row').forEach(function(row) {
-        var noteCell = row.querySelector('td.hide-mobile');
-        if (!noteCell) return;
-        var note = noteCell.textContent.trim();
-        if (!note || note === '—') return;
-        row.classList.add('has-notes');
-        var nr = document.createElement('tr');
-        nr.className = 'bill-notes-row';
-        var colCount = row.children.length - 1;  // visible cells = all minus the hidden notes col
-        nr.innerHTML = '<td colspan="' + colCount + '">' + noteCell.innerHTML + '</td>';
-        row.parentNode.insertBefore(nr, row.nextSibling);
-        row.addEventListener('click', function(e) {
-            // Don't toggle when clicking a link inside the row
-            if (e.target.closest('a')) return;
-            row.classList.toggle('is-open');
-            nr.classList.toggle('is-open');
-        });
-    });
 })();
 
 // ── Mobile: show-more rows per state card ─────────────────────────────────────

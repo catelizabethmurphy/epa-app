@@ -84,14 +84,6 @@
     {% endif %}
 </div>
 
-{% if docket_ids %}
-<div class="topic-dockets">
-    <span class="topic-dockets-label">Source dockets</span>
-    {% for did in docket_ids %}
-    <a href="{{ url_for('docket', docket_id=did) }}" class="topic-docket-chip">{{ did }}</a>
-    {% endfor %}
-</div>
-{% endif %}
 {% endblock %}
 
 
@@ -199,11 +191,9 @@
     <div class="tl-year-label" data-year-label="{{ yr }}">{{ yr }}</div>
   {% endif %}
 
-  {# Resolve URL #}
-  {% if item.courtId %}{% set item_url = url_for('court', court_id=item.courtId) %}{% set item_external = false %}
-  {% elif item.documentId %}{% set item_url = url_for('document', document_id=item.documentId) %}{% set item_external = false %}
-  {% elif item.pressId %}{% set item_url = url_for('press', press_id=item.pressId) %}{% set item_external = false %}
-  {% elif item.docketId %}{% set item_url = url_for('docket', docket_id=item.docketId) %}{% set item_external = false %}
+  {# Resolve URL — every timeline item now routes to its in-app archive page.
+     The legacy id fields stay in the JSON for editorial context. #}
+  {% if item.archiveSlug %}{% set item_url = url_for('archive', slug=item.archiveSlug) %}{% set item_external = false %}
   {% elif item.externalUrl %}{% set item_url = item.externalUrl %}{% set item_external = true %}
   {% else %}{% set item_url = '' %}{% set item_external = false %}
   {% endif %}

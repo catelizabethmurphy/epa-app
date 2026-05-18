@@ -521,7 +521,16 @@
     #wt-state-table .wt-col-tested,
     #wt-state-table .wt-col-over { display: none; }
     #wt-state-table th:first-child,
-    #wt-state-table td:first-child { padding-right: 1.5rem; width: 38%; }
+    #wt-state-table td:first-child {
+        padding-right: 1rem;
+        width: 44%;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        word-break: normal;
+        overflow-wrap: anywhere;
+        line-height: 1.25;
+    }
     #wt-state-table th:last-child,
     #wt-state-table td:last-child { padding-left: 0; white-space: nowrap; }
     /* Bar uses a smaller scale on mobile so the % stays on the same line */
@@ -616,10 +625,10 @@
 <div style="overflow-x:auto;">
 <table class="wt-table" id="wt-state-table">
     <colgroup>
-        <col style="width:25%">
-        <col class="wt-col-tested" style="width:18%">
-        <col class="wt-col-over" style="width:17%">
-        <col style="width:40%">
+        <col style="width:20%">
+        <col class="wt-col-tested" style="width:15%">
+        <col class="wt-col-over" style="width:15%">
+        <col style="width:50%">
     </colgroup>
     <thead>
         <tr>
@@ -664,19 +673,19 @@
 <div style="overflow-x:auto;">
 <table class="wt-table wt-worst">
     <colgroup>
-        <col style="width:25%">
-        <col class="wt-col-state" style="width:18%">
-        <col class="wt-col-pop" style="width:17%">
-        <col style="width:11%">
-        <col style="width:17%">
-        <col class="wt-col-date" style="width:12%">
+        <col style="width:20%">
+        <col class="wt-col-state" style="width:15%">
+        <col class="wt-col-pop" style="width:15%">
+        <col style="width:18%">
+        <col style="width:15%">
+        <col class="wt-col-date" style="width:17%">
     </colgroup>
     <thead>
         <tr>
             <th>Water system</th>
             <th class="center wt-col-state">State</th>
             <th class="center wt-col-pop">Residents served</th>
-            <th>Contaminant</th>
+            <th class="center">Contaminant</th>
             <th class="center">× EPA standard</th>
             <th class="center wt-col-date">Sample date</th>
         </tr>
@@ -691,7 +700,7 @@
             </td>
             <td class="center wt-col-state">{{ r.state }}</td>
             <td class="center wt-col-pop">{% if r.served_population %}~{{ r.served_population|pop }}{% else %}—{% endif %}</td>
-            <td>{{ r.contaminant }}</td>
+            <td class="center">{{ r.contaminant }}</td>
             {%- set m = r.max_result_times_over_limit -%}
             {%- if m >= 50 %}{% set tier = 'sev' %}
             {%- elif m >= 25 %}{% set tier = 'high' %}
