@@ -198,31 +198,83 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: #888;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
 }
 .wt-search-row {
     display: flex;
-    gap: 0.6rem;
-    align-items: baseline;
-    padding: 0.55rem 0;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.85rem 0;
     border-bottom: 1px solid #eee;
 }
 .wt-search-row:last-child { border-bottom: none; }
-.wt-search-name { color: #111; flex: 1 1 auto; }
-.wt-search-state {
-    color: #888;
-    font-size: 0.82rem;
-    width: 2rem;
-    flex: 0 0 auto;
+.wt-search-result {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1 1 auto;
+    min-width: 0;
 }
-.wt-search-flag {
-    font-size: 0.78rem;
-    font-family: "PT Sans", sans-serif;
+.wt-search-count {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-width: 12rem;
+}
+.wt-search-num {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 2.1rem;
     font-weight: 700;
-    flex: 0 0 auto;
+    line-height: 1;
 }
-.wt-search-flag--over { color: #c0202a; }
-.wt-search-flag--ok { color: #1a6b35; }
+.wt-search-num--over { color: #c0202a; }
+.wt-search-num--ok { color: #1a6b35; }
+.wt-search-count-lbl {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    color: #555;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.wt-search-meta { flex: 1 1 auto; min-width: 0; }
+.wt-search-name {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #111;
+    line-height: 1.25;
+}
+.wt-search-state {
+    font-family: "PT Sans", sans-serif;
+    color: #888;
+    font-size: 0.78rem;
+    margin-top: 0.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.wt-search-jump {
+    flex: 0 0 auto;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: #111;
+    padding: 0.45rem 0.7rem;
+    text-decoration: none;
+    border: 2px solid #111;
+    white-space: nowrap;
+}
+.wt-search-jump:hover { background: #c0202a; border-color: #c0202a; }
+.wt-search-jump--muted {
+    color: #888;
+    background: transparent;
+    border-color: #ddd;
+    pointer-events: none;
+}
 
 .wt-statelink {
     margin: 2.5rem 0 1rem;
@@ -417,6 +469,13 @@
     var out = document.getElementById('wt-search-results');
     if (!input || !out) return;
 
+    // abbr → { name, url } for the "Jump to state" buttons.
+    var stateLinks = {
+        {%- for s in water.states_ranked if s.slug %}
+        {{ s.state|tojson }}: {"name": {{ s.name|tojson }}, "url": {{ url_for('water_testing_state', state_slug=s.slug)|tojson }}}{% if not loop.last %},{% endif %}
+        {%- endfor %}
+    };
+
     var systems = null;
     var loadPromise = null;
     function loadSystems() {
@@ -486,14 +545,26 @@
         for (var j = 0; j < matches.length; j++) {
             var m = matches[j];
             var n = m.n_exceedances || 0;
-            var flagClass = n > 0 ? 'wt-search-flag--over' : 'wt-search-flag--ok';
-            var flag = '<span class="wt-search-flag ' + flagClass + '">' +
-                n + ' of 5 PFAS over limit</span>';
+            var numClass = n > 0 ? 'wt-search-num--over' : 'wt-search-num--ok';
+            var link = stateLinks[m.state];
+            var jump = link
+                ? '<a class="wt-search-jump" href="' + esc(link.url) + '">' +
+                  'See ' + esc(m.state) + ' →</a>'
+                : '<span class="wt-search-jump wt-search-jump--muted">Tribal system</span>';
+            var stateLabel = link ? esc(link.name) : 'Tribal system';
             html += '<div class="wt-search-row">' +
-                '<span class="wt-search-state">' + esc(m.state) + '</span>' +
-                '<span class="wt-search-name">' + esc(m.name) + '</span>' +
-                flag +
-                '</div>';
+                '<div class="wt-search-result">' +
+                  '<div class="wt-search-count">' +
+                    '<span class="wt-search-num ' + numClass + '">' + n + '</span>' +
+                    '<span class="wt-search-count-lbl">of 5 PFAS<br>over EPA limit</span>' +
+                  '</div>' +
+                  '<div class="wt-search-meta">' +
+                    '<div class="wt-search-name">' + esc(m.name) + '</div>' +
+                    '<div class="wt-search-state">' + stateLabel + '</div>' +
+                  '</div>' +
+                '</div>' +
+                jump +
+            '</div>';
         }
         out.innerHTML = html;
     }

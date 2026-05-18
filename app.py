@@ -880,10 +880,38 @@ def state_tracker():
             yr = bill.get("year") or ""
             if yr:
                 bills_by_year_map[yr].append(dict(bill, state_slug=state_obj["slug"]))
-    bills_by_year = [
-        {"year": yr, "bills": sorted(bills_by_year_map[yr], key=lambda b: b.get("state") or "")}
-        for yr in sorted(bills_by_year_map.keys(), reverse=True)
-    ]
+    # Merge the two active legislative-session years into one combined section
+    # so the by-year view shows "2025–26" together by default; filter to a single
+    # year still works because each row carries its own data-year attribute.
+    CURRENT_SESSION_YEARS = ("2025", "2026")
+    combined_bills = []
+    for yr in CURRENT_SESSION_YEARS:
+        combined_bills.extend(bills_by_year_map.pop(yr, []))
+    combined_bills.sort(
+        key=lambda b: ((b.get("year") or ""), b.get("state") or ""),
+        reverse=False,
+    )
+    bills_by_year = []
+    if combined_bills:
+        bills_by_year.append({
+            "year": "–".join(CURRENT_SESSION_YEARS),  # display label, e.g. "2025–2026"
+            "year_id": "-".join(CURRENT_SESSION_YEARS),  # URL/DOM id, e.g. "2025-2026"
+            "years": list(CURRENT_SESSION_YEARS),       # data-years attr for matching
+            "bills": combined_bills,
+        })
+    for yr in sorted(bills_by_year_map.keys(), reverse=True):
+        bills_by_year.append({
+            "year": yr,
+            "year_id": yr,
+            "years": [yr],
+            "bills": sorted(bills_by_year_map[yr], key=lambda b: b.get("state") or ""),
+        })
+
+    # Dropdown still lists every year individually so a user can drill down.
+    all_years_sorted = sorted(
+        {b.get("year") for s in states for b in s["bills"] if b.get("year")},
+        reverse=True,
+    )
 
     bills_by_issue_map = defaultdict(list)
     for state_obj in states:
@@ -910,6 +938,7 @@ def state_tracker():
                            state_summaries=state_summaries,
                            all_issues=all_issues,
                            bills_by_year=bills_by_year,
+                           all_years_sorted=all_years_sorted,
                            bills_by_issue=bills_by_issue)
 
 

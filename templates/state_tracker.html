@@ -417,8 +417,8 @@
         <label for="year-jump-select">Jump to year</label>
         <select id="year-jump-select">
             <option value="">All years</option>
-            {% for yr in bills_by_year %}
-            <option value="{{ yr.year }}">{{ yr.year }}</option>
+            {% for yr in all_years_sorted %}
+            <option value="{{ yr }}">{{ yr }}</option>
             {% endfor %}
         </select>
     </div>
@@ -505,7 +505,7 @@
 {# ── By-year view (hidden by default) ── #}
 <div id="view-by-year" hidden>
 {% for yr in bills_by_year %}
-<section class="year-section" id="year-{{ yr.year }}">
+<section class="year-section" id="year-{{ yr.year_id }}" data-years="{{ yr.years|join(' ') }}">
     <div class="year-section-header">
         <span class="year-num">{{ yr.year }}</span>
         <span class="year-count" data-total="{{ yr.bills | length }}">{{ yr.bills | length }} bills</span>
@@ -692,8 +692,12 @@
             if (activeView === 'state' && activeState && card.id !== activeState) {
                 card.style.display = 'none'; return;
             }
-            if (activeView === 'year' && activeYear && card.id !== 'year-' + activeYear) {
-                card.style.display = 'none'; return;
+            if (activeView === 'year' && activeYear) {
+                // A section may cover multiple years (e.g. combined 2025–26).
+                var sectionYears = (card.dataset.years || '').split(' ').filter(Boolean);
+                if (sectionYears.indexOf(activeYear) === -1) {
+                    card.style.display = 'none'; return;
+                }
             }
             if (activeView === 'issue' && activeIssue && card.dataset.issue !== activeIssue) {
                 card.style.display = 'none'; return;
@@ -788,35 +792,21 @@
         var introducedWrap     = document.getElementById('stat-introduced-wrap');
         var introduced2026Wrap = document.getElementById('stat-introduced-2026-wrap');
         if (activeStatus !== 'Adopted') {
-            if (activeView === 'year') {
-                // Only 2025 and 2026 have active legislative sessions
-                var show2025 = activeYear === '' || activeYear === '2025';
-                var show2026 = activeYear === '' || activeYear === '2026';
-                if (show2025) {
-                    var n25 = countRows.filter(function(r) {
-                        return r.dataset.status === 'Introduced' && r.dataset.year === '2025';
-                    }).length;
-                    document.getElementById('stat-introduced-phrase').innerHTML =
-                        num(n25) + 'PFAS ' + bills(n25) + ' under consideration in 2025';
-                    introducedWrap.style.display = '';
-                } else {
-                    introducedWrap.style.display = 'none';
-                }
-                if (show2026) {
-                    var n26 = countRows.filter(function(r) {
-                        return r.dataset.status === 'Introduced' && r.dataset.year === '2026';
-                    }).length;
-                    document.getElementById('stat-introduced-2026-phrase').innerHTML =
-                        num(n26) + 'PFAS ' + bills(n26) + ' under consideration in 2026';
-                    introduced2026Wrap.style.display = '';
-                } else {
-                    introduced2026Wrap.style.display = 'none';
-                }
+            // Always hide the secondary 2026 stat — the year view now uses the
+            // combined "2025–26" section, and filtering to a single year just
+            // re-labels the primary stat below.
+            introduced2026Wrap.style.display = 'none';
+            if (activeView === 'year' && (activeYear === '2025' || activeYear === '2026')) {
+                var nY = countRows.filter(function(r) {
+                    return r.dataset.status === 'Introduced' && r.dataset.year === activeYear;
+                }).length;
+                document.getElementById('stat-introduced-phrase').innerHTML =
+                    num(nY) + 'PFAS ' + bills(nY) + ' under consideration in ' + activeYear;
+                introducedWrap.style.display = '';
             } else {
                 document.getElementById('stat-introduced-phrase').innerHTML =
                     num(introduced) + 'PFAS ' + bills(introduced) + ' under consideration in 2025–26' + qualifier;
                 introducedWrap.style.display = '';
-                introduced2026Wrap.style.display = 'none';
             }
         } else {
             introducedWrap.style.display = 'none';
@@ -926,6 +916,25 @@
 
     updateStats();
     updateDropdowns();
+
+    // ── Deep-link: ?state=<slug> pre-applies the state filter ────────────
+    var params = new URLSearchParams(window.location.search);
+    var deepState = params.get('state');
+    if (deepState) {
+        var optValue = 'state-' + deepState;
+        var opt = jumpSelect.querySelector('option[value="' + optValue + '"]');
+        if (opt) {
+            jumpSelect.value = optValue;
+            activeState     = optValue;
+            activeStateName = opt.dataset.stateName || '';
+            applyFilter();
+            // Smooth-scroll to the card so the user lands on it.
+            var card = document.getElementById(optValue);
+            if (card) setTimeout(function () {
+                card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 50);
+        }
+    }
 })();
 
 // ── Mobile: show-more rows per state card ─────────────────────────────────────

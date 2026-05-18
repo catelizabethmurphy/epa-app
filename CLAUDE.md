@@ -58,10 +58,10 @@ The merged document list lives in `app.get_all_documents()` — regs.gov + FR do
 | `/document/<id>/` | `document.html` | Pulls full text from `static/data/text/` if present |
 | `/press/<id>/` | `press.html` | |
 | `/topic/<id>/` | `topic.html` | Aliases: `drinking-water-mcl`, `cercla-designation`, `tsca-reporting` |
-| `/drinking-water-limits/`, `/hazardous-substance-designation/`, `/pfas-reporting/`, `/timelines/pfas-programs/` | `topic.html` | The three core program timelines |
+| `/drinking-water-limits/`, `/hazardous-substance-designation/`, `/pfas-reporting/`, `/federal-regulations/` | `topic.html` | The three core program timelines |
 | `/court/<id>/` | `court.html` | |
 | `/glossary/`, `/what-are-pfas/` | `glossary.html` | (`what-are-pfas` also renders glossary.html) |
-| `/states/` | `state_tracker.html` | Backed by `pfas-bill-tracker.csv` |
+| `/state-legislation/` | `state_tracker.html` | Backed by `pfas-bill-tracker.csv` |
 | `/search/` | `search.html` | Pagefind UI |
 
 ## Visual conventions
