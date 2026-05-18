@@ -10,6 +10,23 @@ from flask import Flask, render_template, abort, send_from_directory, redirect, 
 
 app = Flask(__name__)
 app.config['FREEZER_RELATIVE_URLS'] = True
+# Some referenced documentIds (from similarities / press-release links) point to
+# regs.gov records that aren't in our local snapshot — skip-bake them instead of
+# aborting the whole freeze.
+app.config['FREEZER_IGNORE_404_NOT_FOUND'] = True
+# Skip the large source CSVs + full-text dumps when copying static/ into build/.
+# They're consumed by the Python loaders at freeze time and aren't needed by the
+# deployed static site, which only serves the rendered HTML and the slim
+# pws-search.json. Keeping them out keeps the GH Pages push under GitHub's
+# packfile size limits.
+app.config['FREEZER_STATIC_IGNORE'] = [
+    'data/pws_data.csv',
+    'data/pws_summaries.csv',
+    'data/pws_summary_stats.csv',
+    'data/text/*',
+    '.DS_Store',
+    '*/.DS_Store',
+]
 
 DATA_DIR = Path("static/data")
 
@@ -772,7 +789,10 @@ def hazardous_substance_designation():
 
 @app.route("/pfas-reporting/")
 def pfas_reporting():
-    return timeline_page("pfas-reporting")
+    # No dedicated timeline JSON for the reporting program — fold into the
+    # combined federal-regulations view so url_for() callers still resolve and
+    # frozen-flask can bake a redirect page.
+    return redirect(url_for("pfas_programs"))
 
 
 @app.route("/federal-regulations/")
@@ -813,11 +833,6 @@ def _topic_event_label(ev):
     if sig in ("rollback", "protection", "delay"):
         return "Regulatory Action"
     return "Milestone"
-
-
-@app.route("/glossary/")
-def glossary():
-    return render_template("glossary.html")
 
 
 @app.route("/state-legislation/")
@@ -1223,15 +1238,14 @@ def explore():
     return redirect(url_for("index"))
 
 
-@app.route("/what-are-pfas/")
-def what_are_pfas():
-    return render_template("glossary.html")
-
-
 @app.route("/pagefind/<path:filename>")
 def pagefind(filename):
     return send_from_directory("build/pagefind", filename)
 
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=True)
+    # macOS reserves port 5000 for AirPlay Receiver; honor PORT env var
+    # if set, otherwise default to 5050 to avoid the conflict.
+    import os
+    app.run(host="127.0.0.1", port=int(os.environ.get("PORT", "5050")),
+            debug=True, use_reloader=True)

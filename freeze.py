@@ -40,12 +40,19 @@ def press():
 @freezer.register_generator
 def topic():
     timelines_dir = Path("static/data/timelines")
-    alias_slugs = ["drinking-water-mcl", "cercla-designation", "tsca-reporting"]
+    # Aliases map to a real timeline slug; only emit those whose target JSON
+    # actually exists, so we don't bake routes that 404 at request time.
+    alias_targets = {
+        "drinking-water-mcl": "drinking-water-limits",
+        "cercla-designation": "hazardous-substance-designation",
+        "tsca-reporting": "pfas-reporting",
+    }
     if timelines_dir.exists():
         for path in timelines_dir.glob("*.json"):
             yield {"topic_id": path.stem}
-    for slug in alias_slugs:
-        yield {"topic_id": slug}
+    for slug, target in alias_targets.items():
+        if (timelines_dir / f"{target}.json").exists():
+            yield {"topic_id": slug}
 
 
 @freezer.register_generator
@@ -65,17 +72,7 @@ def explore():
 
 
 @freezer.register_generator
-def what_are_pfas():
-    yield {}
-
-
-@freezer.register_generator
 def search():
-    yield {}
-
-
-@freezer.register_generator
-def glossary():
     yield {}
 
 
@@ -99,11 +96,6 @@ def drinking_water_limits():
 
 @freezer.register_generator
 def hazardous_substance_designation():
-    yield {}
-
-
-@freezer.register_generator
-def pfas_reporting():
     yield {}
 
 
