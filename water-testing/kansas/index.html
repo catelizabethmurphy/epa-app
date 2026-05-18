@@ -1,0 +1,2950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFAS in Kansas Drinking Water</title>
+    <meta name="description" content="A documentary record of U.S. federal policy on PFAS — per- and polyfluoroalkyl substances — from the first regulatory actions to today's partial rollback.">
+    <meta property="og:title" content="PFAS in Kansas Drinking Water">
+    <meta property="og:description" content="5 of 103 public water systems in Kansas reported PFAS above the EPA standards Biden set in 2024.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    
+<style>
+.ws-back {
+    display: inline-block;
+    margin: 1rem 0 0.5rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666;
+    text-decoration: none;
+    border-bottom: 1px dotted #999;
+}
+.ws-back:hover { color: #111; border-bottom-style: solid; }
+
+.ws-lede {
+    border-top: 3px solid #111;
+    padding-top: 1rem;
+    margin: 0.5rem 0 1.25rem;
+    max-width: 760px;
+}
+.ws-eyebrow {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+    margin-bottom: 0.5rem;
+}
+.ws-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 0.6rem;
+    line-height: 1.2;
+}
+.ws-dek {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.7;
+    margin: 0 0 0.5rem;
+}
+.ws-dek strong { color: #c0202a; }
+
+.ws-strip {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1px;
+    background: #ddd;
+    border: 1px solid #ddd;
+    margin: 1.25rem 0 1.75rem;
+    overflow-x: auto;
+}
+.ws-stat {
+    background: #fff;
+    padding: 0.6rem 0.8rem;
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+}
+.ws-stat-num {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.05;
+}
+.ws-stat--alert .ws-stat-num { color: #c0202a; }
+.ws-stat-lbl {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666;
+    margin-top: 0.2rem;
+    white-space: normal;
+    line-height: 1.25;
+}
+
+.ws-searchbar {
+    margin: 1.25rem 0 0.6rem;
+    border-top: 2px solid #111;
+    padding-top: 0.9rem;
+}
+.ws-searchbar-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+    display: block;
+    margin-bottom: 0.4rem;
+}
+.ws-search-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+}
+.ws-search-input {
+    flex: 1 1 280px;
+    max-width: 460px;
+    padding: 0.5rem 0.7rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.95rem;
+    border: 1px solid #ccc;
+    background: #fff;
+    box-sizing: border-box;
+}
+.ws-search-input:focus { outline: 2px solid #111; outline-offset: -1px; }
+.ws-filter-group {
+    display: flex;
+    gap: 0.25rem;
+}
+.ws-filter-btn {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.4rem 0.7rem;
+    border: 2px solid #ccc;
+    background: #fff;
+    color: #777;
+    cursor: pointer;
+    line-height: 1;
+}
+.ws-filter-btn.active { background: #111; color: #fff; border-color: #111; }
+.ws-filter-btn:hover:not(.active) { border-color: #888; color: #333; }
+.ws-search-count {
+    margin-top: 0.5rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ws-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.92rem;
+}
+.ws-table th, .ws-table td {
+    padding: 1.05rem 0.6rem;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    vertical-align: middle;
+}
+.ws-table th:first-child, .ws-table td:first-child { padding-right: 2.2rem; }
+.ws-table th:last-child, .ws-table td:last-child { padding-left: 2.2rem; }
+.ws-table th {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+    border-bottom: 2px solid #111;
+}
+.ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.ws-table tr.row-hidden { display: none; }
+.ws-status {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+.ws-status--over { color: #c0202a; }
+.ws-status--ok { color: #1a6b35; }
+.ws-name {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    color: #111;
+    font-size: 1.05rem;
+    line-height: 1.25;
+}
+.ws-meta {
+    color: #888;
+    font-size: 0.74rem;
+    margin-top: 0.1rem;
+    font-family: "PT Sans", sans-serif;
+    line-height: 1.3;
+}
+.ws-meta-sep { color: #ccc; margin: 0 0.35rem; }
+.ws-source {
+    display: inline;
+    font-size: 0.7rem;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #555;
+}
+.ws-source--gw { color: #3a5a1e; }
+.ws-source--sw { color: #1d4a6a; }
+.ws-source--mx { color: #6b3a14; }
+.ws-source--gu { color: #543a6a; }
+
+.ws-exceed-count {
+    display: block;
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    color: #c0202a;
+    font-size: 1rem;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+}
+.ws-exceed-count--ok { color: #1a6b35; }
+.ws-detect-note {
+    display: block;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.82rem;
+    color: #555;
+    line-height: 1.5;
+    max-width: 640px;
+}
+.ws-zips-line {
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    font-style: italic;
+    color: #888;
+}
+
+.ws-statelink {
+    margin: 2.5rem 0 1rem;
+    padding: 1.5rem 1.5rem 1.6rem;
+    background: #111;
+    color: #fff;
+    max-width: 760px;
+}
+.ws-statelink-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #fff;
+    margin: 0 0 0.6rem;
+    line-height: 1.25;
+}
+.ws-statelink-text {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.95rem;
+    color: #ddd;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+}
+.ws-statelink-btn {
+    display: inline-block;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-decoration: none;
+    padding: 0.55rem 0.95rem;
+    border: 2px solid #fff;
+}
+.ws-statelink-btn:hover { background: #fff; color: #111; }
+
+.ws-foot {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 2rem;
+    line-height: 1.6;
+    border-top: 1px solid #ddd;
+    padding-top: 0.9rem;
+    max-width: 760px;
+}
+</style>
+
+</head>
+<body>
+<nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+        <a href="../../index.html" class="nav-brand">Home</a>
+        <div class="nav-links">
+            <a href="../index.html">PFAS in My Community</a>
+            <a href="../../federal-regulations/index.html">Federal Regulations</a>
+            <a href="../../state-legislation/index.html">State Legislation</a>
+        </div>
+    </div>
+</nav>
+
+
+
+<div class="container">
+    
+<a class="ws-back" href="../index.html">← All states</a>
+
+<header class="ws-lede">
+    <div class="ws-eyebrow">Kansas drinking-water testing</div>
+    <h1 class="ws-hed">
+        
+            <strong>5</strong> of <strong>103</strong> Kansas water systems reported PFAS above the EPA standards Biden set in 2024.
+        
+    </h1>
+    <p class="ws-dek">
+        5% of public water systems in Kansas that EPA sampled for PFAS reported at least one result above the standards Biden's EPA finalized in 2024 for PFOA, PFOS, PFHxS, PFNA, or HFPO-DA (GenX). The Trump EPA is now moving to rescind those standards for every PFAS except PFOA and PFOS.
+    </p>
+</header>
+
+<div class="ws-strip">
+    <div class="ws-stat">
+        <div class="ws-stat-num">103</div>
+        <div class="ws-stat-lbl">Public water systems tested</div>
+    </div>
+    <div class="ws-stat ws-stat--alert">
+        <div class="ws-stat-num">5</div>
+        <div class="ws-stat-lbl">Exceeded an EPA standard</div>
+    </div>
+    <div class="ws-stat ws-stat--alert">
+        <div class="ws-stat-num">5%</div>
+        <div class="ws-stat-lbl">Share of systems over limit</div>
+    </div>
+    
+    
+    <div class="ws-stat">
+        <div class="ws-stat-num">2%</div>
+        <div class="ws-stat-lbl">Systems over PFOA limit</div>
+    </div>
+    <div class="ws-stat">
+        <div class="ws-stat-num">5%</div>
+        <div class="ws-stat-lbl">Systems over PFOS limit</div>
+    </div>
+</div>
+
+<div class="ws-searchbar">
+    <label class="ws-searchbar-label" for="ws-search-input">Find a water system</label>
+    <div class="ws-search-row">
+        <input type="search" id="ws-search-input" class="ws-search-input"
+               placeholder="Search by name or ZIP code" autocomplete="off">
+        <div class="ws-filter-group">
+            <button class="ws-filter-btn active" data-filter="all">All</button>
+            <button class="ws-filter-btn" data-filter="over">Over limit</button>
+            <button class="ws-filter-btn" data-filter="ok">Below limit</button>
+        </div>
+    </div>
+    <div class="ws-search-count" id="ws-search-count">Showing all 103 systems</div>
+</div>
+
+<div style="overflow-x:auto;">
+<table class="ws-table" id="ws-table">
+    <colgroup>
+        <col style="width:38%">
+        <col style="width:62%">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>Water system</th>
+            <th>PFAS over the EPA limit</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        
+        <tr data-name="great bend, city of" data-zips="67530" data-status="over">
+            <td>
+                <div class="ws-name">Great Bend, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>10 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67530</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFHxS, PFOS, and PFOA tested above EPA limits — detected in 10 of 20 samples between 2023-10-11 and 2024-05-13.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="frusi water treatment plant" data-zips="66442" data-status="over">
+            <td>
+                <div class="ws-name">Frusi Water Treatment Plant</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66442</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA, PFOS, and PFHxS tested above EPA limits — detected in 2 of 2 samples between 2023-10-17 and 2024-03-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="park city, city of" data-zips="67147 67204 67219" data-status="over">
+            <td>
+                <div class="ws-name">Park City, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--mx">Mixed source</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67147, 67204, 67219</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS tested above EPA limits — detected in 7 of 8 samples between 2024-02-13 and 2025-05-05.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="arkansas city, city of" data-zips="67005" data-status="over">
+            <td>
+                <div class="ws-name">Arkansas City, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67005</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS tested above EPA limits — detected in 1 of 2 samples between 2023-09-06 and 2024-01-03.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="pratt, city of" data-zips="67124" data-status="over">
+            <td>
+                <div class="ws-name">Pratt, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>10 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67124</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS tested above EPA limits — detected in 2 of 19 samples between 2023-03-06 and 2023-09-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="abilene, city of" data-zips="67410" data-status="ok">
+            <td>
+                <div class="ws-name">Abilene, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67410</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-03-13 and 2024-12-10.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="american water - fort leavenworth" data-zips="66027" data-status="ok">
+            <td>
+                <div class="ws-name">American Water - Fort Leavenworth</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66027</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2025-01-08 and 2025-07-01.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="atchison co rwd 5c" data-zips="66002 66008 66016 66017 66023 66041 66058 66060 66087 66088 66424 66436 66439" data-status="ok">
+            <td>
+                <div class="ws-name">Atchison CO Rwd 5c</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66002, 66008, 66016, 66017, 66023, 66041, 66058, 66060, 66087, 66088, 66424, 66436, 66439</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-01-22 and 2024-12-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="atchison, city of" data-zips="66002" data-status="ok">
+            <td>
+                <div class="ws-name">Atchison, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66002</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-01-31 and 2024-10-08.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="augusta, city of" data-zips="67010 67039 67074 67110" data-status="ok">
+            <td>
+                <div class="ws-name">Augusta, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67010, 67039, 67074, 67110</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-03-12 and 2024-12-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="baldwin city, city of" data-zips="66006" data-status="ok">
+            <td>
+                <div class="ws-name">Baldwin City, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66006</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-08-08 and 2023-12-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="baxter springs, city of" data-zips="66713" data-status="ok">
+            <td>
+                <div class="ws-name">Baxter Springs, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66713</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-03-14 and 2023-12-12.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="bel aire, city of" data-zips="67220 67226" data-status="ok">
+            <td>
+                <div class="ws-name">Bel Aire, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67220, 67226</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-03-25 and 2024-11-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="bonner springs, city of" data-zips="66012" data-status="ok">
+            <td>
+                <div class="ws-name">Bonner Springs, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66012</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-02-14 and 2024-08-07.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="bourbon co rwd 2c" data-zips="66701 66711 66712 66716 66724 66734 66735 66738 66741 66743 66746 66753 66754 66756 66762 66763 66769 66772 66775 66779 66780" data-status="ok">
+            <td>
+                <div class="ws-name">Bourbon CO Rwd 2c</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66701, 66711, 66712, 66716, 66724, 66734, 66735, 66738, 66741, 66743, 66746, 66753, 66754, 66756, 66762, 66763, 66769, 66772, 66775, 66779, 66780</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 20 samples between 2024-02-13 and 2024-11-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="butler co rwd 5" data-zips="67002 67010 67017 67042 67133 67226 67228" data-status="ok">
+            <td>
+                <div class="ws-name">Butler CO Rwd 5</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67002, 67010, 67017, 67042, 67133, 67226, 67228</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-03-14 and 2023-12-11.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="canton, city of" data-zips="67428" data-status="ok">
+            <td>
+                <div class="ws-name">Canton, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67428</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 1 samples on 2025-05-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="chanute, city of" data-zips="66720" data-status="ok">
+            <td>
+                <div class="ws-name">Chanute, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66720</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-03-14 and 2024-02-14.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="clay center, city of" data-zips="67432" data-status="ok">
+            <td>
+                <div class="ws-name">Clay Center, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67432</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2025-01-27 and 2025-07-14.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="coffeyville, city of" data-zips="67337" data-status="ok">
+            <td>
+                <div class="ws-name">Coffeyville, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67337</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-04-08 and 2025-01-06.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="colby, city of" data-zips="67701" data-status="ok">
+            <td>
+                <div class="ws-name">Colby, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>9 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67701</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 18 samples between 2023-01-16 and 2023-07-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="concordia, city of" data-zips="66901" data-status="ok">
+            <td>
+                <div class="ws-name">Concordia, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66901</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 10 samples between 2024-06-10 and 2024-12-02.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="council grove, city of" data-zips="66846" data-status="ok">
+            <td>
+                <div class="ws-name">Council Grove, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66846</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-17 and 2023-10-02.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="crawford co rwd 5" data-zips="66762" data-status="ok">
+            <td>
+                <div class="ws-name">Crawford CO Rwd 5</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66762</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-03-25 and 2024-09-11.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="desoto, city of" data-zips="66018" data-status="ok">
+            <td>
+                <div class="ws-name">Desoto, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66018</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-04-15 and 2024-10-01.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="dodge city, city of" data-zips="67801" data-status="ok">
+            <td>
+                <div class="ws-name">Dodge City, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>14 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67801</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 28 samples between 2024-03-11 and 2024-11-12.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="douglas co rwd 3" data-zips="66047 66049 66050 66409 66524 66542 66546 66609" data-status="ok">
+            <td>
+                <div class="ws-name">Douglas CO Rwd 3</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66047, 66049, 66050, 66409, 66524, 66542, 66546, 66609</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 3 of 6 samples between 2024-03-12 and 2024-12-11, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="douglas co rwd 4" data-zips="66006 66021 66025 66046 66092" data-status="ok">
+            <td>
+                <div class="ws-name">Douglas CO Rwd 4</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66006, 66021, 66025, 66046, 66092</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2024-03-13 and 2024-12-10.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="el dorado, city of" data-zips="67042" data-status="ok">
+            <td>
+                <div class="ws-name">El Dorado, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67042</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-08-07 and 2024-04-01.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="el paso water company" data-zips="67037" data-status="ok">
+            <td>
+                <div class="ws-name">El Paso Water Company</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--mx">Mixed source</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67037</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-10 and 2023-10-02.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="emporia ks, city of" data-zips="66801" data-status="ok">
+            <td>
+                <div class="ws-name">Emporia Ks, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66801</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-10-22 and 2025-08-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="eudora, city of" data-zips="66025" data-status="ok">
+            <td>
+                <div class="ws-name">Eudora, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66025</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-02-13 and 2023-08-15.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="fort scott, city of" data-zips="64741 66701 66738 66741 66746 66754 66767 66769 66775 66779 66780" data-status="ok">
+            <td>
+                <div class="ws-name">Fort Scott, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 64741, 66701, 66738, 66741, 66746, 66754, 66767, 66769, 66775, 66779, 66780</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-17 and 2023-10-02.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="frontenac, city of" data-zips="66763" data-status="ok">
+            <td>
+                <div class="ws-name">Frontenac, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66763</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 1 samples on 2025-05-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="garden city, city of" data-zips="67846" data-status="ok">
+            <td>
+                <div class="ws-name">Garden City, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>8 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67846</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 15 samples between 2024-09-30 and 2025-06-12.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="gardner, city of" data-zips="66030 66083" data-status="ok">
+            <td>
+                <div class="ws-name">Gardner, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66030, 66083</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-06-05 and 2024-03-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="gas city, city of" data-zips="66742" data-status="ok">
+            <td>
+                <div class="ws-name">Gas City, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66742</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-02-24 and 2025-08-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="goddard, city of" data-zips="67052" data-status="ok">
+            <td>
+                <div class="ws-name">Goddard, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67052</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-05-13 and 2025-03-12.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="goodland, city of" data-zips="67735" data-status="ok">
+            <td>
+                <div class="ws-name">Goodland, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67735</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-10-23 and 2023-11-14.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="hays, city of" data-zips="67601" data-status="ok">
+            <td>
+                <div class="ws-name">Hays, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67601</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-05-01 and 2023-11-07.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="haysville, city of" data-zips="67060 67217" data-status="ok">
+            <td>
+                <div class="ws-name">Haysville, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67060, 67217</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-07-22 and 2025-01-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="hesston, city of" data-zips="67062" data-status="ok">
+            <td>
+                <div class="ws-name">Hesston, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67062</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-06-26 and 2023-12-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="hugoton, city of" data-zips="67951" data-status="ok">
+            <td>
+                <div class="ws-name">Hugoton, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>7 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67951</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 3 of 14 samples between 2024-07-08 and 2024-12-02, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="hutchinson, city of" data-zips="67501 67502 67504" data-status="ok">
+            <td>
+                <div class="ws-name">Hutchinson, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67501, 67502, 67504</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-04-09 and 2024-09-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="independence, city of" data-zips="66757 67301 67333 67335 67337 67340 67347 67363" data-status="ok">
+            <td>
+                <div class="ws-name">Independence, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66757, 67301, 67333, 67335, 67337, 67340, 67347, 67363</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-01-13 and 2025-10-15.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="iola, city of" data-zips="66742 66749" data-status="ok">
+            <td>
+                <div class="ws-name">Iola, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66742, 66749</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-03-11 and 2024-12-09.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="jackson co rwd 3" data-zips="66088 66416 66419 66436 66439 66509 66516 66540 66552" data-status="ok">
+            <td>
+                <div class="ws-name">Jackson CO Rwd 3</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--mx">Mixed source</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66088, 66416, 66419, 66436, 66439, 66509, 66516, 66540, 66552</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-02-10 and 2025-08-12.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="jefferson co rwd 12" data-zips="66002 66020 66048 66054 66060 66066 66088 66097" data-status="ok">
+            <td>
+                <div class="ws-name">Jefferson CO Rwd 12</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66002, 66020, 66048, 66054, 66060, 66066, 66088, 66097</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-01-23 and 2024-10-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="johnson co rwd 7" data-zips="66018 66021 66025 66030 66031 66061 66062 66071 66083" data-status="ok">
+            <td>
+                <div class="ws-name">Johnson CO Rwd 7</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66018, 66021, 66025, 66030, 66031, 66061, 66062, 66071, 66083</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 9 samples between 2025-02-10 and 2025-09-08.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="junction city, city of" data-zips="66441" data-status="ok">
+            <td>
+                <div class="ws-name">Junction City, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66441</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-06-12 and 2023-11-28.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="kansas city board of public utilities" data-zips="66007 66012 66101 66102 66103 66104 66105 66106 66109 66111 66112 66115 66118 66160 66203 66205 66216 66217" data-status="ok">
+            <td>
+                <div class="ws-name">Kansas City Board of Public Utilities</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66007, 66012, 66101, 66102, 66103, 66104, 66105, 66106, 66109, 66111, 66112, 66115, 66118, 66160, 66203, 66205, 66216, 66217</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-01-02 and 2024-10-01.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="lan del water district" data-zips="66043 66048" data-status="ok">
+            <td>
+                <div class="ws-name">Lan del Water District</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66043, 66048</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2024-01-22 and 2024-10-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="larned, city of" data-zips="67550" data-status="ok">
+            <td>
+                <div class="ws-name">Larned, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67550</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2024-04-16 and 2024-10-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="lawrence, city of" data-zips="66044 66046 66047 66049" data-status="ok">
+            <td>
+                <div class="ws-name">Lawrence, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66044, 66046, 66047, 66049</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 4 of 8 samples between 2023-01-06 and 2023-10-09, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="leavenworth water department" data-zips="66048" data-status="ok">
+            <td>
+                <div class="ws-name">Leavenworth Water Department</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66048</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 7 samples between 2023-01-17 and 2023-10-10.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="liberal, city of" data-zips="67901" data-status="ok">
+            <td>
+                <div class="ws-name">Liberal, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>8 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67901</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 16 samples between 2024-11-19 and 2025-05-27.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="louisburg, city of" data-zips="66053" data-status="ok">
+            <td>
+                <div class="ws-name">Louisburg, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66053</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-03-11 and 2025-09-15.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="lyons, city of" data-zips="67554" data-status="ok">
+            <td>
+                <div class="ws-name">Lyons, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67554</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-02-24 and 2025-08-26.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="maize, city of" data-zips="67101" data-status="ok">
+            <td>
+                <div class="ws-name">Maize, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67101</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-01-17 and 2023-07-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="manhattan, city of" data-zips="66502" data-status="ok">
+            <td>
+                <div class="ws-name">Manhattan, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66502</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-10-22 and 2025-04-08.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="maple hill, city of" data-zips="66507" data-status="ok">
+            <td>
+                <div class="ws-name">Maple Hill, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66507</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-03-12 and 2025-09-15.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mcconnell afb" data-zips="67221" data-status="ok">
+            <td>
+                <div class="ws-name">McConnell Afb</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67221</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-14 and 2023-12-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mcpherson, city of" data-zips="67460" data-status="ok">
+            <td>
+                <div class="ws-name">McPherson, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67460</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-07-12 and 2024-01-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="medicine lodge, city of" data-zips="67104" data-status="ok">
+            <td>
+                <div class="ws-name">Medicine Lodge, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67104</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-01-30 and 2024-07-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="miami co rwd 2" data-zips="66013 66040 66053 66064 66071 66079 66083 66092" data-status="ok">
+            <td>
+                <div class="ws-name">Miami CO Rwd 2</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66013, 66040, 66053, 66064, 66071, 66079, 66083, 66092</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-02-10 and 2025-08-12.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="moran, city of" data-zips="66755" data-status="ok">
+            <td>
+                <div class="ws-name">Moran, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66755</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-06-05 and 2024-12-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="moundridge, city of" data-zips="67107" data-status="ok">
+            <td>
+                <div class="ws-name">Moundridge, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67107</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-02-11 and 2025-08-12.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mulvane, city of" data-zips="67110" data-status="ok">
+            <td>
+                <div class="ws-name">Mulvane, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67110</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2025-02-11 and 2025-08-12.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="munden, city of" data-zips="66901 66930 66935 66939 66940 66948 66959 66960 66964 66966 68325" data-status="ok">
+            <td>
+                <div class="ws-name">Munden, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66901, 66930, 66935, 66939, 66940, 66948, 66959, 66960, 66964, 66966, 68325</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-08-08 and 2024-04-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="newton ks, city of" data-zips="67114" data-status="ok">
+            <td>
+                <div class="ws-name">Newton Ks, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67114</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-01-23 and 2023-07-11.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="olathe, city of" data-zips="66061 66062" data-status="ok">
+            <td>
+                <div class="ws-name">Olathe, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66061, 66062</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-03-06 and 2023-12-26.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="osawatomie, city of" data-zips="66064" data-status="ok">
+            <td>
+                <div class="ws-name">Osawatomie, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66064</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2025-03-12 and 2025-09-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="ottawa, city of" data-zips="66067" data-status="ok">
+            <td>
+                <div class="ws-name">Ottawa, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66067</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-12-09 and 2025-08-27.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="paola, city of" data-zips="66071" data-status="ok">
+            <td>
+                <div class="ws-name">Paola, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66071</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-17 and 2023-10-03.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="parsons, city of" data-zips="67357" data-status="ok">
+            <td>
+                <div class="ws-name">Parsons, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67357</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-02-10 and 2025-08-12.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="perry, city of" data-zips="66073" data-status="ok">
+            <td>
+                <div class="ws-name">Perry, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66073</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-04-04 and 2023-10-03.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="pittsburg, city of" data-zips="66762" data-status="ok">
+            <td>
+                <div class="ws-name">Pittsburg, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66762</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2025-03-04 and 2025-09-02.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="pottawatomie co rwd 1" data-zips="66502 66535 66547 66549" data-status="ok">
+            <td>
+                <div class="ws-name">Pottawatomie CO Rwd 1</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66502, 66535, 66547, 66549</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-03-15 and 2023-09-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="rose hill, city of" data-zips="67133" data-status="ok">
+            <td>
+                <div class="ws-name">Rose Hill, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--mx">Mixed source</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67133</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-03-11 and 2025-09-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="russell, city of" data-zips="67665" data-status="ok">
+            <td>
+                <div class="ws-name">Russell, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--mx">Mixed source</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67665</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-22 and 2024-01-29.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="salina, city of" data-zips="67401" data-status="ok">
+            <td>
+                <div class="ws-name">Salina, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--mx">Mixed source</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67401</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 1 of 8 samples between 2024-02-20 and 2025-02-24, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="scott city, city of" data-zips="67871" data-status="ok">
+            <td>
+                <div class="ws-name">Scott City, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67871</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-03-12 and 2025-10-28.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sedgwick co rwd 2" data-zips="67135 67147 67219" data-status="ok">
+            <td>
+                <div class="ws-name">Sedgwick CO Rwd 2</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67135, 67147, 67219</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-03-06 and 2025-08-13.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sedgwick co rwd 3" data-zips="67037 67039 67110 67133 67146 67201 67202 67203 67206 67207 67210 67230 67232" data-status="ok">
+            <td>
+                <div class="ws-name">Sedgwick CO Rwd 3</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--mx">Mixed source</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67037, 67039, 67110, 67133, 67146, 67201, 67202, 67203, 67206, 67207, 67210, 67230, 67232</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-03-13 and 2023-12-11.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="shawnee co rwd 1c" data-zips="66402 66507 66610 66614 66615" data-status="ok">
+            <td>
+                <div class="ws-name">Shawnee CO Rwd 1c</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66402, 66507, 66610, 66614, 66615</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-08-27 and 2024-12-04.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="shawnee co rwd 4c" data-zips="66617 66618" data-status="ok">
+            <td>
+                <div class="ws-name">Shawnee CO Rwd 4c</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66617, 66618</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2024-04-17 and 2025-01-13.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="shawnee co rwd 8" data-zips="66409 66542 66605 66609" data-status="ok">
+            <td>
+                <div class="ws-name">Shawnee CO Rwd 8</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66409, 66542, 66605, 66609</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 1 of 8 samples between 2025-01-22 and 2025-10-15, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="spring hill, city of" data-zips="66083" data-status="ok">
+            <td>
+                <div class="ws-name">Spring Hill, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66083</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-05-22 and 2024-12-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="suburban water company" data-zips="66007 66012 66086" data-status="ok">
+            <td>
+                <div class="ws-name">Suburban Water Company</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gu">Groundwater under surface influence</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66007, 66012, 66086</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2025-01-28 and 2025-10-13.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sylvan grove, city of" data-zips="67481" data-status="ok">
+            <td>
+                <div class="ws-name">Sylvan Grove, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67481</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2025-03-12 and 2025-07-15.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="tonganoxie, city of" data-zips="66086" data-status="ok">
+            <td>
+                <div class="ws-name">Tonganoxie, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66086</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-01-17 and 2023-07-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="topeka, city of" data-zips="66409 66546 66603 66604 66605 66606 66607 66608 66609 66610 66611 66612 66614 66615 66616 66617 66618 66619 66621 66622" data-status="ok">
+            <td>
+                <div class="ws-name">Topeka, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66409, 66546, 66603, 66604, 66605, 66606, 66607, 66608, 66609, 66610, 66611, 66612, 66614, 66615, 66616, 66617, 66618, 66619, 66621, 66622</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-02-03 and 2025-11-03.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="ulysses, city of" data-zips="67880" data-status="ok">
+            <td>
+                <div class="ws-name">Ulysses, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67880</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-01-23 and 2024-07-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="university of kansas" data-zips="66045 66047" data-status="ok">
+            <td>
+                <div class="ws-name">University of Kansas</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66045, 66047</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-10-15 and 2025-09-02.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="valley center, city of" data-zips="67147" data-status="ok">
+            <td>
+                <div class="ws-name">Valley Center, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67147</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-03-11 and 2025-09-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="virgil, city of" data-zips="66870" data-status="ok">
+            <td>
+                <div class="ws-name">Virgil, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66870</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-16 and 2023-10-02.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="wamego, city of" data-zips="66547" data-status="ok">
+            <td>
+                <div class="ws-name">Wamego, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66547</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 5 samples on 2025-06-10.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="water district 1 of johnson co" data-zips="66013 66018 66030 66031 66061 66062 66083 66085 66202 66203 66204 66205 66206 66207 66208 66209 66210 66211 66212 66213 66214 66215 66216 66217 66218 66219 66220 66221 66223 66224 66226 66227" data-status="ok">
+            <td>
+                <div class="ws-name">Water District 1 of Johnson CO</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66013, 66018, 66030, 66031, 66061, 66062, 66083, 66085, 66202, 66203, 66204, 66205, 66206, 66207, 66208, 66209, 66210, 66211, 66212, 66213, 66214, 66215, 66216, 66217, 66218, 66219, 66220, 66221, 66223, 66224, 66226, 66227</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 11 samples between 2024-04-15 and 2025-10-15.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="wathena, city of" data-zips="66090" data-status="ok">
+            <td>
+                <div class="ws-name">Wathena, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66090</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-06-11 and 2024-12-09.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="waverly, city of" data-zips="66871" data-status="ok">
+            <td>
+                <div class="ws-name">Waverly, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 66871</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-05-14 and 2024-12-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="wellington, city of" data-zips="67103 67152" data-status="ok">
+            <td>
+                <div class="ws-name">Wellington, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67103, 67152</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-01-14 and 2025-10-14.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="wichita, city of" data-zips="67002 67202 67203 67204 67205 67206 67207 67208 67209 67210 67211 67212 67213 67214 67215 67216 67217 67218 67219 67220 67223 67226 67227 67228 67230 67232 67235" data-status="ok">
+            <td>
+                <div class="ws-name">Wichita, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--mx">Mixed source</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67002, 67202, 67203, 67204, 67205, 67206, 67207, 67208, 67209, 67210, 67211, 67212, 67213, 67214, 67215, 67216, 67217, 67218, 67219, 67220, 67223, 67226, 67227, 67228, 67230, 67232, 67235</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-21 and 2023-11-07.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="winfield, city of" data-zips="67156" data-status="ok">
+            <td>
+                <div class="ws-name">Winfield, City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 67156</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-07-12 and 2024-04-10.</div>
+            </td>
+        </tr>
+        
+    </tbody>
+</table>
+</div>
+
+<section class="ws-statelink">
+    <h2 class="ws-statelink-hed">What is Kansas doing about PFAS?</h2>
+    <p class="ws-statelink-text">
+        As the federal drinking-water standards retreat, states are filling the gap with their own restrictions on PFAS in consumer products, food packaging, firefighting foam, and industrial discharges.
+    </p>
+    <a class="ws-statelink-btn" href="../../state-legislation/index.html?state=kansas">See Kansas's PFAS legislation →</a>
+</section>
+
+<p class="ws-foot">
+    Source: EPA Fifth Unregulated Contaminant Monitoring Rule (UCMR 5). "Worst exceedance" shows how many times above the EPA standard the system's highest sample registered, and which compound it was. Biden's 2024 rule set limits of 4 ppt for PFOA and PFOS and 10 ppt for PFHxS, PFNA, and HFPO-DA (GenX). The Trump EPA proposed rescinding the latter three in May 2025.
+</p>
+
+<script>
+(function () {
+    var input = document.getElementById('ws-search-input');
+    var rows = Array.prototype.slice.call(document.querySelectorAll('#ws-table tbody tr'));
+    var count = document.getElementById('ws-search-count');
+    var buttons = document.querySelectorAll('.ws-filter-btn');
+    var total = rows.length;
+    var filter = 'all';
+
+    function apply() {
+        var q = input.value.trim().toLowerCase();
+        var shown = 0;
+        rows.forEach(function (r) {
+            var matchText = !q ||
+                r.dataset.name.indexOf(q) !== -1 ||
+                r.dataset.zips.indexOf(q) !== -1;
+            var matchFilter = filter === 'all' || r.dataset.status === filter;
+            if (matchText && matchFilter) { r.classList.remove('row-hidden'); shown++; }
+            else r.classList.add('row-hidden');
+        });
+        var parts = [];
+        if (q) parts.push('"' + q + '"');
+        if (filter === 'over') parts.push('over limit');
+        if (filter === 'ok') parts.push('below limit');
+        var suffix = parts.length ? ' matching ' + parts.join(', ') : '';
+        count.textContent = (suffix ? shown + ' of ' + total : 'Showing all ' + total) + ' systems' + suffix;
+    }
+
+    var timer;
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(apply, 60);
+    });
+    buttons.forEach(function (b) {
+        b.addEventListener('click', function () {
+            buttons.forEach(function (x) { x.classList.remove('active'); });
+            b.classList.add('active');
+            filter = b.dataset.filter;
+            apply();
+        });
+    });
+})();
+</script>
+
+</div>
+
+
+
+<footer>
+    <div class="footer-inner">
+        <p>
+            Regulatory data: <a href="https://www.regulations.gov" target="_blank">regulations.gov</a>
+            &amp; <a href="https://www.federalregister.gov" target="_blank">Federal Register API</a>.
+            Press releases: <a href="https://www.epa.gov/pfas/press-releases-related-pfas" target="_blank">EPA PFAS newsroom</a>.
+            Water-system PFAS testing: <a href="https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule#5" target="_blank" rel="noopener">EPA UCMR 5 occurrence data</a>.
+            PFAS statistics: EWG, CDC NHANES.
+            State legislation: <a href="https://www.saferstates.org/bill-tracker/?toxic_chemicals=PFAS" target="_blank" rel="noopener">Safer States</a>.
+        </p>
+        <p style="margin-top:0.4rem; color:#555;">
+            Data last updated: <strong>run make fetch-all to update</strong>
+        </p>
+    </div>
+</footer>
+
+<script>
+// Fade-in on scroll
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            observer.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Sticky nav shadow
+window.addEventListener('scroll', () => {
+    document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
+});
+</script>
+
+
+</body>
+</html>

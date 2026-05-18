@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFAS in U.S. Drinking Water — Testing Results</title>
+    <meta name="description" content="A documentary record of U.S. federal policy on PFAS — per- and polyfluoroalkyl substances — from the first regulatory actions to today's partial rollback.">
+    <meta property="og:title" content="PFAS in U.S. Drinking Water — Testing Results">
+    <meta property="og:description" content="EPA water-system sampling shows 17% of utilities tested have PFOA or PFOS above the federal limit the Trump EPA is now rolling back.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/style.css">
+    
+<style>
+.wt-lede {
+    border-top: 3px solid #111;
+    padding-top: 1rem;
+    margin: 1rem 0 1.25rem;
+    max-width: 760px;
+}
+.wt-eyebrow {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+    margin-bottom: 0.5rem;
+}
+.wt-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 0.6rem;
+    line-height: 1.25;
+}
+.wt-dek {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.7;
+    margin: 0 0 0.5rem;
+}
+.wt-credit {
+    font-size: 0.72rem;
+    color: #999;
+    font-family: "PT Sans", sans-serif;
+    margin: 0.5rem 0 0;
+}
+
+.wt-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    background: #ddd;
+    border: 1px solid #ddd;
+    margin: 1.25rem 0 1.75rem;
+}
+.wt-stat {
+    background: #fff;
+    padding: 1rem 1.25rem;
+    flex: 1 1 auto;
+    min-width: 160px;
+}
+.wt-stat-num {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.05;
+}
+.wt-stat--alert .wt-stat-num { color: #c0202a; }
+.wt-stat-lbl {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+.wt-section-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 2rem 0 0.4rem;
+    color: #111;
+    border-top: 2px solid #111;
+    padding-top: 0.7rem;
+}
+.wt-section-sub {
+    font-family: "PT Sans", sans-serif;
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0 0 0.9rem;
+}
+
+.wt-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.92rem;
+}
+.wt-table th, .wt-table td {
+    padding: 0.55rem 0.6rem;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    vertical-align: top;
+}
+.wt-table th {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+    border-bottom: 2px solid #111;
+}
+.wt-table td.num, .wt-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.wt-table tr:hover td { background: #fafafa; }
+.wt-table a { color: #111; text-decoration: none; border-bottom: 1px dotted #888; }
+.wt-table a:hover { border-bottom-style: solid; }
+
+.wt-bar {
+    display: inline-block;
+    height: 10px;
+    background: #c0202a;
+    vertical-align: middle;
+    margin-right: 0.4rem;
+    min-width: 1px;
+    opacity: 0.85;
+}
+.wt-bar--low { background: #b85c00; }
+.wt-bar--ok  { background: #8a8a8a; opacity: 0.4; }
+
+.wt-pill {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.45rem;
+    background: #f2f3f4;
+    color: #555;
+    border-radius: 2px;
+    font-family: "PT Sans", sans-serif;
+    margin-right: 0.3rem;
+    letter-spacing: 0.04em;
+}
+.wt-pill--lg { background: #ecebe4; color: #444; }
+
+/* ── State-table collapse ─────────────────────────────────────────────── */
+.wt-table tr.wt-row-hidden { display: none; }
+.wt-show-more {
+    margin: 0.75rem 0 0;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    background: none;
+    border: none;
+    color: #111;
+    cursor: pointer;
+    padding: 0.4rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid #111;
+}
+.wt-show-more:hover { color: #c0202a; border-bottom-color: #c0202a; }
+
+/* ── Search box ───────────────────────────────────────────────────────── */
+.wt-search {
+    margin: 1.5rem 0 0.5rem;
+    padding: 1.1rem 1.25rem 1.2rem;
+    background: #fafaf8;
+    border-left: 3px solid #111;
+}
+.wt-search-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0 0 0.45rem;
+    color: #111;
+}
+.wt-search-sub {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0 0 0.7rem;
+    line-height: 1.5;
+}
+.wt-search-input {
+    width: 100%;
+    max-width: 520px;
+    padding: 0.6rem 0.75rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    background: #fff;
+    box-sizing: border-box;
+}
+.wt-search-input:focus { outline: 2px solid #111; outline-offset: -1px; }
+.wt-search-results {
+    margin: 0.85rem 0 0;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.92rem;
+}
+.wt-search-status {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+.wt-search-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #eee;
+}
+.wt-search-row:last-child { border-bottom: none; }
+.wt-search-result {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.wt-search-count {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-width: 12rem;
+}
+.wt-search-num {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 2.1rem;
+    font-weight: 700;
+    line-height: 1;
+}
+.wt-search-num--over { color: #c0202a; }
+.wt-search-num--ok { color: #1a6b35; }
+.wt-search-count-lbl {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    color: #555;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.wt-search-meta { flex: 1 1 auto; min-width: 0; }
+.wt-search-name {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #111;
+    line-height: 1.25;
+}
+.wt-search-state {
+    font-family: "PT Sans", sans-serif;
+    color: #888;
+    font-size: 0.78rem;
+    margin-top: 0.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.wt-search-jump {
+    flex: 0 0 auto;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: #111;
+    padding: 0.45rem 0.7rem;
+    text-decoration: none;
+    border: 2px solid #111;
+    white-space: nowrap;
+}
+.wt-search-jump:hover { background: #c0202a; border-color: #c0202a; }
+.wt-search-jump--muted {
+    color: #888;
+    background: transparent;
+    border-color: #ddd;
+    pointer-events: none;
+}
+
+.wt-statelink {
+    margin: 2.5rem 0 1rem;
+    padding: 1.5rem 1.5rem 1.6rem;
+    background: #111;
+    color: #fff;
+    max-width: 760px;
+}
+.wt-statelink-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #fff;
+    margin: 0 0 0.6rem;
+    line-height: 1.25;
+}
+.wt-statelink-text {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.95rem;
+    color: #ddd;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+}
+.wt-statelink-btn {
+    display: inline-block;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-decoration: none;
+    padding: 0.55rem 0.95rem;
+    border: 2px solid #fff;
+}
+.wt-statelink-btn:hover { background: #fff; color: #111; }
+
+.wt-foot {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 2rem;
+    line-height: 1.6;
+    border-top: 1px solid #ddd;
+    padding-top: 0.9rem;
+    max-width: 760px;
+}
+</style>
+
+</head>
+<body>
+<nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+        <a href="../index.html" class="nav-brand">Home</a>
+        <div class="nav-links">
+            <a href="index.html">PFAS in My Community</a>
+            <a href="../federal-regulations/index.html">Federal Regulations</a>
+            <a href="../state-legislation/index.html">State Legislation</a>
+        </div>
+    </div>
+</nav>
+
+
+
+<div class="container">
+    
+
+
+<header class="wt-lede">
+    <div class="wt-eyebrow">Drinking-water testing</div>
+    <h1 class="wt-hed">1,716 U.S. water systems tested above the EPA standards Biden set for drinking water.</h1>
+    <p class="wt-dek">
+        Of 10,166 public water systems in EPA's national PFAS sampling, 17% reported at least one sample above the federal limit for one of the five PFAS the Biden EPA finalized standards for in 2024 — PFOA, PFOS, PFHxS, PFNA, and HFPO-DA (GenX). The Trump EPA is now moving to rescind those standards for every PFAS except PFOA and PFOS.
+    </p>
+    <p class="wt-credit">
+        Source: EPA Fifth Unregulated Contaminant Monitoring Rule (UCMR 5) public water system results. Sampling window 2023-01-03 through 2025-12-30.
+    </p>
+</header>
+
+<div class="wt-strip">
+    <div class="wt-stat">
+        <div class="wt-stat-num">10,166</div>
+        <div class="wt-stat-lbl">Public water systems tested</div>
+    </div>
+    <div class="wt-stat wt-stat--alert">
+        <div class="wt-stat-num">1,716</div>
+        <div class="wt-stat-lbl">Exceeded an EPA standard</div>
+    </div>
+    <div class="wt-stat wt-stat--alert">
+        <div class="wt-stat-num">17%</div>
+        <div class="wt-stat-lbl">Share of systems over limit</div>
+    </div>
+    <div class="wt-stat">
+        <div class="wt-stat-num">64,000+</div>
+        <div class="wt-stat-lbl">Individual samples analyzed</div>
+    </div>
+</div>
+
+<section class="wt-search" id="wt-search">
+    <h2 class="wt-search-hed">Find a water system near you</h2>
+    <p class="wt-search-sub">
+        Enter a ZIP code, city, utility name, or PWS ID to see whether a system in EPA's national PFAS dataset reported any PFAS above the federal limit.
+    </p>
+    <input type="search" id="wt-search-input" class="wt-search-input"
+           placeholder="e.g. 20742, City of Tampa, Mashantucket Pequot" autocomplete="off">
+    <div id="wt-search-results" class="wt-search-results"></div>
+</section>
+
+<h2 class="wt-section-hed">States ranked by share of utilities above an EPA drinking-water standard</h2>
+<p class="wt-section-sub">Click a state to see every water system in it. The bar shows the share of public water systems where at least one sample exceeded one of the five PFAS limits Biden's EPA finalized in 2024.</p>
+
+<div style="overflow-x:auto;">
+<table class="wt-table" id="wt-state-table">
+    <thead>
+        <tr>
+            <th>State</th>
+            <th class="num">Systems tested</th>
+            <th class="num">Over limit</th>
+            <th>% over limit (any of five PFAS)</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>
+                
+                <a href="new-jersey/index.html">New Jersey</a>
+                
+            </td>
+            <td class="num">265</td>
+            <td class="num">156</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 106.0px;"></span>
+                58.9%
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                
+                <a href="connecticut/index.html">Connecticut</a>
+                
+            </td>
+            <td class="num">63</td>
+            <td class="num">35</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 100.0px;"></span>
+                55.6%
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                
+                <a href="south-carolina/index.html">South Carolina</a>
+                
+            </td>
+            <td class="num">165</td>
+            <td class="num">69</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 75.3px;"></span>
+                41.8%
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                
+                <a href="massachusetts/index.html">Massachusetts</a>
+                
+            </td>
+            <td class="num">263</td>
+            <td class="num">108</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 73.9px;"></span>
+                41.1%
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                
+                <a href="north-carolina/index.html">North Carolina</a>
+                
+            </td>
+            <td class="num">288</td>
+            <td class="num">117</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 73.1px;"></span>
+                40.6%
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                
+                <a href="florida/index.html">Florida</a>
+                
+            </td>
+            <td class="num">405</td>
+            <td class="num">158</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 70.2px;"></span>
+                39.0%
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                
+                <a href="delaware/index.html">Delaware</a>
+                
+            </td>
+            <td class="num">36</td>
+            <td class="num">14</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 70.0px;"></span>
+                38.9%
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                
+                <a href="rhode-island/index.html">Rhode Island</a>
+                
+            </td>
+            <td class="num">29</td>
+            <td class="num">11</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 68.3px;"></span>
+                37.9%
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                
+                <a href="new-hampshire/index.html">New Hampshire</a>
+                
+            </td>
+            <td class="num">51</td>
+            <td class="num">16</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 56.5px;"></span>
+                31.4%
+            </td>
+        </tr>
+        
+        <tr>
+            <td>
+                
+                <a href="pennsylvania/index.html">Pennsylvania</a>
+                
+            </td>
+            <td class="num">390</td>
+            <td class="num">120</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 55.4px;"></span>
+                30.8%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="alabama/index.html">Alabama</a>
+                
+            </td>
+            <td class="num">307</td>
+            <td class="num">80</td>
+            <td>
+                <span class="wt-bar"
+                      style="width: 46.9px;"></span>
+                26.1%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="california/index.html">California</a>
+                
+            </td>
+            <td class="num">700</td>
+            <td class="num">166</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 42.7px;"></span>
+                23.7%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="west-virginia/index.html">West Virginia</a>
+                
+            </td>
+            <td class="num">103</td>
+            <td class="num">21</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 36.7px;"></span>
+                20.4%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="maryland/index.html">Maryland</a>
+                
+            </td>
+            <td class="num">83</td>
+            <td class="num">16</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 34.7px;"></span>
+                19.3%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="ohio/index.html">Ohio</a>
+                
+            </td>
+            <td class="num">347</td>
+            <td class="num">60</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 31.1px;"></span>
+                17.3%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="georgia/index.html">Georgia</a>
+                
+            </td>
+            <td class="num">255</td>
+            <td class="num">44</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 31.1px;"></span>
+                17.3%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="arizona/index.html">Arizona</a>
+                
+            </td>
+            <td class="num">151</td>
+            <td class="num">26</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 31.0px;"></span>
+                17.2%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="new-york/index.html">New York</a>
+                
+            </td>
+            <td class="num">333</td>
+            <td class="num">52</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 28.1px;"></span>
+                15.6%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="washington/index.html">Washington</a>
+                
+            </td>
+            <td class="num">247</td>
+            <td class="num">35</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 25.5px;"></span>
+                14.2%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="kentucky/index.html">Kentucky</a>
+                
+            </td>
+            <td class="num">231</td>
+            <td class="num">32</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 24.9px;"></span>
+                13.9%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="tennessee/index.html">Tennessee</a>
+                
+            </td>
+            <td class="num">277</td>
+            <td class="num">37</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 24.0px;"></span>
+                13.4%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="alaska/index.html">Alaska</a>
+                
+            </td>
+            <td class="num">30</td>
+            <td class="num">4</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 24.0px;"></span>
+                13.3%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="maine/index.html">Maine</a>
+                
+            </td>
+            <td class="num">41</td>
+            <td class="num">5</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 22.0px;"></span>
+                12.2%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="virginia/index.html">Virginia</a>
+                
+            </td>
+            <td class="num">171</td>
+            <td class="num">20</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 21.1px;"></span>
+                11.7%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="wisconsin/index.html">Wisconsin</a>
+                
+            </td>
+            <td class="num">202</td>
+            <td class="num">23</td>
+            <td>
+                <span class="wt-bar wt-bar--low"
+                      style="width: 20.5px;"></span>
+                11.4%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="texas/index.html">Texas</a>
+                
+            </td>
+            <td class="num">1150</td>
+            <td class="num">108</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 16.9px;"></span>
+                9.4%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="indiana/index.html">Indiana</a>
+                
+            </td>
+            <td class="num">230</td>
+            <td class="num">21</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 16.4px;"></span>
+                9.1%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="colorado/index.html">Colorado</a>
+                
+            </td>
+            <td class="num">165</td>
+            <td class="num">15</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 16.4px;"></span>
+                9.1%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="minnesota/index.html">Minnesota</a>
+                
+            </td>
+            <td class="num">196</td>
+            <td class="num">17</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 15.6px;"></span>
+                8.7%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="oregon/index.html">Oregon</a>
+                
+            </td>
+            <td class="num">127</td>
+            <td class="num">11</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 15.6px;"></span>
+                8.7%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="oklahoma/index.html">Oklahoma</a>
+                
+            </td>
+            <td class="num">166</td>
+            <td class="num">13</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 14.1px;"></span>
+                7.8%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="nebraska/index.html">Nebraska</a>
+                
+            </td>
+            <td class="num">53</td>
+            <td class="num">4</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 13.6px;"></span>
+                7.5%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="nevada/index.html">Nevada</a>
+                
+            </td>
+            <td class="num">58</td>
+            <td class="num">4</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 12.4px;"></span>
+                6.9%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="new-mexico/index.html">New Mexico</a>
+                
+            </td>
+            <td class="num">73</td>
+            <td class="num">5</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 12.3px;"></span>
+                6.8%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="idaho/index.html">Idaho</a>
+                
+            </td>
+            <td class="num">61</td>
+            <td class="num">4</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 11.8px;"></span>
+                6.6%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="illinois/index.html">Illinois</a>
+                
+            </td>
+            <td class="num">487</td>
+            <td class="num">27</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 10.0px;"></span>
+                5.5%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="iowa/index.html">Iowa</a>
+                
+            </td>
+            <td class="num">152</td>
+            <td class="num">8</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 9.5px;"></span>
+                5.3%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="kansas/index.html">Kansas</a>
+                
+            </td>
+            <td class="num">103</td>
+            <td class="num">5</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 8.7px;"></span>
+                4.9%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="montana/index.html">Montana</a>
+                
+            </td>
+            <td class="num">45</td>
+            <td class="num">2</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 8.0px;"></span>
+                4.4%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="south-dakota/index.html">South Dakota</a>
+                
+            </td>
+            <td class="num">49</td>
+            <td class="num">2</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 7.3px;"></span>
+                4.1%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="missouri/index.html">Missouri</a>
+                
+            </td>
+            <td class="num">232</td>
+            <td class="num">9</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 7.0px;"></span>
+                3.9%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="utah/index.html">Utah</a>
+                
+            </td>
+            <td class="num">129</td>
+            <td class="num">5</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 7.0px;"></span>
+                3.9%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="wyoming/index.html">Wyoming</a>
+                
+            </td>
+            <td class="num">33</td>
+            <td class="num">1</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 5.5px;"></span>
+                3.0%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="mississippi/index.html">Mississippi</a>
+                
+            </td>
+            <td class="num">239</td>
+            <td class="num">7</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 5.3px;"></span>
+                2.9%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="vermont/index.html">Vermont</a>
+                
+            </td>
+            <td class="num">38</td>
+            <td class="num">1</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 4.7px;"></span>
+                2.6%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="louisiana/index.html">Louisiana</a>
+                
+            </td>
+            <td class="num">268</td>
+            <td class="num">7</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 4.7px;"></span>
+                2.6%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="michigan/index.html">Michigan</a>
+                
+            </td>
+            <td class="num">319</td>
+            <td class="num">8</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 4.5px;"></span>
+                2.5%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="arkansas/index.html">Arkansas</a>
+                
+            </td>
+            <td class="num">172</td>
+            <td class="num">1</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 1.0px;"></span>
+                0.6%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="district-of-columbia/index.html">District of Columbia</a>
+                
+            </td>
+            <td class="num">3</td>
+            <td class="num">0</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 0.0px;"></span>
+                0.0%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="hawaii/index.html">Hawaii</a>
+                
+            </td>
+            <td class="num">45</td>
+            <td class="num">0</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 0.0px;"></span>
+                0.0%
+            </td>
+        </tr>
+        
+        <tr class="wt-row-hidden">
+            <td>
+                
+                <a href="north-dakota/index.html">North Dakota</a>
+                
+            </td>
+            <td class="num">38</td>
+            <td class="num">0</td>
+            <td>
+                <span class="wt-bar wt-bar--ok"
+                      style="width: 0.0px;"></span>
+                0.0%
+            </td>
+        </tr>
+        
+    </tbody>
+</table>
+</div>
+
+<button class="wt-show-more" id="wt-show-more"
+        data-total="51"
+        data-shown="10">Show all 51 states</button>
+
+
+<h2 class="wt-section-hed">25 water systems with the highest reported exceedances</h2>
+<p class="wt-section-sub">Ranked by how many times above the EPA standard the system's worst sample registered.</p>
+
+<div style="overflow-x:auto;">
+<table class="wt-table">
+    <thead>
+        <tr>
+            <th>Water system</th>
+            <th>State</th>
+            <th>Contaminant</th>
+            <th class="num">× EPA standard</th>
+            <th>Sample date</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>
+                <div>Nashville, Town of</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>NC</td>
+            <td>PFOS</td>
+            <td class="num">122×</td>
+            <td>2024-09-23</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Running Springs Water District</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>CA</td>
+            <td>PFOS</td>
+            <td class="num">59×</td>
+            <td>2025-07-29</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Collegeville Trappe Joint PWD</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>PA</td>
+            <td>PFOA</td>
+            <td class="num">59×</td>
+            <td>2023-03-22</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Potrero Elementary School</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>CA</td>
+            <td>PFOA</td>
+            <td class="num">47×</td>
+            <td>2024-05-15</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Lubeck PSD</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>WV</td>
+            <td>PFOA</td>
+            <td class="num">45×</td>
+            <td>2024-03-19</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Artondale Water System</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>WA</td>
+            <td>PFOS</td>
+            <td class="num">38×</td>
+            <td>2023-04-17</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Emmaus Borough Public Water</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>PA</td>
+            <td>PFOS</td>
+            <td class="num">38×</td>
+            <td>2024-08-01</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>New Martinsville</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>WV</td>
+            <td>PFOS</td>
+            <td class="num">30×</td>
+            <td>2023-05-16</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Pequenakonck Elementary School</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>NY</td>
+            <td>PFOA</td>
+            <td class="num">28×</td>
+            <td>2025-08-26</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Yeshiva Farm Settlement</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater under surface influence</div>
+            </td>
+            <td>NY</td>
+            <td>PFOS</td>
+            <td class="num">26×</td>
+            <td>2023-10-24</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Potrero Elementary School</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>CA</td>
+            <td>PFHxS</td>
+            <td class="num">25×</td>
+            <td>2024-05-15</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Raynham Center Water District</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>MA</td>
+            <td>PFOA</td>
+            <td class="num">23×</td>
+            <td>2025-08-11</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>City of Grand Prairie</div>
+                <div style="font-size:0.72rem;color:#999;">Surface water</div>
+            </td>
+            <td>TX</td>
+            <td>PFOS</td>
+            <td class="num">20×</td>
+            <td>2024-08-13</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Orangewood Water System</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>FL</td>
+            <td>PFOS</td>
+            <td class="num">20×</td>
+            <td>2023-02-28</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>City of Oxford</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>MS</td>
+            <td>PFOS</td>
+            <td class="num">18×</td>
+            <td>2025-03-03</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Potrero Elementary School</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>CA</td>
+            <td>PFOS</td>
+            <td class="num">16×</td>
+            <td>2024-11-19</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Bayleaf Master</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>NC</td>
+            <td>PFHxS</td>
+            <td class="num">15×</td>
+            <td>2024-12-09</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Irondale Water System</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>AL</td>
+            <td>PFOS</td>
+            <td class="num">15×</td>
+            <td>2023-10-12</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Liberty Utilities - Bellflower-Norwalk</div>
+                <div style="font-size:0.72rem;color:#999;">Surface water</div>
+            </td>
+            <td>CA</td>
+            <td>PFOS</td>
+            <td class="num">15×</td>
+            <td>2024-02-14</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Audubon Water Company</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>PA</td>
+            <td>PFOS</td>
+            <td class="num">14×</td>
+            <td>2024-03-11</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Abbeville City of</div>
+                <div style="font-size:0.72rem;color:#999;">Surface water</div>
+            </td>
+            <td>SC</td>
+            <td>HFPO-DA</td>
+            <td class="num">14×</td>
+            <td>2025-11-04</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Lafayette</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater under surface influence</div>
+            </td>
+            <td>GA</td>
+            <td>PFOS</td>
+            <td class="num">14×</td>
+            <td>2025-04-16</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Caernarvon Twp Auth</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>PA</td>
+            <td>PFOA</td>
+            <td class="num">14×</td>
+            <td>2025-04-14</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Tempe City of</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>AZ</td>
+            <td>PFOS</td>
+            <td class="num">14×</td>
+            <td>2025-01-14</td>
+        </tr>
+        
+        <tr>
+            <td>
+                <div>Somers Town House/hall</div>
+                <div style="font-size:0.72rem;color:#999;">Groundwater</div>
+            </td>
+            <td>NY</td>
+            <td>PFOS</td>
+            <td class="num">14×</td>
+            <td>2024-11-07</td>
+        </tr>
+        
+    </tbody>
+</table>
+</div>
+
+<section class="wt-statelink">
+    <h2 class="wt-statelink-hed">What's your state doing about it?</h2>
+    <p class="wt-statelink-text">
+        As the Trump EPA rolls back the federal drinking-water standards, states are filling the gap — restricting PFAS in consumer products, food packaging, firefighting foam, and industrial discharges.
+    </p>
+    <a class="wt-statelink-btn" href="../state-legislation/index.html">See the state legislation tracker →</a>
+</section>
+
+<p class="wt-foot">
+    The five PFAS maximum contaminant levels — 4 parts per trillion for PFOA and PFOS, 10 ppt for PFHxS, PFNA, and HFPO-DA (GenX) — were finalized by the Biden EPA in April 2024 as part of the National Primary Drinking Water Regulation. In May 2025 the Trump EPA announced it would keep the PFOA and PFOS standards but rescind the limits for the other three compounds, and proposed extending compliance deadlines to 2031. "Over limit" means a system reported at least one sample above its compound's EPA standard.
+</p>
+
+<script>
+(function () {
+    // ── Show-more toggle for the state ranking ────────────────────────────
+    var btn = document.getElementById('wt-show-more');
+    if (btn) {
+        btn.addEventListener('click', function () {
+            var rows = document.querySelectorAll('#wt-state-table tr.wt-row-hidden');
+            rows.forEach(function (r) { r.classList.remove('wt-row-hidden'); });
+            btn.remove();
+        });
+    }
+
+    // ── Client-side search ───────────────────────────────────────────────
+    var input = document.getElementById('wt-search-input');
+    var out = document.getElementById('wt-search-results');
+    if (!input || !out) return;
+
+    // abbr → { name, url } for the "Jump to state" buttons.
+    var stateLinks = {
+        "NJ": {"name": "New Jersey", "url": "new-jersey/index.html"},
+        "CT": {"name": "Connecticut", "url": "connecticut/index.html"},
+        "SC": {"name": "South Carolina", "url": "south-carolina/index.html"},
+        "MA": {"name": "Massachusetts", "url": "massachusetts/index.html"},
+        "NC": {"name": "North Carolina", "url": "north-carolina/index.html"},
+        "FL": {"name": "Florida", "url": "florida/index.html"},
+        "DE": {"name": "Delaware", "url": "delaware/index.html"},
+        "RI": {"name": "Rhode Island", "url": "rhode-island/index.html"},
+        "NH": {"name": "New Hampshire", "url": "new-hampshire/index.html"},
+        "PA": {"name": "Pennsylvania", "url": "pennsylvania/index.html"},
+        "AL": {"name": "Alabama", "url": "alabama/index.html"},
+        "CA": {"name": "California", "url": "california/index.html"},
+        "WV": {"name": "West Virginia", "url": "west-virginia/index.html"},
+        "MD": {"name": "Maryland", "url": "maryland/index.html"},
+        "OH": {"name": "Ohio", "url": "ohio/index.html"},
+        "GA": {"name": "Georgia", "url": "georgia/index.html"},
+        "AZ": {"name": "Arizona", "url": "arizona/index.html"},
+        "NY": {"name": "New York", "url": "new-york/index.html"},
+        "WA": {"name": "Washington", "url": "washington/index.html"},
+        "KY": {"name": "Kentucky", "url": "kentucky/index.html"},
+        "TN": {"name": "Tennessee", "url": "tennessee/index.html"},
+        "AK": {"name": "Alaska", "url": "alaska/index.html"},
+        "ME": {"name": "Maine", "url": "maine/index.html"},
+        "VA": {"name": "Virginia", "url": "virginia/index.html"},
+        "WI": {"name": "Wisconsin", "url": "wisconsin/index.html"},
+        "TX": {"name": "Texas", "url": "texas/index.html"},
+        "IN": {"name": "Indiana", "url": "indiana/index.html"},
+        "CO": {"name": "Colorado", "url": "colorado/index.html"},
+        "MN": {"name": "Minnesota", "url": "minnesota/index.html"},
+        "OR": {"name": "Oregon", "url": "oregon/index.html"},
+        "OK": {"name": "Oklahoma", "url": "oklahoma/index.html"},
+        "NE": {"name": "Nebraska", "url": "nebraska/index.html"},
+        "NV": {"name": "Nevada", "url": "nevada/index.html"},
+        "NM": {"name": "New Mexico", "url": "new-mexico/index.html"},
+        "ID": {"name": "Idaho", "url": "idaho/index.html"},
+        "IL": {"name": "Illinois", "url": "illinois/index.html"},
+        "IA": {"name": "Iowa", "url": "iowa/index.html"},
+        "KS": {"name": "Kansas", "url": "kansas/index.html"},
+        "MT": {"name": "Montana", "url": "montana/index.html"},
+        "SD": {"name": "South Dakota", "url": "south-dakota/index.html"},
+        "MO": {"name": "Missouri", "url": "missouri/index.html"},
+        "UT": {"name": "Utah", "url": "utah/index.html"},
+        "WY": {"name": "Wyoming", "url": "wyoming/index.html"},
+        "MS": {"name": "Mississippi", "url": "mississippi/index.html"},
+        "VT": {"name": "Vermont", "url": "vermont/index.html"},
+        "LA": {"name": "Louisiana", "url": "louisiana/index.html"},
+        "MI": {"name": "Michigan", "url": "michigan/index.html"},
+        "AR": {"name": "Arkansas", "url": "arkansas/index.html"},
+        "DC": {"name": "District of Columbia", "url": "district-of-columbia/index.html"},
+        "HI": {"name": "Hawaii", "url": "hawaii/index.html"},
+        "ND": {"name": "North Dakota", "url": "north-dakota/index.html"}
+    };
+
+    var systems = null;
+    var loadPromise = null;
+    function loadSystems() {
+        if (loadPromise) return loadPromise;
+        loadPromise = fetch("../data/pws-search.json")
+            .then(function (r) { return r.json(); })
+            .then(function (data) { systems = data; });
+        return loadPromise;
+    }
+    input.addEventListener('focus', loadSystems, { once: true });
+
+    function esc(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+            return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+        });
+    }
+
+    function render(query) {
+        var q = query.trim().toLowerCase();
+        if (q.length < 2) {
+            out.innerHTML = '';
+            return;
+        }
+        if (!systems) {
+            out.innerHTML = '<div class="wt-search-status">Loading water-system data…</div>';
+            loadSystems().then(function () { render(query); });
+            return;
+        }
+        // Detect a 5-digit ZIP (and ignore any +4 suffix).
+        var zipMatch = q.match(/^(\d{5})(?:-\d{4})?$/);
+        var matches = [];
+        var mode = 'text';
+        if (zipMatch) {
+            mode = 'zip';
+            var zip = zipMatch[1];
+            for (var i = 0; i < systems.length; i++) {
+                if (systems[i].zips && systems[i].zips.indexOf(zip) !== -1) {
+                    matches.push(systems[i]);
+                    if (matches.length >= 50) break;
+                }
+            }
+        } else {
+            for (var k = 0; k < systems.length; k++) {
+                var s = systems[k];
+                if (s.name.toLowerCase().indexOf(q) !== -1 ||
+                    s.id.toLowerCase().indexOf(q) !== -1 ||
+                    s.state.toLowerCase() === q) {
+                    matches.push(s);
+                    if (matches.length >= 50) break;
+                }
+            }
+        }
+        if (!matches.length) {
+            out.innerHTML = '<div class="wt-search-status">' +
+                (mode === 'zip'
+                    ? 'No water systems in EPA\'s dataset list ZIP ' + esc(zipMatch[1]) + ' in their service area.'
+                    : 'No matching water systems.') +
+                '</div>';
+            return;
+        }
+        var html = '<div class="wt-search-status">' +
+            matches.length + (matches.length >= 50 ? '+ ' : ' ') +
+            (mode === 'zip'
+                ? 'water system' + (matches.length === 1 ? '' : 's') + ' serving ZIP ' + esc(zipMatch[1])
+                : 'match' + (matches.length === 1 ? '' : 'es')) +
+            '</div>';
+        for (var j = 0; j < matches.length; j++) {
+            var m = matches[j];
+            var n = m.n_exceedances || 0;
+            var numClass = n > 0 ? 'wt-search-num--over' : 'wt-search-num--ok';
+            var link = stateLinks[m.state];
+            var jump = link
+                ? '<a class="wt-search-jump" href="' + esc(link.url) + '">' +
+                  'See ' + esc(m.state) + ' →</a>'
+                : '<span class="wt-search-jump wt-search-jump--muted">Tribal system</span>';
+            var stateLabel = link ? esc(link.name) : 'Tribal system';
+            html += '<div class="wt-search-row">' +
+                '<div class="wt-search-result">' +
+                  '<div class="wt-search-count">' +
+                    '<span class="wt-search-num ' + numClass + '">' + n + '</span>' +
+                    '<span class="wt-search-count-lbl">of 5 PFAS<br>over EPA limit</span>' +
+                  '</div>' +
+                  '<div class="wt-search-meta">' +
+                    '<div class="wt-search-name">' + esc(m.name) + '</div>' +
+                    '<div class="wt-search-state">' + stateLabel + '</div>' +
+                  '</div>' +
+                '</div>' +
+                jump +
+            '</div>';
+        }
+        out.innerHTML = html;
+    }
+
+    var timer;
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        var v = input.value;
+        timer = setTimeout(function () { render(v); }, 80);
+    });
+})();
+</script>
+
+</div>
+
+
+
+<footer>
+    <div class="footer-inner">
+        <p>
+            Regulatory data: <a href="https://www.regulations.gov" target="_blank">regulations.gov</a>
+            &amp; <a href="https://www.federalregister.gov" target="_blank">Federal Register API</a>.
+            Press releases: <a href="https://www.epa.gov/pfas/press-releases-related-pfas" target="_blank">EPA PFAS newsroom</a>.
+            Water-system PFAS testing: <a href="https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule#5" target="_blank" rel="noopener">EPA UCMR 5 occurrence data</a>.
+            PFAS statistics: EWG, CDC NHANES.
+            State legislation: <a href="https://www.saferstates.org/bill-tracker/?toxic_chemicals=PFAS" target="_blank" rel="noopener">Safer States</a>.
+        </p>
+        <p style="margin-top:0.4rem; color:#555;">
+            Data last updated: <strong>run make fetch-all to update</strong>
+        </p>
+    </div>
+</footer>
+
+<script>
+// Fade-in on scroll
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            observer.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Sticky nav shadow
+window.addEventListener('scroll', () => {
+    document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
+});
+</script>
+
+
+</body>
+</html>

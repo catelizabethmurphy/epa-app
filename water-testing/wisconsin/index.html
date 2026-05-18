@@ -1,0 +1,5344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PFAS in Wisconsin Drinking Water</title>
+    <meta name="description" content="A documentary record of U.S. federal policy on PFAS — per- and polyfluoroalkyl substances — from the first regulatory actions to today's partial rollback.">
+    <meta property="og:title" content="PFAS in Wisconsin Drinking Water">
+    <meta property="og:description" content="23 of 202 public water systems in Wisconsin reported PFAS above the EPA standards Biden set in 2024.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=PT+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    
+<style>
+.ws-back {
+    display: inline-block;
+    margin: 1rem 0 0.5rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666;
+    text-decoration: none;
+    border-bottom: 1px dotted #999;
+}
+.ws-back:hover { color: #111; border-bottom-style: solid; }
+
+.ws-lede {
+    border-top: 3px solid #111;
+    padding-top: 1rem;
+    margin: 0.5rem 0 1.25rem;
+    max-width: 760px;
+}
+.ws-eyebrow {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+    margin-bottom: 0.5rem;
+}
+.ws-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 0.6rem;
+    line-height: 1.2;
+}
+.ws-dek {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.7;
+    margin: 0 0 0.5rem;
+}
+.ws-dek strong { color: #c0202a; }
+
+.ws-strip {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1px;
+    background: #ddd;
+    border: 1px solid #ddd;
+    margin: 1.25rem 0 1.75rem;
+    overflow-x: auto;
+}
+.ws-stat {
+    background: #fff;
+    padding: 0.6rem 0.8rem;
+    flex: 1 1 0;
+    min-width: 0;
+    white-space: nowrap;
+}
+.ws-stat-num {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.05;
+}
+.ws-stat--alert .ws-stat-num { color: #c0202a; }
+.ws-stat-lbl {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #666;
+    margin-top: 0.2rem;
+    white-space: normal;
+    line-height: 1.25;
+}
+
+.ws-searchbar {
+    margin: 1.25rem 0 0.6rem;
+    border-top: 2px solid #111;
+    padding-top: 0.9rem;
+}
+.ws-searchbar-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+    display: block;
+    margin-bottom: 0.4rem;
+}
+.ws-search-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+}
+.ws-search-input {
+    flex: 1 1 280px;
+    max-width: 460px;
+    padding: 0.5rem 0.7rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.95rem;
+    border: 1px solid #ccc;
+    background: #fff;
+    box-sizing: border-box;
+}
+.ws-search-input:focus { outline: 2px solid #111; outline-offset: -1px; }
+.ws-filter-group {
+    display: flex;
+    gap: 0.25rem;
+}
+.ws-filter-btn {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.4rem 0.7rem;
+    border: 2px solid #ccc;
+    background: #fff;
+    color: #777;
+    cursor: pointer;
+    line-height: 1;
+}
+.ws-filter-btn.active { background: #111; color: #fff; border-color: #111; }
+.ws-filter-btn:hover:not(.active) { border-color: #888; color: #333; }
+.ws-search-count {
+    margin-top: 0.5rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ws-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.92rem;
+}
+.ws-table th, .ws-table td {
+    padding: 1.05rem 0.6rem;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    vertical-align: middle;
+}
+.ws-table th:first-child, .ws-table td:first-child { padding-right: 2.2rem; }
+.ws-table th:last-child, .ws-table td:last-child { padding-left: 2.2rem; }
+.ws-table th {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+    border-bottom: 2px solid #111;
+}
+.ws-table td.num, .ws-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.ws-table tr.row-hidden { display: none; }
+.ws-status {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+.ws-status--over { color: #c0202a; }
+.ws-status--ok { color: #1a6b35; }
+.ws-name {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    color: #111;
+    font-size: 1.05rem;
+    line-height: 1.25;
+}
+.ws-meta {
+    color: #888;
+    font-size: 0.74rem;
+    margin-top: 0.1rem;
+    font-family: "PT Sans", sans-serif;
+    line-height: 1.3;
+}
+.ws-meta-sep { color: #ccc; margin: 0 0.35rem; }
+.ws-source {
+    display: inline;
+    font-size: 0.7rem;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #555;
+}
+.ws-source--gw { color: #3a5a1e; }
+.ws-source--sw { color: #1d4a6a; }
+.ws-source--mx { color: #6b3a14; }
+.ws-source--gu { color: #543a6a; }
+
+.ws-exceed-count {
+    display: block;
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    color: #c0202a;
+    font-size: 1rem;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+}
+.ws-exceed-count--ok { color: #1a6b35; }
+.ws-detect-note {
+    display: block;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.82rem;
+    color: #555;
+    line-height: 1.5;
+    max-width: 640px;
+}
+.ws-zips-line {
+    margin-top: 0.25rem;
+    font-size: 0.78rem;
+    font-style: italic;
+    color: #888;
+}
+
+.ws-statelink {
+    margin: 2.5rem 0 1rem;
+    padding: 1.5rem 1.5rem 1.6rem;
+    background: #111;
+    color: #fff;
+    max-width: 760px;
+}
+.ws-statelink-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #fff;
+    margin: 0 0 0.6rem;
+    line-height: 1.25;
+}
+.ws-statelink-text {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.95rem;
+    color: #ddd;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+}
+.ws-statelink-btn {
+    display: inline-block;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-decoration: none;
+    padding: 0.55rem 0.95rem;
+    border: 2px solid #fff;
+}
+.ws-statelink-btn:hover { background: #fff; color: #111; }
+
+.ws-foot {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 2rem;
+    line-height: 1.6;
+    border-top: 1px solid #ddd;
+    padding-top: 0.9rem;
+    max-width: 760px;
+}
+</style>
+
+</head>
+<body>
+<nav class="site-nav" id="site-nav">
+    <div class="nav-inner">
+        <a href="../../index.html" class="nav-brand">Home</a>
+        <div class="nav-links">
+            <a href="../index.html">PFAS in My Community</a>
+            <a href="../../federal-regulations/index.html">Federal Regulations</a>
+            <a href="../../state-legislation/index.html">State Legislation</a>
+        </div>
+    </div>
+</nav>
+
+
+
+<div class="container">
+    
+<a class="ws-back" href="../index.html">← All states</a>
+
+<header class="ws-lede">
+    <div class="ws-eyebrow">Wisconsin drinking-water testing</div>
+    <h1 class="ws-hed">
+        
+            <strong>23</strong> of <strong>202</strong> Wisconsin water systems reported PFAS above the EPA standards Biden set in 2024.
+        
+    </h1>
+    <p class="ws-dek">
+        11% of public water systems in Wisconsin that EPA sampled for PFAS reported at least one result above the standards Biden's EPA finalized in 2024 for PFOA, PFOS, PFHxS, PFNA, or HFPO-DA (GenX). The Trump EPA is now moving to rescind those standards for every PFAS except PFOA and PFOS.
+    </p>
+</header>
+
+<div class="ws-strip">
+    <div class="ws-stat">
+        <div class="ws-stat-num">202</div>
+        <div class="ws-stat-lbl">Public water systems tested</div>
+    </div>
+    <div class="ws-stat ws-stat--alert">
+        <div class="ws-stat-num">23</div>
+        <div class="ws-stat-lbl">Exceeded an EPA standard</div>
+    </div>
+    <div class="ws-stat ws-stat--alert">
+        <div class="ws-stat-num">11%</div>
+        <div class="ws-stat-lbl">Share of systems over limit</div>
+    </div>
+    
+    
+    <div class="ws-stat">
+        <div class="ws-stat-num">8%</div>
+        <div class="ws-stat-lbl">Systems over PFOA limit</div>
+    </div>
+    <div class="ws-stat">
+        <div class="ws-stat-num">6%</div>
+        <div class="ws-stat-lbl">Systems over PFOS limit</div>
+    </div>
+</div>
+
+<div class="ws-searchbar">
+    <label class="ws-searchbar-label" for="ws-search-input">Find a water system</label>
+    <div class="ws-search-row">
+        <input type="search" id="ws-search-input" class="ws-search-input"
+               placeholder="Search by name or ZIP code" autocomplete="off">
+        <div class="ws-filter-group">
+            <button class="ws-filter-btn active" data-filter="all">All</button>
+            <button class="ws-filter-btn" data-filter="over">Over limit</button>
+            <button class="ws-filter-btn" data-filter="ok">Below limit</button>
+        </div>
+    </div>
+    <div class="ws-search-count" id="ws-search-count">Showing all 202 systems</div>
+</div>
+
+<div style="overflow-x:auto;">
+<table class="ws-table" id="ws-table">
+    <colgroup>
+        <col style="width:38%">
+        <col style="width:62%">
+    </colgroup>
+    <thead>
+        <tr>
+            <th>Water system</th>
+            <th>PFAS over the EPA limit</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        
+        <tr data-name="saukville waterworks" data-zips="53024 53074 53080" data-status="over">
+            <td>
+                <div class="ws-name">Saukville Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53024, 53074, 53080</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS, PFHxS, and PFOA tested above EPA limits — detected in 4 of 10 samples between 2025-02-25 and 2025-08-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="pewaukee city water and sewer utility" data-zips="53072 53186 53187 53188" data-status="over">
+            <td>
+                <div class="ws-name">Pewaukee City Water and Sewer Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>8 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53072, 53186, 53187, 53188</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">3 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFHxS, PFOS, and PFOA tested above EPA limits — detected in 6 of 16 samples between 2024-06-24 and 2024-12-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="tomahawk waterworks" data-zips="54487" data-status="over">
+            <td>
+                <div class="ws-name">Tomahawk Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54487</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA tested above EPA limits — detected in 4 of 4 samples between 2024-04-24 and 2024-10-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="kewaskum waterworks" data-zips="53040" data-status="over">
+            <td>
+                <div class="ws-name">Kewaskum Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53040</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA tested above EPA limits — detected in 4 of 8 samples between 2023-02-08 and 2023-08-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="marshfield utilities" data-zips="54449" data-status="over">
+            <td>
+                <div class="ws-name">Marshfield Utilities</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54449</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS and PFHxS tested above EPA limits — detected in 2 of 6 samples between 2023-01-16 and 2023-07-12.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="weston municipal utilities" data-zips="54474 54476" data-status="over">
+            <td>
+                <div class="ws-name">Weston Municipal Utilities</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>7 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54474, 54476</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS and PFOA tested above EPA limits — detected in 9 of 13 samples between 2025-02-13 and 2025-08-26.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="prairie du chien waterworks" data-zips="53821" data-status="over">
+            <td>
+                <div class="ws-name">Prairie Du Chien Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53821</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS tested above EPA limits — detected in 2 of 3 samples on 2025-06-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="prescott waterworks" data-zips="54021" data-status="over">
+            <td>
+                <div class="ws-name">Prescott Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54021</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA and PFHxS tested above EPA limits — detected in 4 of 4 samples between 2024-01-22 and 2024-07-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="rib mountain sanitary dist" data-zips="54401" data-status="over">
+            <td>
+                <div class="ws-name">Rib Mountain Sanitary Dist</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54401</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS and PFOA tested above EPA limits — detected in 4 of 8 samples between 2024-04-23 and 2024-10-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="concor tool &amp; machine inc" data-zips="54843" data-status="over">
+            <td>
+                <div class="ws-name">Concor Tool &amp; MacHine INC</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54843</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA and PFOS tested above EPA limits — detected in 2 of 2 samples between 2023-04-18 and 2023-10-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="hartford waterworks, wi" data-zips="53027" data-status="over">
+            <td>
+                <div class="ws-name">Hartford Waterworks, Wi</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53027</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA and PFOS tested above EPA limits — detected in 4 of 10 samples between 2024-02-19 and 2024-08-26.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="rhinelander water &amp; wastewater" data-zips="54501" data-status="over">
+            <td>
+                <div class="ws-name">Rhinelander Water &amp; Wastewater</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54501</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA tested above EPA limits — detected in 3 of 4 samples between 2024-02-08 and 2024-08-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="west bend waterworks" data-zips="53090 53095" data-status="over">
+            <td>
+                <div class="ws-name">West Bend Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>6 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53090, 53095</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA tested above EPA limits — detected in 1 of 6 samples on 2025-06-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="palmyra waterworks" data-zips="53156" data-status="over">
+            <td>
+                <div class="ws-name">Palmyra Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53156</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS tested above EPA limits — detected in 2 of 4 samples between 2024-05-21 and 2024-11-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="la crosse waterworks" data-zips="54601 54603" data-status="over">
+            <td>
+                <div class="ws-name">La Crosse Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>10 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54601, 54603</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS and PFOA tested above EPA limits — detected in 8 of 20 samples between 2023-05-23 and 2024-05-06.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sturgeon bay waterworks" data-zips="54235" data-status="over">
+            <td>
+                <div class="ws-name">Sturgeon Bay Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54235</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFHxS and PFOS tested above EPA limits — detected in 6 of 10 samples between 2023-05-16 and 2023-11-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sheboygan tn waterworks" data-zips="53044 53081 53083" data-status="over">
+            <td>
+                <div class="ws-name">Sheboygan Tn Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53044, 53081, 53083</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFHxS tested above EPA limits — detected in 2 of 6 samples between 2023-04-19 and 2023-10-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="lake geneva utility commission" data-zips="53147" data-status="over">
+            <td>
+                <div class="ws-name">Lake Geneva Utility Commission</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53147</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA tested above EPA limits — detected in 4 of 4 samples between 2024-03-19 and 2024-09-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="schofield waterworks" data-zips="54403 54474" data-status="over">
+            <td>
+                <div class="ws-name">Schofield Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54403, 54474</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA tested above EPA limits — detected in 4 of 4 samples between 2023-05-17 and 2023-11-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="hartland waterworks" data-zips="53029" data-status="over">
+            <td>
+                <div class="ws-name">Hartland Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53029</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">2 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS and PFOA tested above EPA limits — detected in 4 of 10 samples between 2023-05-09 and 2023-11-13.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="eau claire waterworks" data-zips="54701 54702 54703" data-status="over">
+            <td>
+                <div class="ws-name">Eau Claire Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54701, 54702, 54703</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFHxS tested above EPA limits — detected in 2 of 2 samples between 2023-01-18 and 2023-07-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="waupaca waterworks" data-zips="54981" data-status="over">
+            <td>
+                <div class="ws-name">Waupaca Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>6 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54981</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOS tested above EPA limits — detected in 2 of 12 samples between 2024-06-19 and 2024-12-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="medford waterworks" data-zips="54451" data-status="over">
+            <td>
+                <div class="ws-name">Medford Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>6 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54451</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count">1 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">PFOA tested above EPA limits — detected in 2 of 12 samples between 2024-02-13 and 2024-09-09.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="allouez waterworks" data-zips="54301" data-status="ok">
+            <td>
+                <div class="ws-name">Allouez Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54301</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-10-15 and 2025-07-28.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="altoona waterworks" data-zips="54720" data-status="ok">
+            <td>
+                <div class="ws-name">Altoona Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>6 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54720</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 12 samples between 2024-04-09 and 2024-10-09.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="antigo waterworks" data-zips="54409" data-status="ok">
+            <td>
+                <div class="ws-name">Antigo Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54409</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2025-02-17 and 2025-08-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="appleton waterworks" data-zips="54952" data-status="ok">
+            <td>
+                <div class="ws-name">Appleton Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54952</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-12-06 and 2024-09-10.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="arena waterworks" data-zips="53503" data-status="ok">
+            <td>
+                <div class="ws-name">Arena Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53503</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-04-22 and 2024-10-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="ashland water utility" data-zips="54806" data-status="ok">
+            <td>
+                <div class="ws-name">Ashland Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54806</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-03-17 and 2025-09-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="ashwaubenon waterworks" data-zips="54115 54304 54313" data-status="ok">
+            <td>
+                <div class="ws-name">Ashwaubenon Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54115, 54304, 54313</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-06 and 2023-11-07.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="baldwin waterworks" data-zips="54002" data-status="ok">
+            <td>
+                <div class="ws-name">Baldwin Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54002</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-03-21 and 2023-09-26.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="baraboo waterworks" data-zips="53913" data-status="ok">
+            <td>
+                <div class="ws-name">Baraboo Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53913</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 10 samples between 2024-09-17 and 2025-03-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="barron light &amp; water dept" data-zips="54812" data-status="ok">
+            <td>
+                <div class="ws-name">Barron Light &amp; Water Dept</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54812</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-05-16 and 2023-11-13.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="beaver dam water utility" data-zips="53916" data-status="ok">
+            <td>
+                <div class="ws-name">Beaver Dam Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53916</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-04-18 and 2023-10-11.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="bellevue waterworks" data-zips="54311" data-status="ok">
+            <td>
+                <div class="ws-name">Bellevue Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54311</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-12-10 and 2025-09-25.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="beloit city of" data-zips="53511" data-status="ok">
+            <td>
+                <div class="ws-name">Beloit City of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>7 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53511</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 14 samples between 2023-05-02 and 2023-11-13.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="berlin waterworks" data-zips="54923" data-status="ok">
+            <td>
+                <div class="ws-name">Berlin Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54923</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-02-20 and 2024-09-03.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="birds eye foods" data-zips="53114" data-status="ok">
+            <td>
+                <div class="ws-name">Birds Eye Foods</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53114</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-06-18 and 2024-12-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="black river falls waterworks" data-zips="54615" data-status="ok">
+            <td>
+                <div class="ws-name">Black River Falls Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54615</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-01-24 and 2023-07-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="bloomer waterworks" data-zips="54724" data-status="ok">
+            <td>
+                <div class="ws-name">Bloomer Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54724</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples on 2025-06-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="bloomfield, village of" data-zips="53157" data-status="ok">
+            <td>
+                <div class="ws-name">Bloomfield, Village of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53157</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples on 2025-05-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="bloomington waterworks" data-zips="53804" data-status="ok">
+            <td>
+                <div class="ws-name">Bloomington Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53804</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-04-23 and 2024-10-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="brillion waterworks" data-zips="54110" data-status="ok">
+            <td>
+                <div class="ws-name">Brillion Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54110</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2025-04-21 and 2025-10-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="brookfield water utility" data-zips="53005 53045 53072 53122" data-status="ok">
+            <td>
+                <div class="ws-name">Brookfield Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>17 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53005, 53045, 53072, 53122</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 2 of 34 samples between 2023-01-18 and 2025-07-23, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="brown deer waterworks" data-zips="53223" data-status="ok">
+            <td>
+                <div class="ws-name">Brown Deer Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53223</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-11-06 and 2024-08-15.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="burlington waterworks" data-zips="53105" data-status="ok">
+            <td>
+                <div class="ws-name">Burlington Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53105</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 10 samples between 2024-04-22 and 2024-10-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="cabelas - richfield" data-zips="53076" data-status="ok">
+            <td>
+                <div class="ws-name">Cabelas - Richfield</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53076</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-04-23 and 2024-09-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="caledonia water utility - village of" data-zips="53108 53126 53402 53404 53405 53406" data-status="ok">
+            <td>
+                <div class="ws-name">Caledonia Water Utility - Village of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53108, 53126, 53402, 53404, 53405, 53406</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2024-11-18 and 2025-08-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="cedarburg l &amp; w commission" data-zips="53012" data-status="ok">
+            <td>
+                <div class="ws-name">Cedarburg L &amp; W Commission</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53012</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-01-17 and 2023-07-11.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="chilton waterworks" data-zips="53014" data-status="ok">
+            <td>
+                <div class="ws-name">Chilton Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53014</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 1 samples on 2025-06-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="chippewa falls waterworks" data-zips="54729" data-status="ok">
+            <td>
+                <div class="ws-name">Chippewa Falls Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54729</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-04-03 and 2023-10-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="clinton waterworks, wi" data-zips="53525" data-status="ok">
+            <td>
+                <div class="ws-name">Clinton Waterworks, Wi</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53525</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-01-22 and 2024-07-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="clintonville utilities" data-zips="54929" data-status="ok">
+            <td>
+                <div class="ws-name">Clintonville Utilities</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54929</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-06-21 and 2023-12-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="columbus water &amp; light department" data-zips="53925" data-status="ok">
+            <td>
+                <div class="ws-name">Columbus Water &amp; Light Department</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53925</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-01-23 and 2024-07-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="combined locks waterworks" data-zips="54113" data-status="ok">
+            <td>
+                <div class="ws-name">Combined Locks Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54113</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-01-24 and 2023-07-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="cottage grove waterworks" data-zips="53527" data-status="ok">
+            <td>
+                <div class="ws-name">Cottage Grove Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53527</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-04-18 and 2023-11-07.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="cross plains waterworks" data-zips="53528" data-status="ok">
+            <td>
+                <div class="ws-name">Cross Plains Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53528</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-06-13 and 2024-09-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="cudahy waterworks" data-zips="53110" data-status="ok">
+            <td>
+                <div class="ws-name">Cudahy Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53110</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-07 and 2023-11-06.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="darboy sanitary dist 1" data-zips="54130 54915" data-status="ok">
+            <td>
+                <div class="ws-name">Darboy Sanitary Dist 1</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54130, 54915</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-09-17 and 2025-03-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="de pere water department" data-zips="54115" data-status="ok">
+            <td>
+                <div class="ws-name">De Pere Water Department</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54115</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-24 and 2023-10-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="deforest waterworks" data-zips="53532 53598" data-status="ok">
+            <td>
+                <div class="ws-name">Deforest Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53532, 53598</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2025-03-18 and 2025-09-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="delavan waterworks" data-zips="53115" data-status="ok">
+            <td>
+                <div class="ws-name">Delavan Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53115</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2025-04-21 and 2025-10-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="denmark waterworks" data-zips="54208" data-status="ok">
+            <td>
+                <div class="ws-name">Denmark Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54208</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-06-19 and 2023-12-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="dodgeville waterworks" data-zips="53533" data-status="ok">
+            <td>
+                <div class="ws-name">Dodgeville Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53533</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples on 2025-05-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="east troy waterworks" data-zips="53120" data-status="ok">
+            <td>
+                <div class="ws-name">East Troy Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53120</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2024-04-23 and 2024-10-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="eau galle cheese factory" data-zips="54736" data-status="ok">
+            <td>
+                <div class="ws-name">Eau Galle Cheese Factory</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54736</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-05-21 and 2024-11-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="edgerton waterworks" data-zips="53534" data-status="ok">
+            <td>
+                <div class="ws-name">Edgerton Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53534</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2025-04-21 and 2025-10-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="elkhorn waterworks" data-zips="53121" data-status="ok">
+            <td>
+                <div class="ws-name">Elkhorn Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53121</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 5 samples between 2025-01-21 and 2025-07-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="ellsworth waterworks" data-zips="54011" data-status="ok">
+            <td>
+                <div class="ws-name">Ellsworth Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54011</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2025-01-21 and 2025-07-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="evansville waterworks" data-zips="53536" data-status="ok">
+            <td>
+                <div class="ws-name">Evansville Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53536</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-03-18 and 2025-09-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="fitchburg utility dist 1" data-zips="53711 53719" data-status="ok">
+            <td>
+                <div class="ws-name">Fitchburg Utility Dist 1</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53711, 53719</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-04-12 and 2023-12-06.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="fond du lac waterworks" data-zips="54935 54936 54937" data-status="ok">
+            <td>
+                <div class="ws-name">Fond Du Lac Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54935, 54936, 54937</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-03-21 and 2023-10-09.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="forest junction pub util" data-zips="54110" data-status="ok">
+            <td>
+                <div class="ws-name">Forest Junction Pub Util</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54110</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2025-05-20 and 2025-06-10.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="fort atkinson waterworks" data-zips="53538" data-status="ok">
+            <td>
+                <div class="ws-name">Fort Atkinson Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53538</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2025-03-05 and 2025-09-10.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="fort mccoy north post" data-zips="54656" data-status="ok">
+            <td>
+                <div class="ws-name">Fort McCoy North Post</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>6 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54656</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 12 samples between 2025-01-22 and 2025-07-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="fox crossing utilities east-formerly menasha tn of" data-zips="54915 54952" data-status="ok">
+            <td>
+                <div class="ws-name">Fox Crossing Utilities East-Formerly Menasha Tn of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--mx">Mixed source</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54915, 54952</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-11-13 and 2024-08-01.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="fox crossing utilities west-formerly menasha tn of" data-zips="54956" data-status="ok">
+            <td>
+                <div class="ws-name">Fox Crossing Utilities West-Formerly Menasha Tn of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54956</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-11-27 and 2024-05-09.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="fox point waterworks" data-zips="53217" data-status="ok">
+            <td>
+                <div class="ws-name">Fox Point Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53217</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-15 and 2023-11-14.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="franklin water utility" data-zips="53132" data-status="ok">
+            <td>
+                <div class="ws-name">Franklin Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53132</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-03 and 2023-10-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="germantown water utility" data-zips="53022" data-status="ok">
+            <td>
+                <div class="ws-name">Germantown Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>6 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53022</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 12 samples between 2023-09-19 and 2024-02-13.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="glendale waterworks" data-zips="53209 53212 53217" data-status="ok">
+            <td>
+                <div class="ws-name">Glendale Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53209, 53212, 53217</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-15 and 2023-11-14.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="grafton waterworks" data-zips="53024" data-status="ok">
+            <td>
+                <div class="ws-name">Grafton Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>6 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53024</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 12 samples between 2023-10-25 and 2024-09-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="grand chute tn san dist 1" data-zips="54911 54912 54913 54914 54915" data-status="ok">
+            <td>
+                <div class="ws-name">Grand Chute Tn San Dist 1</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54911, 54912, 54913, 54914, 54915</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-04-18 and 2024-01-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="green bay waterworks" data-zips="54301 54302 54303 54304 54311 54313" data-status="ok">
+            <td>
+                <div class="ws-name">Green Bay Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54301, 54302, 54303, 54304, 54311, 54313</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-01-08 and 2024-10-07.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="greendale waterworks" data-zips="53129" data-status="ok">
+            <td>
+                <div class="ws-name">Greendale Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53129</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-05-01 and 2025-02-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="greenville sanitary dist" data-zips="54942" data-status="ok">
+            <td>
+                <div class="ws-name">Greenville Sanitary Dist</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54942</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-03-20 and 2023-09-27.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="harrison utilities - fka waverly sd" data-zips="54915 54952" data-status="ok">
+            <td>
+                <div class="ws-name">Harrison Utilities - Fka Waverly Sd</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54915, 54952</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-02-17 and 2025-08-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="hilbert waterworks" data-zips="54129" data-status="ok">
+            <td>
+                <div class="ws-name">Hilbert Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54129</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-02-18 and 2025-08-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="ho chunk casino" data-zips="54615" data-status="ok">
+            <td>
+                <div class="ws-name">Ho Chunk Casino</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54615</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-04-23 and 2024-10-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="holmen waterworks" data-zips="54636 54650" data-status="ok">
+            <td>
+                <div class="ws-name">Holmen Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54636, 54650</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 7 samples between 2023-10-11 and 2024-04-04.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="horicon waterworks" data-zips="53032" data-status="ok">
+            <td>
+                <div class="ws-name">Horicon Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53032</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2025-03-18 and 2025-09-29.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="howard waterworks" data-zips="54303 54313" data-status="ok">
+            <td>
+                <div class="ws-name">Howard Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54303, 54313</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-01-03 and 2024-01-09.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="hudson waterworks" data-zips="54016" data-status="ok">
+            <td>
+                <div class="ws-name">Hudson Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>7 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54016</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 14 samples between 2023-05-09 and 2024-07-31.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="jackson waterworks" data-zips="53037" data-status="ok">
+            <td>
+                <div class="ws-name">Jackson Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53037</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2024-01-23 and 2024-08-06.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="janesville water utility" data-zips="53545 53546 53547 53548" data-status="ok">
+            <td>
+                <div class="ws-name">Janesville Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53545, 53546, 53547, 53548</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-08-27 and 2025-02-25.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="jefferson waterworks" data-zips="53549" data-status="ok">
+            <td>
+                <div class="ws-name">Jefferson Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53549</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-03-14 and 2024-09-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="kaukauna utilities" data-zips="54130" data-status="ok">
+            <td>
+                <div class="ws-name">Kaukauna Utilities</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54130</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2025-02-26 and 2025-08-06.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="kenosha water utility" data-zips="53140 53142 53143 53144" data-status="ok">
+            <td>
+                <div class="ws-name">Kenosha Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53140, 53142, 53143, 53144</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-10-10 and 2024-07-09.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="kiel waterworks" data-zips="53042" data-status="ok">
+            <td>
+                <div class="ws-name">Kiel Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53042</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-04-18 and 2023-10-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="kimberly waterworks" data-zips="54136" data-status="ok">
+            <td>
+                <div class="ws-name">Kimberly Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54136</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-02-07 and 2023-08-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="kronenwetter water &amp; sewer utility" data-zips="54455" data-status="ok">
+            <td>
+                <div class="ws-name">Kronenwetter Water &amp; Sewer Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54455</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-01-23 and 2024-07-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="lake hallie waterworks village of" data-zips="54729" data-status="ok">
+            <td>
+                <div class="ws-name">Lake Hallie Waterworks Village of</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54729</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-03-20 and 2023-09-26.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="lake mills waterworks" data-zips="53551" data-status="ok">
+            <td>
+                <div class="ws-name">Lake Mills Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53551</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2025-02-18 and 2025-08-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="lancaster waterworks" data-zips="53813" data-status="ok">
+            <td>
+                <div class="ws-name">Lancaster Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53813</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples on 2025-05-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="lawrence waterworks" data-zips="54115" data-status="ok">
+            <td>
+                <div class="ws-name">Lawrence Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54115</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-23 and 2023-10-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="ledgeview tn sanitary dist 2" data-zips="54115" data-status="ok">
+            <td>
+                <div class="ws-name">Ledgeview Tn Sanitary Dist 2</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54115</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-03-20 and 2023-12-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="little chute waterworks" data-zips="54140" data-status="ok">
+            <td>
+                <div class="ws-name">Little Chute Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54140</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-07-23 and 2025-01-27.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="madison water utility" data-zips="53558 53562 53593 53703 53704 53705 53706 53711 53713 53714 53715 53716 53717 53718 53719 53726" data-status="ok">
+            <td>
+                <div class="ws-name">Madison Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>20 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53558, 53562, 53593, 53703, 53704, 53705, 53706, 53711, 53713, 53714, 53715, 53716, 53717, 53718, 53719, 53726</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 4 of 40 samples between 2023-10-02 and 2024-10-08, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="manitowoc waterworks" data-zips="54220" data-status="ok">
+            <td>
+                <div class="ws-name">Manitowoc Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54220</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-09 and 2023-11-14.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="marinette waterworks" data-zips="54143" data-status="ok">
+            <td>
+                <div class="ws-name">Marinette Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54143</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-03-12 and 2024-12-02.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="marshall waterworks" data-zips="53559" data-status="ok">
+            <td>
+                <div class="ws-name">Marshall Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53559</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-05-21 and 2024-11-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mauston green acres" data-zips="53948" data-status="ok">
+            <td>
+                <div class="ws-name">Mauston Green Acres</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53948</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 1 samples on 2025-06-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mauston waterworks" data-zips="53948" data-status="ok">
+            <td>
+                <div class="ws-name">Mauston Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53948</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples on 2025-06-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mayville waterworks" data-zips="53050" data-status="ok">
+            <td>
+                <div class="ws-name">Mayville Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53050</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2024-05-22 and 2025-05-28.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mcfarland waterworks" data-zips="53558" data-status="ok">
+            <td>
+                <div class="ws-name">McFarland Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53558</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 2 of 6 samples between 2023-06-21 and 2024-01-02, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="menasha elec &amp; water util" data-zips="54952" data-status="ok">
+            <td>
+                <div class="ws-name">Menasha Elec &amp; Water Util</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54952</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-17 and 2023-10-10.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="menomonee falls ww - surface water" data-zips="53051" data-status="ok">
+            <td>
+                <div class="ws-name">Menomonee Falls Ww - Surface Water</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53051</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-02-11 and 2025-08-05.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="menomonie waterworks" data-zips="54751" data-status="ok">
+            <td>
+                <div class="ws-name">Menomonie Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54751</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-11-05 and 2025-05-27.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mequon water utility" data-zips="53092 53097 53217" data-status="ok">
+            <td>
+                <div class="ws-name">Mequon Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53092, 53097, 53217</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2024-04-18 and 2025-01-08.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="merrill waterworks" data-zips="54452" data-status="ok">
+            <td>
+                <div class="ws-name">Merrill Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54452</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-04-18 and 2023-10-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="middleton waterworks" data-zips="53562 53597" data-status="ok">
+            <td>
+                <div class="ws-name">Middleton Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>6 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53562, 53597</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 12 samples between 2024-10-22 and 2025-04-15.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="milton waterworks" data-zips="53563" data-status="ok">
+            <td>
+                <div class="ws-name">Milton Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53563</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2024-03-18 and 2024-09-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="milwaukee waterworks" data-zips="53130 53132 53201 53202 53203 53204 53205 53206 53207 53208 53209 53210 53211 53212 53213 53214 53215 53216 53217 53218 53219 53220 53221 53222 53223 53224 53225 53226 53227 53228 53233 53234 53235 53237 53259 53263 53274 53278 53288 53290 53293 53295" data-status="ok">
+            <td>
+                <div class="ws-name">Milwaukee Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53130, 53132, 53201, 53202, 53203, 53204, 53205, 53206, 53207, 53208, 53209, 53210, 53211, 53212, 53213, 53214, 53215, 53216, 53217, 53218, 53219, 53220, 53221, 53222, 53223, 53224, 53225, 53226, 53227, 53228, 53233, 53234, 53235, 53237, 53259, 53263, 53274, 53278, 53288, 53290, 53293, 53295</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-02-20 and 2023-11-13.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="monona waterworks" data-zips="53716" data-status="ok">
+            <td>
+                <div class="ws-name">Monona Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53716</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 2 of 3 samples on 2025-06-17, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="monroe waterworks" data-zips="53566" data-status="ok">
+            <td>
+                <div class="ws-name">Monroe Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53566</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 10 samples between 2023-10-18 and 2024-04-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mt horeb waterworks" data-zips="53572" data-status="ok">
+            <td>
+                <div class="ws-name">Mt Horeb Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53572</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 2 of 8 samples between 2024-05-20 and 2024-11-18, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mt zion christian church" data-zips="53147" data-status="ok">
+            <td>
+                <div class="ws-name">Mt Zion Christian Church</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53147</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2024-02-27 and 2024-08-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="mukwonago waterworks" data-zips="53149" data-status="ok">
+            <td>
+                <div class="ws-name">Mukwonago Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53149</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-03-17 and 2025-09-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="muskego water utility" data-zips="53150" data-status="ok">
+            <td>
+                <div class="ws-name">Muskego Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53150</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 16 samples between 2023-06-19 and 2024-01-29.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="neenah waterworks" data-zips="54956" data-status="ok">
+            <td>
+                <div class="ws-name">Neenah Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54956</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-08 and 2023-11-07.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="new berlin water utility" data-zips="53151" data-status="ok">
+            <td>
+                <div class="ws-name">New Berlin Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53151</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-08 and 2023-11-01.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="new berlin west middle high school" data-zips="53146" data-status="ok">
+            <td>
+                <div class="ws-name">New Berlin West Middle High School</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53146</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-06-21 and 2023-12-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="new london waterworks" data-zips="54961" data-status="ok">
+            <td>
+                <div class="ws-name">New London Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54961</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 14 samples between 2023-04-25 and 2024-01-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="new richmond waterworks" data-zips="54017" data-status="ok">
+            <td>
+                <div class="ws-name">New Richmond Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54017</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 10 samples between 2023-05-17 and 2023-11-08.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="north fond du lac waterworks" data-zips="54937" data-status="ok">
+            <td>
+                <div class="ws-name">North Fond Du Lac Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54937</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-05-16 and 2023-11-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="north shore water commission" data-zips="53217" data-status="ok">
+            <td>
+                <div class="ws-name">North Shore Water Commission</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53217</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-15 and 2023-11-14.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="oak creek waterworks" data-zips="53154" data-status="ok">
+            <td>
+                <div class="ws-name">Oak Creek Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53154</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-11 and 2023-10-03.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="oconomowoc waterworks" data-zips="53066" data-status="ok">
+            <td>
+                <div class="ws-name">Oconomowoc Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53066</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-09-18 and 2024-07-29.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="oconto waterworks" data-zips="54153" data-status="ok">
+            <td>
+                <div class="ws-name">Oconto Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54153</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples on 2025-05-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="omro waterworks" data-zips="54963" data-status="ok">
+            <td>
+                <div class="ws-name">Omro Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54963</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2025-01-21 and 2025-07-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="onalaska waterworks" data-zips="54650" data-status="ok">
+            <td>
+                <div class="ws-name">Onalaska Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54650</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-01-10 and 2023-07-11.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="oregon waterworks" data-zips="53575" data-status="ok">
+            <td>
+                <div class="ws-name">Oregon Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53575</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-09-18 and 2025-03-05.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="oshkosh waterworks" data-zips="54901 54902 54904" data-status="ok">
+            <td>
+                <div class="ws-name">Oshkosh Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54901, 54902, 54904</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-07 and 2023-11-07.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="peshtigo waterworks" data-zips="54157" data-status="ok">
+            <td>
+                <div class="ws-name">Peshtigo Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54157</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2025-02-18 and 2025-08-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="pewaukee village waterworks" data-zips="53072" data-status="ok">
+            <td>
+                <div class="ws-name">Pewaukee Village Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53072</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 5 samples between 2025-06-16 and 2025-07-15.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="platteville waterworks" data-zips="53818" data-status="ok">
+            <td>
+                <div class="ws-name">Platteville Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53818</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-10-08 and 2025-04-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="pleasant prairie water utility" data-zips="53158" data-status="ok">
+            <td>
+                <div class="ws-name">Pleasant Prairie Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53158</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-08-09 and 2024-05-08.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="plover waterworks" data-zips="54467" data-status="ok">
+            <td>
+                <div class="ws-name">Plover Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54467</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-09-11 and 2024-03-11.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="plymouth utilities" data-zips="53073" data-status="ok">
+            <td>
+                <div class="ws-name">Plymouth Utilities</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>7 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53073</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 14 samples between 2024-03-26 and 2024-09-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="port washington waterworks" data-zips="53024 53074" data-status="ok">
+            <td>
+                <div class="ws-name">Port Washington Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53024, 53074</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-17 and 2023-10-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="portage waterworks" data-zips="53901" data-status="ok">
+            <td>
+                <div class="ws-name">Portage Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53901</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 2 of 4 samples between 2024-07-29 and 2025-02-11, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="prairie du sac waterworks" data-zips="53578" data-status="ok">
+            <td>
+                <div class="ws-name">Prairie Du Sac Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53578</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-01-24 and 2024-07-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="pulaski waterworks" data-zips="54162" data-status="ok">
+            <td>
+                <div class="ws-name">Pulaski Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54162</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-05-09 and 2023-11-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="racine waterworks" data-zips="53126 53177 53402 53403 53404 53405 53406" data-status="ok">
+            <td>
+                <div class="ws-name">Racine Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53126, 53177, 53402, 53403, 53404, 53405, 53406</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-01-18 and 2023-10-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="reedsburg waterworks" data-zips="53959" data-status="ok">
+            <td>
+                <div class="ws-name">Reedsburg Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53959</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 2 of 10 samples between 2023-06-20 and 2023-12-19, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="rice lake waterworks" data-zips="54868" data-status="ok">
+            <td>
+                <div class="ws-name">Rice Lake Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54868</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-03-20 and 2023-09-25.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="richland center waterworks" data-zips="53581" data-status="ok">
+            <td>
+                <div class="ws-name">Richland Center Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53581</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-04-24 and 2023-10-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="ripon water utility" data-zips="54971" data-status="ok">
+            <td>
+                <div class="ws-name">Ripon Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54971</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-05-15 and 2023-11-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="river falls waterworks" data-zips="54022" data-status="ok">
+            <td>
+                <div class="ws-name">River Falls Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54022</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 10 samples between 2023-01-11 and 2023-07-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sauk city waterworks" data-zips="53583" data-status="ok">
+            <td>
+                <div class="ws-name">Sauk City Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53583</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-04-22 and 2024-10-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="schreiber foods inc" data-zips="53095" data-status="ok">
+            <td>
+                <div class="ws-name">Schreiber Foods INC</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53095</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-04-18 and 2023-10-23.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="seymour waterworks" data-zips="54165" data-status="ok">
+            <td>
+                <div class="ws-name">Seymour Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54165</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-02-20 and 2024-08-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="shawano lk san dist 1" data-zips="54107 54111 54166" data-status="ok">
+            <td>
+                <div class="ws-name">Shawano Lk San Dist 1</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54107, 54111, 54166</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-05-16 and 2023-11-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="shawano waterworks" data-zips="54166" data-status="ok">
+            <td>
+                <div class="ws-name">Shawano Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54166</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-02-06 and 2023-08-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sheboygan falls utilities" data-zips="53085" data-status="ok">
+            <td>
+                <div class="ws-name">Sheboygan Falls Utilities</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53085</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-01-23 and 2024-10-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sheboygan water utilities" data-zips="53081" data-status="ok">
+            <td>
+                <div class="ws-name">Sheboygan Water Utilities</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53081</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-10-09 and 2025-09-30.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="shorewood waterworks" data-zips="53211" data-status="ok">
+            <td>
+                <div class="ws-name">Shorewood Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53211</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-08-07 and 2025-05-01.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="shullsburg waterworks" data-zips="53586" data-status="ok">
+            <td>
+                <div class="ws-name">Shullsburg Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53586</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-03-20 and 2024-09-24.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="slinger water utility" data-zips="53086" data-status="ok">
+            <td>
+                <div class="ws-name">Slinger Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53086</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 1 of 6 samples between 2024-06-18 and 2024-12-16, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="somers water utility" data-zips="53140 53141 53144 53171 53403" data-status="ok">
+            <td>
+                <div class="ws-name">Somers Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53140, 53141, 53144, 53171, 53403</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples between 2025-02-18 and 2025-08-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="south milwaukee waterworks" data-zips="53110 53172" data-status="ok">
+            <td>
+                <div class="ws-name">South Milwaukee Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53110, 53172</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-09-12 and 2024-06-10.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sparta waterworks" data-zips="54656" data-status="ok">
+            <td>
+                <div class="ws-name">Sparta Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54656</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 10 samples between 2024-06-18 and 2025-01-13.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="st edward sch &amp; ch" data-zips="54913" data-status="ok">
+            <td>
+                <div class="ws-name">St Edward Sch &amp; Ch</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54913</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-01-23 and 2023-07-31.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="stanley waterworks" data-zips="54768" data-status="ok">
+            <td>
+                <div class="ws-name">Stanley Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54768</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-02-07 and 2024-08-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="stevens point waterworks" data-zips="54481 54482" data-status="ok">
+            <td>
+                <div class="ws-name">Stevens Point Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54481, 54482</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-11-06 and 2024-05-28.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="stoughton waterworks" data-zips="53589" data-status="ok">
+            <td>
+                <div class="ws-name">Stoughton Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53589</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 2 of 8 samples between 2024-11-18 and 2025-05-20, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="suamico waterworks" data-zips="54173 54313" data-status="ok">
+            <td>
+                <div class="ws-name">Suamico Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54173, 54313</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-04-18 and 2023-10-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sun prairie utilities" data-zips="53590" data-status="ok">
+            <td>
+                <div class="ws-name">Sun Prairie Utilities</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>7 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53590</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 14 samples between 2023-06-15 and 2023-12-05.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="superior water light &amp; power company" data-zips="54880" data-status="ok">
+            <td>
+                <div class="ws-name">Superior Water Light &amp; Power Company</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54880</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-03-06 and 2023-12-06.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="sussex village hall &amp; water utility" data-zips="53089" data-status="ok">
+            <td>
+                <div class="ws-name">Sussex Village Hall &amp; Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53089</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2023-08-08 and 2024-01-31.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="tomah waterworks" data-zips="54660" data-status="ok">
+            <td>
+                <div class="ws-name">Tomah Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54660</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">Trace PFAS detected in 3 of 10 samples between 2023-03-20 and 2023-09-25, all below EPA limits.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="town of brookfield san dist 4" data-zips="53045 53186" data-status="ok">
+            <td>
+                <div class="ws-name">Town of Brookfield San Dist 4</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53045, 53186</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples on 2025-05-28.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="two rivers waterworks" data-zips="54241" data-status="ok">
+            <td>
+                <div class="ws-name">Two Rivers Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54241</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-03-07 and 2023-10-17.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="union grove waterworks" data-zips="53182" data-status="ok">
+            <td>
+                <div class="ws-name">Union Grove Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53182</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-04-17 and 2025-01-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="verona waterworks" data-zips="53593" data-status="ok">
+            <td>
+                <div class="ws-name">Verona Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53593</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 10 samples between 2024-10-02 and 2025-04-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="viroqua waterworks" data-zips="54665" data-status="ok">
+            <td>
+                <div class="ws-name">Viroqua Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54665</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-05-20 and 2024-11-18.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="waterford waterworks" data-zips="53185" data-status="ok">
+            <td>
+                <div class="ws-name">Waterford Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53185</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-02-07 and 2023-08-21.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="waterford on the bay" data-zips="54814" data-status="ok">
+            <td>
+                <div class="ws-name">Waterford on the Bay</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54814</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 1 samples on 2025-06-16.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="waterloo waterworks" data-zips="53594" data-status="ok">
+            <td>
+                <div class="ws-name">Waterloo Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53594</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 3 samples on 2025-06-10.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="watertown waterworks" data-zips="53094" data-status="ok">
+            <td>
+                <div class="ws-name">Watertown Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53094</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2023-03-20 and 2023-09-26.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="waukesha water utility" data-zips="53186 53187 53188 53189" data-status="ok">
+            <td>
+                <div class="ws-name">Waukesha Water Utility</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>7 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53186, 53187, 53188, 53189</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 14 samples between 2023-02-03 and 2023-08-15.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="waunakee waterworks" data-zips="53597" data-status="ok">
+            <td>
+                <div class="ws-name">Waunakee Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>4 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53597</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 8 samples between 2025-03-11 and 2025-09-09.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="waupun correctional inst" data-zips="53963" data-status="ok">
+            <td>
+                <div class="ws-name">Waupun Correctional Inst</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53963</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-04-17 and 2023-10-11.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="waupun utilities" data-zips="53963" data-status="ok">
+            <td>
+                <div class="ws-name">Waupun Utilities</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53963</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2025-04-21 and 2025-10-20.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="wausau waterworks" data-zips="54401 54402 54403" data-status="ok">
+            <td>
+                <div class="ws-name">Wausau Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>2 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54401, 54402, 54403</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2025-01-22 and 2025-07-22.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="wauwatosa waterworks" data-zips="53210 53213 53222 53225 53226" data-status="ok">
+            <td>
+                <div class="ws-name">Wauwatosa Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53210, 53213, 53222, 53225, 53226</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-04-08 and 2025-01-06.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="west allis waterworks" data-zips="53214 53219 53227" data-status="ok">
+            <td>
+                <div class="ws-name">West Allis Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53214, 53219, 53227</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2024-10-09 and 2025-07-01.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="west salem waterworks" data-zips="54669" data-status="ok">
+            <td>
+                <div class="ws-name">West Salem Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>3 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54669</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 6 samples between 2024-05-21 and 2024-11-19.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="whitefish bay waterworks" data-zips="53211 53217" data-status="ok">
+            <td>
+                <div class="ws-name">Whitefish Bay Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--sw">Surface water</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53211, 53217</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 4 samples between 2023-02-15 and 2023-11-14.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="whitewater waterworks" data-zips="53190" data-status="ok">
+            <td>
+                <div class="ws-name">Whitewater Waterworks</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    <span class="ws-meta-sep">·</span>5 facilities
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53190</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 10 samples between 2024-12-02 and 2025-06-03.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="wis rapids water works &amp; lighting comm" data-zips="54494 54495" data-status="ok">
+            <td>
+                <div class="ws-name">Wis Rapids Water Works &amp; Lighting Comm</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 54494, 54495</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-12-04 and 2024-06-03.</div>
+            </td>
+        </tr>
+        
+        
+        <tr data-name="yorkville utility dist 1" data-zips="53182" data-status="ok">
+            <td>
+                <div class="ws-name">Yorkville Utility Dist 1</div>
+                <div class="ws-meta">
+                    <span class="ws-source ws-source--gw">Groundwater</span>
+                    
+                </div>
+                <div class="ws-meta ws-zips-line">ZIPs served: 53182</div>
+            </td>
+            <td>
+                
+                <div class="ws-exceed-count ws-exceed-count--ok">0 of 5 PFAS over limit</div>
+                
+                
+                
+                
+                
+                    
+                
+                <div class="ws-detect-note">No PFAS detected across 2 samples between 2023-06-19 and 2023-12-18.</div>
+            </td>
+        </tr>
+        
+    </tbody>
+</table>
+</div>
+
+<section class="ws-statelink">
+    <h2 class="ws-statelink-hed">What is Wisconsin doing about PFAS?</h2>
+    <p class="ws-statelink-text">
+        As the federal drinking-water standards retreat, states are filling the gap with their own restrictions on PFAS in consumer products, food packaging, firefighting foam, and industrial discharges.
+    </p>
+    <a class="ws-statelink-btn" href="../../state-legislation/index.html?state=wisconsin">See Wisconsin's PFAS legislation →</a>
+</section>
+
+<p class="ws-foot">
+    Source: EPA Fifth Unregulated Contaminant Monitoring Rule (UCMR 5). "Worst exceedance" shows how many times above the EPA standard the system's highest sample registered, and which compound it was. Biden's 2024 rule set limits of 4 ppt for PFOA and PFOS and 10 ppt for PFHxS, PFNA, and HFPO-DA (GenX). The Trump EPA proposed rescinding the latter three in May 2025.
+</p>
+
+<script>
+(function () {
+    var input = document.getElementById('ws-search-input');
+    var rows = Array.prototype.slice.call(document.querySelectorAll('#ws-table tbody tr'));
+    var count = document.getElementById('ws-search-count');
+    var buttons = document.querySelectorAll('.ws-filter-btn');
+    var total = rows.length;
+    var filter = 'all';
+
+    function apply() {
+        var q = input.value.trim().toLowerCase();
+        var shown = 0;
+        rows.forEach(function (r) {
+            var matchText = !q ||
+                r.dataset.name.indexOf(q) !== -1 ||
+                r.dataset.zips.indexOf(q) !== -1;
+            var matchFilter = filter === 'all' || r.dataset.status === filter;
+            if (matchText && matchFilter) { r.classList.remove('row-hidden'); shown++; }
+            else r.classList.add('row-hidden');
+        });
+        var parts = [];
+        if (q) parts.push('"' + q + '"');
+        if (filter === 'over') parts.push('over limit');
+        if (filter === 'ok') parts.push('below limit');
+        var suffix = parts.length ? ' matching ' + parts.join(', ') : '';
+        count.textContent = (suffix ? shown + ' of ' + total : 'Showing all ' + total) + ' systems' + suffix;
+    }
+
+    var timer;
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(apply, 60);
+    });
+    buttons.forEach(function (b) {
+        b.addEventListener('click', function () {
+            buttons.forEach(function (x) { x.classList.remove('active'); });
+            b.classList.add('active');
+            filter = b.dataset.filter;
+            apply();
+        });
+    });
+})();
+</script>
+
+</div>
+
+
+
+<footer>
+    <div class="footer-inner">
+        <p>
+            Regulatory data: <a href="https://www.regulations.gov" target="_blank">regulations.gov</a>
+            &amp; <a href="https://www.federalregister.gov" target="_blank">Federal Register API</a>.
+            Press releases: <a href="https://www.epa.gov/pfas/press-releases-related-pfas" target="_blank">EPA PFAS newsroom</a>.
+            Water-system PFAS testing: <a href="https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule#5" target="_blank" rel="noopener">EPA UCMR 5 occurrence data</a>.
+            PFAS statistics: EWG, CDC NHANES.
+            State legislation: <a href="https://www.saferstates.org/bill-tracker/?toxic_chemicals=PFAS" target="_blank" rel="noopener">Safer States</a>.
+        </p>
+        <p style="margin-top:0.4rem; color:#555;">
+            Data last updated: <strong>run make fetch-all to update</strong>
+        </p>
+    </div>
+</footer>
+
+<script>
+// Fade-in on scroll
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.classList.add('is-visible');
+            observer.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Sticky nav shadow
+window.addEventListener('scroll', () => {
+    document.getElementById('site-nav').classList.toggle('nav-scrolled', window.scrollY > 40);
+});
+</script>
+
+
+</body>
+</html>
