@@ -166,7 +166,7 @@
       <div class="tl-entry-left">
           <div class="tl-date">{{ raw_date }}</div>
           {% if item.programSlug == 'both' %}
-          <div class="tl-program tl-program--both"><span class="tl-program--drinking-water">Drinking Water Levels</span> &amp; <span class="tl-program--superfund">Hazardous Substance Designation</span></div>
+          <div class="tl-program tl-program--both"><span class="tl-program--drinking-water">Drinking Water Protections</span> &amp; <span class="tl-program--superfund">Hazardous Substance Designation</span></div>
           {% elif item.programSlug %}
           <div class="tl-program tl-program--{{ item.programSlug }}">{{ item.program }}</div>
           {% endif %}
@@ -231,10 +231,13 @@ function parseDate(s) {
     {% elif sc == 'retained' or sc == 'protection' %}{% set trump2color = '#1a6b35' %}
     {% elif sc == 'delay' or 'reconsideration' in sc %}{% set trump2color = '#b85c00' %}
     {% else %}{% set trump2color = '#2a9080' %}{% endif %}
+    // Era bands extend slightly left of the actual inauguration date so a
+    // tick dated "January 20YY" lands inside the new admin's band when its
+    // x-offset is applied at render time.
     var ERAS = [
-        { id:'trump1', start:new Date('2018-01-01'), end:new Date('2021-01-20'), color:'#a06820', label:'Trump I' },
-        { id:'biden',  start:new Date('2021-01-20'), end:new Date('2025-01-20'), color:'#1e5fa0', label:'Biden'   },
-        { id:'trump2', start:new Date('2025-01-20'), end:new Date(),              color:'{{ trump2color }}', label:'Trump II' },
+        { id:'trump1', start:new Date('2018-01-01'), end:new Date('2021-01-01'), color:'#a06820', label:'Trump I' },
+        { id:'biden',  start:new Date('2021-01-01'), end:new Date('2025-01-01'), color:'#1e5fa0', label:'Biden'   },
+        { id:'trump2', start:new Date('2025-01-01'), end:new Date(),              color:'{{ trump2color }}', label:'Trump II' },
     ];
     var SIG_COLORS = {
         rollback:   '#e0202a',
@@ -263,36 +266,76 @@ function parseDate(s) {
     });
     html += '</div>';
 
-    // Collect tick data and bucket by ~0.8% (≈ monthly resolution over the 8-year span)
+    // Tick positions come directly from each entry's calendar date. Same-month
+    // cross-admin items end up at the same horizontal position; the rendering
+    // step below stacks them vertically so they're both visible.
     var tickData = [];
     entries.forEach(function (entry) {
         var dateEl = entry.querySelector('.tl-date');
         if (!dateEl) return;
         var date = parseDate(dateEl.textContent.trim());
         if (!date) return;
+        var entryEra = entry.dataset.era;
+        var bucketKey = (entryEra || '') + ':' + date.getFullYear() + '-' + date.getMonth();
         var color = SIG_COLORS[entry.dataset.sig] || '#bbb';
         var titleEl = entry.querySelector('.tl-title');
         tickData.push({
-            idx:   entry.dataset.idx,
-            pos:   parseFloat(pct(date)),
-            color: color,
-            date:  dateEl.textContent.trim(),
-            title: (titleEl ? titleEl.textContent.trim() : ''),
+            idx:    entry.dataset.idx,
+            pos:    parseFloat(pct(date)),
+            era:    entryEra || '',
+            bucket: bucketKey,
+            color:  color,
+            date:   dateEl.textContent.trim(),
+            title:  (titleEl ? titleEl.textContent.trim() : ''),
         });
     });
 
-    var BUCKET = 0.8;
     var bucketMap = {};
     tickData.forEach(function (t) {
-        var key = Math.round(t.pos / BUCKET);
-        if (!bucketMap[key]) bucketMap[key] = [];
-        bucketMap[key].push(t);
+        if (!bucketMap[t.bucket]) bucketMap[t.bucket] = [];
+        bucketMap[t.bucket].push(t);
     });
 
-    html += '<div class="bcode-ticks">';
-    Object.keys(bucketMap).map(Number).sort(function(a,b){return a-b;}).forEach(function(key) {
+    // Bucket-by-era-and-month already guarantees that same-month cross-admin
+    // items (Jan 2021 trump1/biden, Jan 2025 biden/trump2) get distinct ticks.
+    // The 7-day clamp in tickData above lands them ~26 days apart visually —
+    // slightly tighter than the ~30 days between regular month-adjacent ticks,
+    // which is the "paired but distinct" look we want at era transitions.
+    var renderList = Object.keys(bucketMap).map(function (key) {
         var group = bucketMap[key];
-        var avgPos = group.reduce(function(s,t){return s+t.pos;},0) / group.length;
+        var avgPos = group.reduce(function (s, t) { return s + t.pos; }, 0) / group.length;
+        return { group: group, pos: avgPos, era: group[0].era };
+    }).sort(function (a, b) { return a.pos - b.pos; });
+
+    // When multiple admins land at the same horizontal position (Jan 2021
+    // trump1+biden, Jan 2025 biden+trump2), nudge each tick by a few pixels
+    // so they sit side-by-side without overlapping. Outgoing admin on the
+    // left, incoming on the right (chronological order).
+    var ERA_ORDER = { trump1: 0, biden: 1, trump2: 2 };
+    var posGroups = {};
+    renderList.forEach(function (item) {
+        var key = Math.round(item.pos * 2); // 0.5% buckets
+        if (!posGroups[key]) posGroups[key] = [];
+        posGroups[key].push(item);
+    });
+    var TICK_STEP_PX = 10; // distance between adjacent tick centers
+    Object.keys(posGroups).forEach(function (k) {
+        var g = posGroups[k];
+        if (g.length === 1) { g[0].pxOffset = 0; return; }
+        g.sort(function (a, b) { return (ERA_ORDER[a.era] || 0) - (ERA_ORDER[b.era] || 0); });
+        var span = TICK_STEP_PX * (g.length - 1);
+        g.forEach(function (it, i) { it.pxOffset = (i * TICK_STEP_PX) - (span / 2); });
+    });
+
+    // Map each entry idx → the CSS `left` value of its rendered tick so the
+    // scroll tracker can sit directly on the tick (including the px offset
+    // applied to side-by-side admin ticks).
+    var entryPosCSS = {};
+
+    html += '<div class="bcode-ticks">';
+    renderList.forEach(function (item) {
+        var group = item.group;
+        var avgPos = item.pos;
         var idxList = group.map(function (t) { return t.idx; }).join(',');
         var isCluster = group.length > 1;
 
@@ -313,8 +356,13 @@ function parseDate(s) {
             tooltipTitle = group[0].title;
         }
 
+        var leftValue = item.pxOffset
+            ? 'calc(' + avgPos.toFixed(2) + '% + ' + item.pxOffset + 'px)'
+            : avgPos.toFixed(2) + '%';
+        group.forEach(function (t) { entryPosCSS[t.idx] = leftValue; });
         html += '<div class="bcode-tick' + (isCluster ? ' bcode-tick--cluster' : '') + '"'
-             + ' style="left:' + avgPos.toFixed(2) + '%;background:' + bg + '"'
+             + ' style="left:' + leftValue + ';background:' + bg + '"'
+             + ' data-era="' + (item.era || '') + '"'
              + ' data-idx="' + group[0].idx + '"'
              + ' data-idxlist="' + idxList + '"'
              + ' data-color="' + group[0].color + '"'
@@ -329,7 +377,7 @@ function parseDate(s) {
     // Year labels
 
     html += '<div class="bcode-years">';
-    for (var y = 2018; y <= maxDate.getFullYear(); y++) {
+    for (var y = minDate.getFullYear(); y <= maxDate.getFullYear(); y++) {
         html += '<span class="bcode-year" data-year="' + y + '" style="left:' + pct(new Date(y, 0, 1)) + '%">' + y + '</span>';
     }
     html += '</div>';
@@ -371,17 +419,14 @@ function parseDate(s) {
                 tooltip.innerHTML = '<span class="bcode-tooltip-title">' + tick.dataset.title + '</span>';
             }
             tooltip.hidden = false;
-            // Move tracker bar to this tick and bold its era
-            var tickPct = parseFloat(tick.style.left);
+            // Move tracker bar to this tick — use the tick's full `left` CSS
+            // (a `calc(% + Npx)` for side-by-side admin ticks) so the tracker
+            // sits exactly on the tick, not on its un-offset center.
             if (scrollPos) {
-                scrollPos.style.left = tickPct + '%';
+                scrollPos.style.left = tick.style.left;
             }
             var hoverEra = null;
-            ERAS.forEach(function (e) {
-                var ePct = parseFloat(pct(e.start));
-                var endPct = parseFloat(pct(e.end));
-                if (tickPct >= ePct && tickPct <= endPct) hoverEra = e;
-            });
+            ERAS.forEach(function (e) { if (e.id === tick.dataset.era) hoverEra = e; });
             if (hoverEra) {
                 if (scrollPos) {
                     scrollPos.style.background = hoverEra.color;
@@ -394,9 +439,8 @@ function parseDate(s) {
                 });
             }
         });
-        tick.addEventListener('mouseleave', function () {
-            tooltip.hidden = true;
-        });
+        // Tooltip stays visible until another tick is hovered or the mouse
+        // leaves the whole chart — see chart-wide mouseleave below.
         tick.addEventListener('click', function () {
             var idxList = tick.dataset.idxlist ? tick.dataset.idxlist.split(',') : [tick.dataset.idx];
             var cycleKey = tick.dataset.idxlist || tick.dataset.idx;
@@ -413,7 +457,7 @@ function parseDate(s) {
             var navH  = parseFloat(getComputedStyle(document.documentElement).fontSize) * 2.75;
             var bcodeH = bcode ? bcode.getBoundingClientRect().height : 0;
             entry.style.scrollMarginTop = (navH + bcodeH + 4) + 'px';
-            entry.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            entry.scrollIntoView({ behavior: 'instant', block: 'start' });
         });
     });
 
@@ -434,9 +478,11 @@ function parseDate(s) {
             if (lastEntry && lastEntry.querySelector('.tl-date')) {
                 var date = parseDate(lastEntry.querySelector('.tl-date').textContent.trim());
                 if (date) {
-                    scrollPos.style.left = pct(date) + '%';
+                    scrollPos.style.left = entryPosCSS[lastEntry.dataset.idx] || (pct(date) + '%');
+                    var lastEraId = lastEntry.dataset.era;
                     var era = null;
-                    ERAS.forEach(function(e) { if (date >= e.start && date <= e.end) era = e; });
+                    ERAS.forEach(function (e) { if (e.id === lastEraId) era = e; });
+                    if (!era) ERAS.forEach(function(e) { if (date >= e.start && date <= e.end) era = e; });
                     if (era) {
                         scrollPos.style.background = era.color;
                         scrollPos.style.boxShadow  = 'none';
@@ -459,24 +505,84 @@ function parseDate(s) {
         }
         var bcode = document.querySelector('.bcode-section');
         var bcodeBottom = bcode ? bcode.getBoundingClientRect().bottom : 80;
+        // Walk entries, era-band headers, AND year labels; the most recent
+        // one whose top has crossed the bottom of the timeline is the anchor.
+        // Era-band header → first tick of that admin. Year label → Jan 1 of
+        // that year. Entry → its own tick.
+        var anchors = Array.from(document.querySelectorAll('.tl-era-band[data-era-band], .tl-year-label[data-year-label], .tl-entry[data-idx]'));
         var current = null;
-        entries.forEach(function (entry) {
-            if (entry.style.display === 'none') return;
-            if (entry.getBoundingClientRect().top <= bcodeBottom + 60) current = entry;
+        anchors.forEach(function (el) {
+            if (el.style.display === 'none') return;
+            // Tolerance matches the scrollMarginTop offset used when a tick
+            // is clicked, so the clicked entry is recognized as crossed
+            // right when it lands at its scroll-into-view position.
+            if (el.getBoundingClientRect().top <= bcodeBottom + 60) current = el;
         });
         if (!current) {
             entries.some(function (entry) {
                 if (entry.style.display !== 'none') { current = entry; return true; }
             });
         }
-        if (!current || !current.querySelector('.tl-date')) return;
-        var date = parseDate(current.querySelector('.tl-date').textContent.trim());
-        if (!date) return;
-        scrollPos.style.left = pct(date) + '%';
+        if (!current) return;
 
-        // Detect current era and apply color + glow to tracker bar
+        var date, currentEraId, leftCSS;
+        if (current.classList.contains('tl-era-band')) {
+            currentEraId = current.dataset.eraBand;
+            var startEra = null;
+            ERAS.forEach(function (e) { if (e.id === currentEraId) startEra = e; });
+            if (!startEra) return;
+            // When an era band header crosses the timeline bottom, advance
+            // the tracker to that admin's first tick — including the px
+            // offset that side-by-side tick rendering may have applied.
+            var firstEntry = null;
+            for (var fi = 0; fi < entries.length; fi++) {
+                if (entries[fi].dataset.era === currentEraId) { firstEntry = entries[fi]; break; }
+            }
+            if (firstEntry) {
+                var fdEl = firstEntry.querySelector('.tl-date');
+                date = fdEl ? parseDate(fdEl.textContent.trim()) : null;
+                leftCSS = entryPosCSS[firstEntry.dataset.idx];
+            }
+            if (!date) date = startEra.start;
+            if (!leftCSS) leftCSS = pct(date) + '%';
+        } else if (current.classList.contains('tl-year-label')) {
+            // Year label crossed the timeline bottom: jump tracker to the
+            // tick of the first entry in that year, so the position lines
+            // up with where that entry will sit when it crosses next —
+            // avoids a bounce between year-label pos and offset tick pos.
+            var yr = parseInt(current.dataset.yearLabel, 10);
+            if (isNaN(yr)) return;
+            date = new Date(yr, 0, 1);
+            var anchorIdx = anchors.indexOf(current);
+            var yearFirstEntry = null;
+            for (var yi = anchorIdx + 1; yi < anchors.length; yi++) {
+                if (anchors[yi].classList.contains('tl-entry')) { yearFirstEntry = anchors[yi]; break; }
+            }
+            if (yearFirstEntry) {
+                currentEraId = yearFirstEntry.dataset.era;
+                leftCSS = entryPosCSS[yearFirstEntry.dataset.idx] || (pct(date) + '%');
+            } else {
+                // No following entry — carry era from preceding anchor.
+                for (var yj = anchorIdx - 1; yj >= 0; yj--) {
+                    if (anchors[yj].classList.contains('tl-entry')) { currentEraId = anchors[yj].dataset.era; break; }
+                    if (anchors[yj].classList.contains('tl-era-band')) { currentEraId = anchors[yj].dataset.eraBand; break; }
+                }
+                leftCSS = pct(date) + '%';
+            }
+        } else {
+            if (!current.querySelector('.tl-date')) return;
+            date = parseDate(current.querySelector('.tl-date').textContent.trim());
+            if (!date) return;
+            currentEraId = current.dataset.era;
+            leftCSS = entryPosCSS[current.dataset.idx] || (pct(date) + '%');
+        }
+        scrollPos.style.left = leftCSS;
+
+        // Detect current era — prefer the entry's data-era so boundary
+        // months map to the admin they belong to.
         var era = null;
-        ERAS.forEach(function (e) { if (date >= e.start && date <= e.end) era = e; });
+        if (currentEraId) ERAS.forEach(function (e) { if (e.id === currentEraId) era = e; });
+        if (!era) ERAS.forEach(function (e) { if (date >= e.start && date <= e.end) era = e; });
         if (era) {
             scrollPos.style.background = era.color;
             scrollPos.style.boxShadow  = 'none';
@@ -495,6 +601,16 @@ function parseDate(s) {
     }
     window.addEventListener('scroll', updateScrollPos, { passive: true });
     updateScrollPos();
+
+    // When the mouse leaves the chart entirely, dismiss the tooltip and snap
+    // the tracker back to wherever the page is scrolled to.
+    var bcodeSection = document.querySelector('.bcode-section');
+    if (bcodeSection) {
+        bcodeSection.addEventListener('mouseleave', function () {
+            tooltip.hidden = true;
+            updateScrollPos();
+        });
+    }
 })();
 
 // ── Filter logic ───────────────────────────────────────────────────────────────

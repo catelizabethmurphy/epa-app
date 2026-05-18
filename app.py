@@ -6,7 +6,7 @@ from datetime import datetime
 from collections import Counter, defaultdict
 from functools import lru_cache
 from pathlib import Path
-from flask import Flask, render_template, abort, send_from_directory, redirect, url_for
+from flask import Flask, render_template, abort, send_from_directory, redirect, url_for, jsonify
 
 app = Flask(__name__)
 app.config['FREEZER_RELATIVE_URLS'] = True
@@ -162,6 +162,237 @@ def get_state_bills():
                 "description": _clean_text(row.get("Description")),
             })
     return items
+
+
+# EPA MCL for PFOA and PFOS under the 2024 final rule (parts per trillion).
+PFAS_MCL_PPT = 4.0
+
+# Per-contaminant maximum contaminant levels (parts per trillion) from the
+# Biden EPA's April 2024 National Primary Drinking Water Regulation.
+PFAS_MCL_BY_CONTAMINANT = {
+    "PFOA": 4.0,
+    "PFOS": 4.0,
+    "PFHxS": 10.0,
+    "PFNA": 10.0,
+    "HFPO-DA": 10.0,
+}
+
+
+# Tokens that should stay uppercase when title-casing water-system names.
+_UPPERCASE_TOKENS = {
+    "PWS", "PWD", "PSD", "MWD", "WSD", "WD", "WSC", "MUD", "WS",
+    "WTP", "WWTP", "WWTF", "WSA", "PUD", "MUA", "MHP", "RV",
+    "USA", "US", "USAF", "USMC", "USN", "USAG", "VA", "DOD",
+    "I", "II", "III", "IV", "VI", "VII", "VIII", "IX", "XI", "XII",
+    "HOA", "POA", "LLC", "LP", "INC", "CO",
+    "NW", "NE", "SW", "SE",
+}
+_LOWERCASE_TOKENS = {"and", "of", "the", "at", "in", "on", "for", "to", "de", "la", "del"}
+
+
+def _titlecase_name(value):
+    if not value:
+        return ""
+    out = []
+    for i, raw in enumerate(value.split()):
+        # Strip surrounding punctuation but remember it so we can re-attach.
+        lead = ""
+        trail = ""
+        token = raw
+        while token and not token[0].isalnum():
+            lead += token[0]
+            token = token[1:]
+        while token and not token[-1].isalnum():
+            trail = token[-1] + trail
+            token = token[:-1]
+        if not token:
+            out.append(raw)
+            continue
+        upper = token.upper()
+        lower = token.lower()
+        if upper in _UPPERCASE_TOKENS:
+            cased = upper
+        elif i > 0 and lower in _LOWERCASE_TOKENS:
+            cased = lower
+        elif "-" in token:
+            cased = "-".join(p.capitalize() for p in token.split("-"))
+        elif "'" in token and not token.upper().startswith("O'"):
+            # Handle names like Murphy's — capitalize first letter only.
+            cased = token[0].upper() + token[1:].lower()
+        elif token.upper().startswith(("MC", "MAC")) and len(token) > 2:
+            prefix_len = 2 if token.upper().startswith("MC") else 3
+            cased = token[:prefix_len].capitalize() + token[prefix_len:].capitalize()
+        else:
+            cased = token.capitalize()
+        out.append(f"{lead}{cased}{trail}")
+    return " ".join(out)
+
+
+@lru_cache(maxsize=1)
+def get_pws_rows():
+    """Per-PWS/contaminant rows from UCMR-style summary."""
+    path = DATA_DIR / "pws_summaries.csv"
+    if not path.exists():
+        return []
+    rows = []
+    with open(path, newline="", encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            state_raw = (r.get("state") or "").strip().upper()
+            # Tribal water systems use a numeric EPA region code instead of a state
+            # abbreviation. Keep those rows in the search index (their ZIPs are still
+            # useful for the ZIP-code lookup) but leave their state blank so they don't
+            # land in any state aggregate.
+            if state_raw.isdigit():
+                state = ""
+            elif len(state_raw) == 2 and state_raw.isalpha():
+                state = state_raw
+            else:
+                continue
+            try:
+                n_samples = int(r.get("n_samples") or 0)
+                n_over = int(r.get("n_samples_over_limit") or 0)
+                max_res = float(r.get("max_result") or 0)
+                max_times = float(r.get("max_result_times_over_limit") or 0)
+            except ValueError:
+                continue
+            rows.append({
+                "pwsid": (r.get("pwsid") or "").strip(),
+                "name": _titlecase_name(_clean_text(r.get("pws_name"))),
+                "size": (r.get("size") or "").strip(),
+                "state": state,
+                "n_samples": n_samples,
+                "n_samples_over_limit": n_over,
+                "max_result": max_res,
+                "max_result_times_over_limit": max_times,
+                "first_collection_date": (r.get("first_collection_date") or "")[:10],
+                "last_collection_date": (r.get("last_collection_date") or "")[:10],
+                "contaminant": (r.get("contaminant") or "").strip(),
+                "over_limit": (r.get("over_limit") or "").strip().upper() == "TRUE",
+                "zips": [z.strip() for z in (r.get("zips_served") or "").split(",") if z.strip()],
+            })
+    return rows
+
+
+@lru_cache(maxsize=1)
+def get_pws_state_stats():
+    """Per-state, per-contaminant counts (n_pws, n_pws_over_limit, pct)."""
+    path = DATA_DIR / "pws_summary_stats.csv"
+    if not path.exists():
+        return []
+    items = []
+    with open(path, newline="", encoding="utf-8") as f:
+        for r in csv.DictReader(f):
+            state = (r.get("state") or "").strip().upper()
+            if len(state) != 2:
+                continue
+            try:
+                n_pws = int(r.get("n_pws") or 0)
+                n_over = int(r.get("n_pws_over_limit") or 0)
+                pct = float(r.get("pct_pws_over_limit") or 0)
+            except ValueError:
+                continue
+            items.append({
+                "state": state,
+                "contaminant": (r.get("contaminant") or "").strip().upper(),
+                "n_pws": n_pws,
+                "n_pws_over_limit": n_over,
+                "pct_pws_over_limit": pct,
+            })
+    return items
+
+
+@lru_cache(maxsize=1)
+def get_water_summary():
+    """Build a national + per-state water-testing rollup from the two CSVs."""
+    rows = get_pws_rows()
+    stats = get_pws_state_stats()
+
+    # Per-state: combine PFOA and PFOS into a single row, plus track each separately.
+    by_state = {}
+    for s in stats:
+        st = by_state.setdefault(s["state"], {
+            "state": s["state"],
+            "n_pws": 0,                 # unique PWS in the state (max of contaminants)
+            "by_contaminant": {},       # 'PFOA' -> {n_pws, n_over, pct}
+            "n_pws_any_exceed": 0,      # filled from rows below
+        })
+        st["by_contaminant"][s["contaminant"]] = {
+            "n_pws": s["n_pws"],
+            "n_pws_over_limit": s["n_pws_over_limit"],
+            "pct": s["pct_pws_over_limit"],
+        }
+        # Each contaminant covers the same set of PWS — use max as the unique count.
+        st["n_pws"] = max(st["n_pws"], s["n_pws"])
+
+    # Walk rows to compute "any contaminant exceeded" per PWS (PFOA OR PFOS).
+    pws_any = {}  # (state, pwsid) -> bool
+    for r in rows:
+        key = (r["state"], r["pwsid"])
+        pws_any[key] = pws_any.get(key, False) or r["over_limit"]
+    for (state, _pwsid), exceeded in pws_any.items():
+        if exceeded and state in by_state:
+            by_state[state]["n_pws_any_exceed"] += 1
+
+    # Derived pct for "any contaminant"
+    for st in by_state.values():
+        st["pct_any_exceed"] = (
+            100.0 * st["n_pws_any_exceed"] / st["n_pws"]
+            if st["n_pws"] else 0.0
+        )
+
+    states_ranked = sorted(
+        by_state.values(),
+        key=lambda s: (-s["pct_any_exceed"], -s["n_pws_any_exceed"]),
+    )
+
+    # Top exceeding systems nationally — rank by how many times over the limit.
+    detail = get_pws_detail()
+    worst_systems = []
+    for r in sorted(
+        (r for r in rows if r["over_limit"] and r["max_result_times_over_limit"] > 0),
+        key=lambda r: r["max_result_times_over_limit"],
+        reverse=True,
+    )[:25]:
+        d = detail.get(r["pwsid"])
+        peak = (d or {}).get("peak_by_contaminant", {}).get(r["contaminant"], {}) if d else {}
+        worst_systems.append({
+            **r,
+            "peak_ppt": (peak.get("ppt") or r["max_result"] * 1000.0),
+            "peak_date": peak.get("date", ""),
+            "water_type": (d or {}).get("water_type", ""),
+            "water_type_label": (d or {}).get("water_type_label", ""),
+        })
+
+    # National totals — use unique physical samples derived from pws_data.csv,
+    # not the analytical-result count (which counts each sample once per PFAS).
+    total_pws = len({(r["state"], r["pwsid"]) for r in rows})
+    total_pws_any_exceed = sum(1 for v in pws_any.values() if v)
+    total_samples = sum(d["n_samples"] for d in detail.values()) if detail else 0
+    total_samples_over = sum(d["n_samples_over_limit"] for d in detail.values()) if detail else 0
+
+    # Date range
+    dates = [r["last_collection_date"] for r in rows if r["last_collection_date"]]
+    first_dates = [r["first_collection_date"] for r in rows if r["first_collection_date"]]
+    date_range = {
+        "earliest": min(first_dates) if first_dates else "",
+        "latest": max(dates) if dates else "",
+    }
+
+    return {
+        "national": {
+            "total_pws": total_pws,
+            "total_pws_any_exceed": total_pws_any_exceed,
+            "pct_pws_any_exceed": (100.0 * total_pws_any_exceed / total_pws) if total_pws else 0.0,
+            "total_samples": total_samples,
+            "total_samples_over": total_samples_over,
+            "states_covered": len(by_state),
+            "date_range": date_range,
+            "mcl_ppt": PFAS_MCL_PPT,
+        },
+        "states_ranked": states_ranked,
+        "by_state": by_state,
+        "worst_systems": worst_systems,
+    }
 
 
 _MEETING_TITLE_KEYWORDS = ("meetings:", "meeting;", "advisory council",
@@ -478,6 +709,38 @@ def topic(topic_id):
     return _render_timeline_page(slug)
 
 
+ERA_RANK = {"trump1": 0, "biden": 1, "trump2": 2}
+_MONTHS = {m: f"{i:02d}" for i, m in enumerate(
+    ["january","february","march","april","may","june",
+     "july","august","september","october","november","december"], start=1)}
+
+
+def _timeline_sort_key(item):
+    """Sort items by administration first, then chronologically within era.
+
+    Keeps items in the era band they belong to even when calendar dates
+    overlap across an admin transition (e.g. January 2021, January 2025).
+    """
+    era = item.get("era") or ""
+    rank = ERA_RANK.get(era, 99)
+    raw = (item.get("date") or "").strip()
+    if len(raw) >= 7 and raw[4] == "-":
+        ym = raw[:7]
+    else:
+        parts = raw.lower().split()
+        if len(parts) == 2 and parts[1].isdigit() and parts[0] in _MONTHS:
+            ym = f"{parts[1]}-{_MONTHS[parts[0]]}"
+        elif len(parts) == 1 and parts[0].isdigit():
+            ym = f"{parts[0]}-00"
+        else:
+            ym = ""
+    return (rank, ym)
+
+
+def _sort_timeline(items):
+    return sorted(items, key=_timeline_sort_key)
+
+
 def _render_timeline_page(slug):
     page = get_timeline_page(slug)
     if not page:
@@ -494,7 +757,7 @@ def _render_timeline_page(slug):
 
     return render_template("topic.html",
                            topic=topic_data,
-                           timeline=page.get("timeline", []),
+                           timeline=_sort_timeline(page.get("timeline", [])),
                            docket_ids=page.get("docketIds", []))
 
 
@@ -533,7 +796,7 @@ def pfas_programs():
     programs = page.get("programs", [])
     return render_template("topic.html",
                            topic=topic_data,
-                           timeline=page.get("timeline", []),
+                           timeline=_sort_timeline(page.get("timeline", [])),
                            docket_ids=[],
                            programs=programs)
 
@@ -654,6 +917,239 @@ def state_tracker():
                            all_issues=all_issues,
                            bills_by_year=bills_by_year,
                            bills_by_issue=bills_by_issue)
+
+
+WATER_TYPE_LABELS = {
+    "GW": "Groundwater",
+    "SW": "Surface water",
+    "MX": "Mixed source",
+    "GU": "Groundwater under surface influence",
+}
+
+
+@lru_cache(maxsize=1)
+def get_pws_detail():
+    """Per-PWS aggregates derived from the sample-level UCMR 5 dataset.
+
+    Yields, per PWSID:
+      water_type   — single source label (most common across facilities)
+      n_facilities — distinct treatment facilities
+      n_samples    — total analytical results
+      n_detections — results above the minimum reporting level
+      peak_by_contaminant — {contaminant -> {"ppt": float, "date": "YYYY-MM-DD"}}
+    """
+    path = DATA_DIR / "pws_data.csv"
+    if not path.exists():
+        return {}
+
+    def _norm_date(raw):
+        # Source uses M/D/YYYY; normalize to YYYY-MM-DD so it sorts cleanly.
+        parts = (raw or "").split("/")
+        if len(parts) != 3:
+            return raw or ""
+        try:
+            m, d, y = int(parts[0]), int(parts[1]), int(parts[2])
+        except ValueError:
+            return raw or ""
+        return f"{y:04d}-{m:02d}-{d:02d}"
+
+    out = {}
+    with open(path, newline="", encoding="latin-1") as f:
+        for r in csv.DictReader(f):
+            pwsid = (r.get("pwsid") or "").strip()
+            if not pwsid:
+                continue
+            entry = out.setdefault(pwsid, {
+                "_facility_ids": set(),
+                "_water_types": Counter(),
+                # Track physical samples (one per sample_id) rather than analytical
+                # results (one per sample × contaminant). Each physical sample is
+                # analyzed for all five PFAS, so the result-row count is ~5× the
+                # actual number of water samples drawn.
+                "_sample_ids": set(),
+                "_detected_sample_ids": set(),
+                "_overlimit_sample_ids": set(),
+                "n_result_rows": 0,        # legacy: analytical-result rows
+                "n_detection_rows": 0,     # legacy: result rows above MRL
+                "peak_by_contaminant": {},
+            })
+            fid = (r.get("facility_id") or "").strip()
+            if fid and fid != "NA":
+                entry["_facility_ids"].add(fid)
+            wt = (r.get("facility_water_type") or "").strip()
+            if wt and wt != "NA":
+                entry["_water_types"][wt] += 1
+            entry["n_result_rows"] += 1
+            sid = (r.get("sample_id") or "").strip()
+            if sid:
+                entry["_sample_ids"].add(sid)
+
+            if (r.get("analytical_results_sign") or "").strip() == "=":
+                entry["n_detection_rows"] += 1
+                if sid:
+                    entry["_detected_sample_ids"].add(sid)
+                try:
+                    val_ugl = float(r.get("analytical_result_value") or "")
+                except ValueError:
+                    val_ugl = None
+                if val_ugl is not None:
+                    contam = (r.get("contaminant") or "").strip()
+                    ppt = val_ugl * 1000.0
+                    date = _norm_date(r.get("collection_date") or "")
+                    # Track per-sample exceedances against each contaminant's MCL.
+                    limit_ppt = PFAS_MCL_BY_CONTAMINANT.get(contam)
+                    if limit_ppt and ppt > limit_ppt and sid:
+                        entry["_overlimit_sample_ids"].add(sid)
+                    prev = entry["peak_by_contaminant"].get(contam)
+                    if prev is None or ppt > prev["ppt"]:
+                        entry["peak_by_contaminant"][contam] = {
+                            "ppt": ppt,
+                            "date": date,
+                        }
+
+    # Collapse derived counters into a stable shape.
+    final = {}
+    for pwsid, e in out.items():
+        types = e.pop("_water_types")
+        fids = e.pop("_facility_ids")
+        sids = e.pop("_sample_ids")
+        det_sids = e.pop("_detected_sample_ids")
+        over_sids = e.pop("_overlimit_sample_ids")
+        primary = types.most_common(1)[0][0] if types else ""
+        e["water_type"] = primary
+        e["water_type_label"] = WATER_TYPE_LABELS.get(primary, primary)
+        e["n_facilities"] = len(fids)
+        # Physical-sample counts — what readers expect when they hear "samples".
+        e["n_samples"] = len(sids)
+        e["n_detections"] = len(det_sids)
+        e["n_samples_over_limit"] = len(over_sids)
+        final[pwsid] = e
+    return final
+
+
+@lru_cache(maxsize=1)
+def get_pws_index():
+    """Per-PWS rollup (collapses each system's 5 contaminant rows into one entry)."""
+    detail = get_pws_detail()
+    index = {}
+    for r in get_pws_rows():
+        e = index.setdefault(r["pwsid"], {
+            "id": r["pwsid"],
+            "name": r["name"],
+            "state": r["state"],
+            "exceeded": False,
+            "max_times": 0.0,
+            "max_contaminant": "",
+            "max_result": 0.0,
+            "samples": 0,
+            "first_sampled": r["first_collection_date"],
+            "last_sampled": r["last_collection_date"],
+            "zips": [],
+            # contaminant -> {"times": float, "ppt": float, "date": "YYYY-MM-DD"}
+            "exceedances": {},
+        })
+        e["exceeded"] = e["exceeded"] or r["over_limit"]
+        if r["max_result_times_over_limit"] > e["max_times"]:
+            e["max_times"] = r["max_result_times_over_limit"]
+            e["max_contaminant"] = r["contaminant"]
+            e["max_result"] = r["max_result"]
+        e["samples"] = max(e["samples"], r["n_samples"])
+        if r["last_collection_date"] > e["last_sampled"]:
+            e["last_sampled"] = r["last_collection_date"]
+        if r["first_collection_date"] and (
+            not e["first_sampled"] or r["first_collection_date"] < e["first_sampled"]
+        ):
+            e["first_sampled"] = r["first_collection_date"]
+        if r["over_limit"]:
+            prev = e["exceedances"].get(r["contaminant"])
+            if prev is None or r["max_result_times_over_limit"] > prev["times"]:
+                e["exceedances"][r["contaminant"]] = {
+                    "times": r["max_result_times_over_limit"],
+                    "ppt": r["max_result"] * 1000.0,
+                    "date": "",
+                }
+        if r["zips"] and not e["zips"]:
+            e["zips"] = r["zips"]
+
+    # Enrich each PWS with sample-level detail (water source, detection counts,
+    # peak-sample dates per contaminant).
+    for pwsid, entry in index.items():
+        d = detail.get(pwsid)
+        if not d:
+            entry["water_type"] = ""
+            entry["water_type_label"] = ""
+            entry["n_facilities"] = 0
+            entry["n_total_samples"] = 0
+            entry["n_detections"] = 0
+            entry["n_samples_over_limit"] = 0
+            continue
+        entry["water_type"] = d["water_type"]
+        entry["water_type_label"] = d["water_type_label"]
+        entry["n_facilities"] = d["n_facilities"]
+        # Physical-sample counts (each water sample is analyzed for 5 PFAS, so
+        # the raw result-row counts are 5× higher).
+        entry["n_total_samples"] = d["n_samples"]
+        entry["n_detections"] = d["n_detections"]
+        entry["n_samples_over_limit"] = d["n_samples_over_limit"]
+        # Attach the peak-sample date for each exceeding contaminant.
+        for contam, ex in entry["exceedances"].items():
+            peak = d["peak_by_contaminant"].get(contam)
+            if peak:
+                ex["date"] = peak["date"]
+                # Prefer the sample-level peak in ppt if we have it (more precise).
+                if peak["ppt"] > ex["ppt"]:
+                    ex["ppt"] = peak["ppt"]
+
+    # Precompute a sorted list view so templates can iterate without doing
+    # nested attribute sorts on (contaminant, dict) tuples.
+    for entry in index.values():
+        entry["exceedances_sorted"] = sorted(
+            entry["exceedances"].items(),
+            key=lambda kv: kv[1]["times"],
+            reverse=True,
+        )
+        entry["n_exceedances"] = len(entry["exceedances"])
+
+    return list(index.values())
+
+
+def _attach_state_names(water):
+    abbr_to_name = {v: k for k, v in STATE_ABBR.items()}
+    for st in water["states_ranked"]:
+        name = abbr_to_name.get(st["state"], st["state"])
+        st["name"] = name
+        st["slug"] = _slugify(name)
+    return water
+
+
+@app.route("/water-testing/")
+def water_testing():
+    water = _attach_state_names(get_water_summary())
+    return render_template("water_testing.html", water=water)
+
+
+@app.route("/data/pws-search.json")
+def pws_search_data():
+    """Search-index JSON, fetched on demand by the water-testing page."""
+    return jsonify(get_pws_index())
+
+
+@app.route("/water-testing/<state_slug>/")
+def water_testing_state(state_slug):
+    water = _attach_state_names(get_water_summary())
+    target = next((s for s in water["states_ranked"] if s["slug"] == state_slug), None)
+    if not target:
+        abort(404)
+
+    systems = [p for p in get_pws_index() if p["state"] == target["state"]]
+    systems.sort(key=lambda s: (-s["max_times"], s["name"]))
+
+    return render_template(
+        "water_state.html",
+        water=water,
+        state=target,
+        systems=systems,
+    )
 
 
 @app.route("/search/")

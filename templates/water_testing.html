@@ -1,0 +1,509 @@
+{% extends "base.html" %}
+
+{% block title %}PFAS in U.S. Drinking Water — Testing Results{% endblock %}
+{% block og_title %}PFAS in U.S. Drinking Water — Testing Results{% endblock %}
+{% block og_description %}EPA water-system sampling shows {{ "%.0f"|format(water.national.pct_pws_any_exceed) }}% of utilities tested have PFOA or PFOS above the federal limit the Trump EPA is now rolling back.{% endblock %}
+
+{% block head %}
+<style>
+.wt-lede {
+    border-top: 3px solid #111;
+    padding-top: 1rem;
+    margin: 1rem 0 1.25rem;
+    max-width: 760px;
+}
+.wt-eyebrow {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #888;
+    font-family: "PT Sans", sans-serif;
+    margin-bottom: 0.5rem;
+}
+.wt-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 0.6rem;
+    line-height: 1.25;
+}
+.wt-dek {
+    font-size: 1rem;
+    color: #444;
+    line-height: 1.7;
+    margin: 0 0 0.5rem;
+}
+.wt-credit {
+    font-size: 0.72rem;
+    color: #999;
+    font-family: "PT Sans", sans-serif;
+    margin: 0.5rem 0 0;
+}
+
+.wt-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    background: #ddd;
+    border: 1px solid #ddd;
+    margin: 1.25rem 0 1.75rem;
+}
+.wt-stat {
+    background: #fff;
+    padding: 1rem 1.25rem;
+    flex: 1 1 auto;
+    min-width: 160px;
+}
+.wt-stat-num {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: #111;
+    line-height: 1.05;
+}
+.wt-stat--alert .wt-stat-num { color: #c0202a; }
+.wt-stat-lbl {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+.wt-section-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 2rem 0 0.4rem;
+    color: #111;
+    border-top: 2px solid #111;
+    padding-top: 0.7rem;
+}
+.wt-section-sub {
+    font-family: "PT Sans", sans-serif;
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0 0 0.9rem;
+}
+
+.wt-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.92rem;
+}
+.wt-table th, .wt-table td {
+    padding: 0.55rem 0.6rem;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    vertical-align: top;
+}
+.wt-table th {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    font-weight: 700;
+    border-bottom: 2px solid #111;
+}
+.wt-table td.num, .wt-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.wt-table tr:hover td { background: #fafafa; }
+.wt-table a { color: #111; text-decoration: none; border-bottom: 1px dotted #888; }
+.wt-table a:hover { border-bottom-style: solid; }
+
+.wt-bar {
+    display: inline-block;
+    height: 10px;
+    background: #c0202a;
+    vertical-align: middle;
+    margin-right: 0.4rem;
+    min-width: 1px;
+    opacity: 0.85;
+}
+.wt-bar--low { background: #b85c00; }
+.wt-bar--ok  { background: #8a8a8a; opacity: 0.4; }
+
+.wt-pill {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.45rem;
+    background: #f2f3f4;
+    color: #555;
+    border-radius: 2px;
+    font-family: "PT Sans", sans-serif;
+    margin-right: 0.3rem;
+    letter-spacing: 0.04em;
+}
+.wt-pill--lg { background: #ecebe4; color: #444; }
+
+/* ── State-table collapse ─────────────────────────────────────────────── */
+.wt-table tr.wt-row-hidden { display: none; }
+.wt-show-more {
+    margin: 0.75rem 0 0;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    background: none;
+    border: none;
+    color: #111;
+    cursor: pointer;
+    padding: 0.4rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid #111;
+}
+.wt-show-more:hover { color: #c0202a; border-bottom-color: #c0202a; }
+
+/* ── Search box ───────────────────────────────────────────────────────── */
+.wt-search {
+    margin: 1.5rem 0 0.5rem;
+    padding: 1.1rem 1.25rem 1.2rem;
+    background: #fafaf8;
+    border-left: 3px solid #111;
+}
+.wt-search-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin: 0 0 0.45rem;
+    color: #111;
+}
+.wt-search-sub {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.85rem;
+    color: #666;
+    margin: 0 0 0.7rem;
+    line-height: 1.5;
+}
+.wt-search-input {
+    width: 100%;
+    max-width: 520px;
+    padding: 0.6rem 0.75rem;
+    font-family: "PT Sans", sans-serif;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    background: #fff;
+    box-sizing: border-box;
+}
+.wt-search-input:focus { outline: 2px solid #111; outline-offset: -1px; }
+.wt-search-results {
+    margin: 0.85rem 0 0;
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.92rem;
+}
+.wt-search-status {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #888;
+    margin-bottom: 0.4rem;
+}
+.wt-search-row {
+    display: flex;
+    gap: 0.6rem;
+    align-items: baseline;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid #eee;
+}
+.wt-search-row:last-child { border-bottom: none; }
+.wt-search-name { color: #111; flex: 1 1 auto; }
+.wt-search-state {
+    color: #888;
+    font-size: 0.82rem;
+    width: 2rem;
+    flex: 0 0 auto;
+}
+.wt-search-flag {
+    font-size: 0.78rem;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    flex: 0 0 auto;
+}
+.wt-search-flag--over { color: #c0202a; }
+.wt-search-flag--ok { color: #1a6b35; }
+
+.wt-statelink {
+    margin: 2.5rem 0 1rem;
+    padding: 1.5rem 1.5rem 1.6rem;
+    background: #111;
+    color: #fff;
+    max-width: 760px;
+}
+.wt-statelink-hed {
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #fff;
+    margin: 0 0 0.6rem;
+    line-height: 1.25;
+}
+.wt-statelink-text {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.95rem;
+    color: #ddd;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+}
+.wt-statelink-btn {
+    display: inline-block;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-decoration: none;
+    padding: 0.55rem 0.95rem;
+    border: 2px solid #fff;
+}
+.wt-statelink-btn:hover { background: #fff; color: #111; }
+
+.wt-foot {
+    font-family: "PT Sans", sans-serif;
+    font-size: 0.78rem;
+    color: #888;
+    margin-top: 2rem;
+    line-height: 1.6;
+    border-top: 1px solid #ddd;
+    padding-top: 0.9rem;
+    max-width: 760px;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+{% set n = water.national %}
+
+<header class="wt-lede">
+    <div class="wt-eyebrow">Drinking-water testing</div>
+    <h1 class="wt-hed">{{ "{:,}".format(n.total_pws_any_exceed) }} U.S. water systems tested above the EPA standards Biden set for drinking water.</h1>
+    <p class="wt-dek">
+        Of {{ "{:,}".format(n.total_pws) }} public water systems in EPA's national PFAS sampling, {{ "%.0f"|format(n.pct_pws_any_exceed) }}% reported at least one sample above the federal limit for one of the five PFAS the Biden EPA finalized standards for in 2024 — PFOA, PFOS, PFHxS, PFNA, and HFPO-DA (GenX). The Trump EPA is now moving to rescind those standards for every PFAS except PFOA and PFOS.
+    </p>
+    <p class="wt-credit">
+        Source: EPA Fifth Unregulated Contaminant Monitoring Rule (UCMR 5) public water system results. Sampling window {{ n.date_range.earliest }} through {{ n.date_range.latest }}.
+    </p>
+</header>
+
+<div class="wt-strip">
+    <div class="wt-stat">
+        <div class="wt-stat-num">{{ "{:,}".format(n.total_pws) }}</div>
+        <div class="wt-stat-lbl">Public water systems tested</div>
+    </div>
+    <div class="wt-stat wt-stat--alert">
+        <div class="wt-stat-num">{{ "{:,}".format(n.total_pws_any_exceed) }}</div>
+        <div class="wt-stat-lbl">Exceeded an EPA standard</div>
+    </div>
+    <div class="wt-stat wt-stat--alert">
+        <div class="wt-stat-num">{{ "%.0f"|format(n.pct_pws_any_exceed) }}%</div>
+        <div class="wt-stat-lbl">Share of systems over limit</div>
+    </div>
+    <div class="wt-stat">
+        <div class="wt-stat-num">{{ "{:,}".format((n.total_samples // 1000) * 1000) }}+</div>
+        <div class="wt-stat-lbl">Individual samples analyzed</div>
+    </div>
+</div>
+
+<section class="wt-search" id="wt-search">
+    <h2 class="wt-search-hed">Find a water system near you</h2>
+    <p class="wt-search-sub">
+        Enter a ZIP code, city, utility name, or PWS ID to see whether a system in EPA's national PFAS dataset reported any PFAS above the federal limit.
+    </p>
+    <input type="search" id="wt-search-input" class="wt-search-input"
+           placeholder="e.g. 20742, City of Tampa, Mashantucket Pequot" autocomplete="off">
+    <div id="wt-search-results" class="wt-search-results"></div>
+</section>
+
+<h2 class="wt-section-hed">States ranked by share of utilities above an EPA drinking-water standard</h2>
+<p class="wt-section-sub">Click a state to see every water system in it. The bar shows the share of public water systems where at least one sample exceeded one of the five PFAS limits Biden's EPA finalized in 2024.</p>
+
+<div style="overflow-x:auto;">
+<table class="wt-table" id="wt-state-table">
+    <thead>
+        <tr>
+            <th>State</th>
+            <th class="num">Systems tested</th>
+            <th class="num">Over limit</th>
+            <th>% over limit (any of five PFAS)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in water.states_ranked %}
+        <tr{% if loop.index > 10 %} class="wt-row-hidden"{% endif %}>
+            <td>
+                {% if s.slug %}
+                <a href="{{ url_for('water_testing_state', state_slug=s.slug) }}">{{ s.name }}</a>
+                {% else %}
+                {{ s.name }}
+                {% endif %}
+            </td>
+            <td class="num">{{ s.n_pws }}</td>
+            <td class="num">{{ s.n_pws_any_exceed }}</td>
+            <td>
+                <span class="wt-bar{% if s.pct_any_exceed < 10 %} wt-bar--ok{% elif s.pct_any_exceed < 25 %} wt-bar--low{% endif %}"
+                      style="width: {{ (s.pct_any_exceed * 1.8)|round(1) }}px;"></span>
+                {{ "%.1f"|format(s.pct_any_exceed) }}%
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% if water.states_ranked|length > 10 %}
+<button class="wt-show-more" id="wt-show-more"
+        data-total="{{ water.states_ranked|length }}"
+        data-shown="10">Show all {{ water.states_ranked|length }} states</button>
+{% endif %}
+
+<h2 class="wt-section-hed">25 water systems with the highest reported exceedances</h2>
+<p class="wt-section-sub">Ranked by how many times above the EPA standard the system's worst sample registered.</p>
+
+<div style="overflow-x:auto;">
+<table class="wt-table">
+    <thead>
+        <tr>
+            <th>Water system</th>
+            <th>State</th>
+            <th>Contaminant</th>
+            <th>Sample date</th>
+            <th class="num">× EPA standard</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in water.worst_systems %}
+        <tr>
+            <td>
+                <div>{{ r.name }}</div>
+                {% if r.water_type_label %}<div style="font-size:0.72rem;color:#999;">{{ r.water_type_label }}</div>{% endif %}
+            </td>
+            <td>{{ r.state }}</td>
+            <td>{{ r.contaminant }}</td>
+            <td>{{ r.peak_date or '—' }}</td>
+            <td class="num">{{ "%.0f"|format(r.max_result_times_over_limit) }}×</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<section class="wt-statelink">
+    <h2 class="wt-statelink-hed">What's your state doing about it?</h2>
+    <p class="wt-statelink-text">
+        As the Trump EPA rolls back the federal drinking-water standards, states are filling the gap — restricting PFAS in consumer products, food packaging, firefighting foam, and industrial discharges.
+    </p>
+    <a class="wt-statelink-btn" href="{{ url_for('state_tracker') }}">See the state legislation tracker →</a>
+</section>
+
+<p class="wt-foot">
+    The five PFAS maximum contaminant levels — 4 parts per trillion for PFOA and PFOS, 10 ppt for PFHxS, PFNA, and HFPO-DA (GenX) — were finalized by the Biden EPA in April 2024 as part of the National Primary Drinking Water Regulation. In May 2025 the Trump EPA announced it would keep the PFOA and PFOS standards but rescind the limits for the other three compounds, and proposed extending compliance deadlines to 2031. "Over limit" means a system reported at least one sample above its compound's EPA standard.
+</p>
+
+<script>
+(function () {
+    // ── Show-more toggle for the state ranking ────────────────────────────
+    var btn = document.getElementById('wt-show-more');
+    if (btn) {
+        btn.addEventListener('click', function () {
+            var rows = document.querySelectorAll('#wt-state-table tr.wt-row-hidden');
+            rows.forEach(function (r) { r.classList.remove('wt-row-hidden'); });
+            btn.remove();
+        });
+    }
+
+    // ── Client-side search ───────────────────────────────────────────────
+    var input = document.getElementById('wt-search-input');
+    var out = document.getElementById('wt-search-results');
+    if (!input || !out) return;
+
+    var systems = null;
+    var loadPromise = null;
+    function loadSystems() {
+        if (loadPromise) return loadPromise;
+        loadPromise = fetch({{ url_for('pws_search_data')|tojson }})
+            .then(function (r) { return r.json(); })
+            .then(function (data) { systems = data; });
+        return loadPromise;
+    }
+    input.addEventListener('focus', loadSystems, { once: true });
+
+    function esc(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+            return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+        });
+    }
+
+    function render(query) {
+        var q = query.trim().toLowerCase();
+        if (q.length < 2) {
+            out.innerHTML = '';
+            return;
+        }
+        if (!systems) {
+            out.innerHTML = '<div class="wt-search-status">Loading water-system data…</div>';
+            loadSystems().then(function () { render(query); });
+            return;
+        }
+        // Detect a 5-digit ZIP (and ignore any +4 suffix).
+        var zipMatch = q.match(/^(\d{5})(?:-\d{4})?$/);
+        var matches = [];
+        var mode = 'text';
+        if (zipMatch) {
+            mode = 'zip';
+            var zip = zipMatch[1];
+            for (var i = 0; i < systems.length; i++) {
+                if (systems[i].zips && systems[i].zips.indexOf(zip) !== -1) {
+                    matches.push(systems[i]);
+                    if (matches.length >= 50) break;
+                }
+            }
+        } else {
+            for (var k = 0; k < systems.length; k++) {
+                var s = systems[k];
+                if (s.name.toLowerCase().indexOf(q) !== -1 ||
+                    s.id.toLowerCase().indexOf(q) !== -1 ||
+                    s.state.toLowerCase() === q) {
+                    matches.push(s);
+                    if (matches.length >= 50) break;
+                }
+            }
+        }
+        if (!matches.length) {
+            out.innerHTML = '<div class="wt-search-status">' +
+                (mode === 'zip'
+                    ? 'No water systems in EPA\'s dataset list ZIP ' + esc(zipMatch[1]) + ' in their service area.'
+                    : 'No matching water systems.') +
+                '</div>';
+            return;
+        }
+        var html = '<div class="wt-search-status">' +
+            matches.length + (matches.length >= 50 ? '+ ' : ' ') +
+            (mode === 'zip'
+                ? 'water system' + (matches.length === 1 ? '' : 's') + ' serving ZIP ' + esc(zipMatch[1])
+                : 'match' + (matches.length === 1 ? '' : 'es')) +
+            '</div>';
+        for (var j = 0; j < matches.length; j++) {
+            var m = matches[j];
+            var n = m.n_exceedances || 0;
+            var flagClass = n > 0 ? 'wt-search-flag--over' : 'wt-search-flag--ok';
+            var flag = '<span class="wt-search-flag ' + flagClass + '">' +
+                n + ' of 5 PFAS over limit</span>';
+            html += '<div class="wt-search-row">' +
+                '<span class="wt-search-state">' + esc(m.state) + '</span>' +
+                '<span class="wt-search-name">' + esc(m.name) + '</span>' +
+                flag +
+                '</div>';
+        }
+        out.innerHTML = html;
+    }
+
+    var timer;
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        var v = input.value;
+        timer = setTimeout(function () { render(v); }, 80);
+    });
+})();
+</script>
+{% endblock %}
