@@ -4302,7 +4302,15 @@
                 sorted = rows.slice().sort(function (a, b) {
                     var av = parseInt(a.dataset.pop || '0', 10);
                     var bv = parseInt(b.dataset.pop || '0', 10);
-                    return dir * (av - bv);
+                    // Push unknown/zero populations to the end in both
+                    // directions — the user is sorting *by* population, so
+                    // systems with no estimate aren't meaningful to interleave.
+                    if (av === 0 && bv !== 0) return 1;
+                    if (bv === 0 && av !== 0) return -1;
+                    if (av !== bv) return dir * (av - bv);
+                    // Stable tiebreaker by name so equal populations don't
+                    // shuffle arbitrarily on re-sort.
+                    return (a.dataset.name || '').localeCompare(b.dataset.name || '');
                 });
                 th.classList.add(state === 1 ? 'ws-sort-desc' : 'ws-sort-asc');
             }
