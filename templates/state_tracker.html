@@ -362,9 +362,10 @@
 .issue-table colgroup col:nth-child(4) { width: 25%; }
 .issue-table colgroup col:nth-child(5) { width: auto; }
 
-/* Inline description + stacked status badge shown only on mobile */
-.bill-note-inline,
-.bill-status-stacked { display: none; }
+/* Inline issue label (under bill ID) and inline status badge (above the
+   description) are shown only on mobile. */
+.bill-issue-inline,
+.bill-status-inline { display: none; }
 
 /* ── Mobile tweaks ───────────────────────────────────────────────────────── */
 @media (max-width: 600px) {
@@ -391,6 +392,9 @@
     .state-card-counts { font-size: 0.68rem; gap: 0.35rem; }
 
     .state-table-wrap { padding: 0 0 0.5rem; overflow-x: visible; }
+    /* Fixed layout so every state's table aligns to the same column widths.
+       The Description column has no explicit width and absorbs the rest of
+       the row; Year and Bill columns are pinned below. */
     .state-table { font-size: 0.85rem; table-layout: fixed; width: 100%; }
     .state-table th, .state-table td {
         padding: 0.55rem 0.4rem;
@@ -398,32 +402,47 @@
         word-break: normal;
         vertical-align: top;
     }
-    /* Hide Status (col 2) and Notes (col 5) on mobile. The status badge moves
-       inline under the bill ID so the Bill column gets more room. */
+    /* Hide Status (col 2) and Issue (col 4) on mobile. The status badge
+       moves to the top of the Description cell; the issue label moves under
+       the bill ID. Each row reads as:
+         year | bill + issue | status badge + description */
     .state-table th:nth-child(2), .state-table td:nth-child(2),
-    .state-table th:nth-child(5), .state-table td:nth-child(5) { display: none; }
-
-    .state-table colgroup col:nth-child(1) { width: 56px; }   /* Year */
-    .state-table colgroup col:nth-child(2) { width: 0; }      /* Status — hidden */
-    .state-table colgroup col:nth-child(3) { width: auto; }   /* Bill (stack) */
-    .state-table colgroup col:nth-child(4) { width: 26%; }    /* Issue */
-    .state-table colgroup col:nth-child(5) { width: 0; }      /* Notes — hidden */
-    .year-table colgroup col:nth-child(1) { width: 60px; }    /* State abbr */
+    .state-table th:nth-child(4), .state-table td:nth-child(4) { display: none; }
+    /* Re-show the Description cells on mobile — they use the global
+       `.hide-mobile` helper which is `display:none !important` at this width. */
+    .state-table td.hide-mobile,
+    .state-table th.hide-mobile { display: table-cell !important; }
+    .state-table colgroup { display: none; }   /* let auto layout decide */
+    /* Lock every visible column to an explicit percentage so all state
+       tables align. With table-layout: fixed and `display:none` cells in
+       cols 2/4, leaving col 5 as `auto` makes WebKit split the leftover
+       space equally across the three auto columns — collapsing Description
+       to ~33% on tables that follow the first. Explicit percentages avoid
+       that. */
+    .state-table th:nth-child(1),
+    .state-table td:nth-child(1) { width: 16%; }
+    .state-table th:nth-child(3),
+    .state-table td:nth-child(3) { width: 33%; }
+    .state-table th:nth-child(5),
+    .state-table td:nth-child(5) { width: 51%; }
     .sbadge { font-size: 0.58rem; padding: 0.14rem 0.4rem; }
 
-    /* Status badge stacked under bill ID */
-    .bill-status-stacked {
+    /* Inline issue label under the bill ID */
+    .bill-issue-inline {
         display: block;
-        margin-top: 0.3rem;
-    }
-    /* Inline description under the badge */
-    .bill-note-inline {
-        display: block;
-        font-size: 0.78rem;
-        font-weight: 400;
-        color: #555;
-        line-height: 1.45;
+        font-family: "PT Sans", sans-serif;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #888;
         margin-top: 0.35rem;
+        line-height: 1.3;
+    }
+    /* Status badge stacked above the description text */
+    .bill-status-inline {
+        display: block;
+        margin-bottom: 0.35rem;
     }
 }
 </style>
@@ -536,7 +555,7 @@
                     <th>Status</th>
                     <th>Bill</th>
                     <th>Issue</th>
-                    <th class="hide-mobile">Notes</th>
+                    <th class="hide-mobile">Description</th>
                 </tr>
             </thead>
             <tbody>
@@ -555,7 +574,13 @@
                 </td>
                 <td>
                     <strong>{{ b.bill or "—" }}</strong>
-                    <div class="bill-status-stacked">
+                    {% if b.issue %}
+                    <div class="bill-issue-inline">{{ b.issue }}</div>
+                    {% endif %}
+                </td>
+                <td>{{ b.issue or "Other" }}</td>
+                <td class="hide-mobile">
+                    <div class="bill-status-inline">
                         {% if status_clean == "Adopted" %}
                         <span class="sbadge sbadge--adopted">Adopted</span>
                         {% elif status_clean == "Introduced" %}
@@ -564,12 +589,8 @@
                         <span class="sbadge sbadge--other">{{ status_clean or "—" }}</span>
                         {% endif %}
                     </div>
-                    {% if b.description and b.description != "—" %}
-                    <div class="bill-note-inline">{{ b.description }}</div>
-                    {% endif %}
+                    {{ b.description or "—" }}
                 </td>
-                <td>{{ b.issue or "Other" }}</td>
-                <td class="hide-mobile">{{ b.description or "—" }}</td>
             </tr>
             {% endfor %}
             </tbody>
@@ -596,7 +617,7 @@
                     <th>Status</th>
                     <th>Bill</th>
                     <th>Issue</th>
-                    <th class="hide-mobile">Notes</th>
+                    <th class="hide-mobile">Description</th>
                 </tr>
             </thead>
             <tbody>
@@ -615,7 +636,13 @@
                 </td>
                 <td>
                     <strong>{{ b.bill or "—" }}</strong>
-                    <div class="bill-status-stacked">
+                    {% if b.issue %}
+                    <div class="bill-issue-inline">{{ b.issue }}</div>
+                    {% endif %}
+                </td>
+                <td>{{ b.issue or "Other" }}</td>
+                <td class="hide-mobile">
+                    <div class="bill-status-inline">
                         {% if status_clean == "Adopted" %}
                         <span class="sbadge sbadge--adopted">Adopted</span>
                         {% elif status_clean == "Introduced" %}
@@ -624,12 +651,8 @@
                         <span class="sbadge sbadge--other">{{ status_clean or "—" }}</span>
                         {% endif %}
                     </div>
-                    {% if b.description and b.description != "—" %}
-                    <div class="bill-note-inline">{{ b.description }}</div>
-                    {% endif %}
+                    {{ b.description or "—" }}
                 </td>
-                <td>{{ b.issue or "Other" }}</td>
-                <td class="hide-mobile">{{ b.description or "—" }}</td>
             </tr>
             {% endfor %}
             </tbody>
@@ -656,7 +679,7 @@
                     <th>Year</th>
                     <th>Status</th>
                     <th>Bill</th>
-                    <th class="hide-mobile">Notes</th>
+                    <th class="hide-mobile">Description</th>
                 </tr>
             </thead>
             <tbody>
@@ -676,7 +699,12 @@
                 </td>
                 <td>
                     <strong>{{ b.bill or "—" }}</strong>
-                    <div class="bill-status-stacked">
+                    {% if b.issue %}
+                    <div class="bill-issue-inline">{{ b.issue }}</div>
+                    {% endif %}
+                </td>
+                <td class="hide-mobile">
+                    <div class="bill-status-inline">
                         {% if status_clean == "Adopted" %}
                         <span class="sbadge sbadge--adopted">Adopted</span>
                         {% elif status_clean == "Introduced" %}
@@ -685,11 +713,8 @@
                         <span class="sbadge sbadge--other">{{ status_clean or "—" }}</span>
                         {% endif %}
                     </div>
-                    {% if b.description and b.description != "—" %}
-                    <div class="bill-note-inline">{{ b.description }}</div>
-                    {% endif %}
+                    {{ b.description or "—" }}
                 </td>
-                <td class="hide-mobile">{{ b.description or "—" }}</td>
             </tr>
             {% endfor %}
             </tbody>
