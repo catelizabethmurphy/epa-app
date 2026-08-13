@@ -49,7 +49,6 @@ epa-app/
 │
 └── templates/
     ├── base.html
-    ├── index.html              # Homepage: scrolly intro + status + timeline
     ├── browse.html             # Filterable database view
     ├── explore.html            # Pagefind search + timeline/database tabs
     ├── docket.html             # Single docket, primary + supplementary docs

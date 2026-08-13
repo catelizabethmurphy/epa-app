@@ -36,7 +36,7 @@ static/data/pfas-bill-tracker.csv          ← state-legislation tracker
 
 | Route | Template | Notes |
 |---|---|---|
-| `/` | `index.html` | Scrolly intro + three nav cards |
+| `/` | `water_testing.html` | No standalone home page — root serves the water-testing page (same view as `/water-testing/`) |
 | `/federal-regulations/` | `topic.html` | Renders `pfas-programs.json` timeline |
 | `/archive/<slug>/` | `archive.html` | In-app viewer for one archived source; PDFs embed via `<iframe>`, HTML renders inline |
 | `/state-legislation/` | `state_tracker.html` | Backed by `pfas-bill-tracker.csv` |

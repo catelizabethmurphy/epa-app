@@ -411,7 +411,10 @@ def get_water_summary():
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    # No standalone home page — the root serves the water-testing page, which
+    # is also reachable at /water-testing/.
+    water = _attach_state_names(get_water_summary())
+    return render_template("water_testing.html", water=water)
 
 
 ERA_RANK = {"trump1": 0, "biden": 1, "trump2": 2}
